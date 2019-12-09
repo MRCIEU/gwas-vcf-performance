@@ -1,5 +1,5 @@
 ---
-title: "Compare VCF and plain text for storing GWAS summary statistics"
+title: "Compare VCF and text for storing GWAS summary statistics"
 author: "Matt Lyon"
 date: "2019-12-09"
 ---
@@ -8,20 +8,22 @@ Download a typical GWAS in plain text
 
 ```{bash}
 # Yengo L, Sidorenko J, Kemper KE, Zheng Z, Wood AR, Weedon MN, Frayling TM, Hirschhorn J, Yang J, Visscher PM, GIANT Consortium. (2018). Meta-analysis of genome-wide association studies for height and body mass index in ~700,000 individuals of European ancestry. Biorxiv.
-wget -O /data/gwas.txt.gz https://portals.broadinstitute.org/collaboration/giant/images/c/c8/Meta-analysis_Locke_et_al%2BUKBiobank_2018_UPDATED.txt.gz
+wget -q -O /data/gwas.txt.gz https://portals.broadinstitute.org/collaboration/giant/images/c/c8/Meta-analysis_Locke_et_al%2BUKBiobank_2018_UPDATED.txt.gz
 ```
 
-Count the number of variants
+Count the total number of variants in GIANT BMI GWAS (Yengo et al, 2018)
 
 ```{bash}
 gzip -dc /data/gwas.txt.gz | awk 'NR>1' | wc -l
 ```
 
-Define file schema for mapping plain text to VCF format
+Determine file format
 
 ```{bash}
 gzip -dc /data/gwas.txt.gz | head -n1 | tr '\t' '\n' | awk '{print NR" "$0}'
 ```
+
+Define file schema for mapping plain text to VCF format
 
 ```{bash}
 echo "{\"chr_col\": 0, \"pos_col\": 1, \"snp_col\": 2, \"ea_col\": 3, \"oa_col\": 4, \"eaf_col\": 5, \"beta_col\": 6, \"se_col\": 7, \"pval_col\": 8, \"ncontrol_col\": 9, \"header\": true, \"build\": \"GRCh37\", \"delimiter\": \"\t\"}" > /data/schema.json
@@ -34,7 +36,7 @@ time python /app/gwas2vcf/main.py \
 --out /data/gwas.vcf.gz \
 --data /data/gwas.txt.gz \
 --ref /data/human_g1k_v37.fasta \
---id "giant_bmi_01" \
+--id "giant-bmi-2018" \
 --json /data/schema.json
 ```
 
@@ -54,15 +56,15 @@ Extract single variant by rsid. Compare execution time between VCF and text.
 snp="rs10518554"
 
 # compressed text
-time gzip -dc /data/gwas.txt.gz | awk -v snp="$snp" -F"\t" '$3==snp'
+time gzip -dc /data/gwas.txt.gz | awk -v snp="$snp" -F"\t" '$3==snp' > /dev/null
 
 # plain text
 gzip -dc /data/gwas.txt.gz > /data/gwas.txt
-time awk -v snp="$snp" -F"\t" '$3==snp' /data/gwas.txt
+time awk -v snp="$snp" -F"\t" '$3==snp' /data/gwas.txt > /dev/null
 
 # compressed VCF
-time bcftools query -i '%ID == "$snp"' -f '%LINE\n' /data/gwas.vcf.gz
-time bcftools query -e '%ID != "$snp"' -f '%LINE\n' /data/gwas.vcf.gz
+time bcftools query -i '%ID == "$snp"' -f '%LINE\n' /data/gwas.vcf.gz > /dev/null
+time bcftools query -e '%ID != "$snp"' -f '%LINE\n' /data/gwas.vcf.gz > /dev/null
 ```
 
 Extract single variant by chromosome & position. Compare execution time between VCF and text.
@@ -72,14 +74,14 @@ chr="4"
 pos="130766891"
 
 # compressed text
-time gzip -dc /data/gwas.txt.gz | awk -v chr="$chr" -v pos="$pos" -F"\t" '$1 == chr && $2 == pos'
+time gzip -dc /data/gwas.txt.gz | awk -v chr="$chr" -v pos="$pos" -F"\t" '$1 == chr && $2 == pos' > /dev/null
 
 # plain text
 gzip -dc /data/gwas.txt.gz > /data/gwas.txt
-time awk -v chr="$chr" -v pos="$pos" -F"\t" '$1 == chr && $2 == pos' /data/gwas.txt
+time awk -v chr="$chr" -v pos="$pos" -F"\t" '$1 == chr && $2 == pos' /data/gwas.txt > /dev/null
 
 # compressed VCF
-time bcftools query -r "$chr:$pos-$pos" -f '%LINE\n' /data/gwas.vcf.gz
+time bcftools query -r "$chr:$pos-$pos" -f '%LINE\n' /data/gwas.vcf.gz > /dev/null
 ```
 
 Extract interval with chromosome & position range. Compare execution time between VCF and text.
@@ -90,14 +92,14 @@ start="130766891"
 end="130717819"
 
 # compressed text
-time gzip -dc /data/gwas.txt.gz | awk -v chr="$chr" -v start="$start" -v end="$end" -F"\t" '$1 == chr && $2 >= start && $3 <= end'
+time gzip -dc /data/gwas.txt.gz | awk -v chr="$chr" -v start="$start" -v end="$end" -F"\t" '$1 == chr && $2 >= start && $3 <= end' > /dev/null
 
 # plain text
 gzip -dc /data/gwas.txt.gz > /data/gwas.txt
-time awk -v chr="$chr" -v pos="$pos" -F"\t" '$1 == chr && $2 == pos' /data/gwas.txt
+time awk -v chr="$chr" -v pos="$pos" -F"\t" '$1 == chr && $2 == pos' /data/gwas.txt > /dev/null
 
 # compressed VCF
-time bcftools query -r "$chr:$start-$end" -f '%LINE\n' /data/gwas.vcf.gz
+time bcftools query -r "$chr:$start-$end" -f '%LINE\n' /data/gwas.vcf.gz > /dev/null
 ```
 
 File size and performance of storing multiple traits per VCF file
@@ -124,20 +126,20 @@ Compare query performance between single and multi-trait VCF files
 ```{bash}
 # ID lookup
 snp="rs10518554"
-time bcftools query -i '%ID == "$snp"' -f '%LINE\n' /data/gwas.vcf.gz
-time bcftools query -i '%ID == "$snp"' -f '%LINE\n' /data/merged.vcf.gz
+time bcftools query -i '%ID == "$snp"' -f '%LINE\n' /data/gwas.vcf.gz > /dev/null
+time bcftools query -i '%ID == "$snp"' -f '%LINE\n' /data/merged.vcf.gz > /dev/null
 
 # position
 chr="4"
 pos="130766891"
-time bcftools query -r "$chr:$pos-$pos" -f '%LINE\n' /data/gwas.vcf.gz
-time bcftools query -r "$chr:$pos-$pos" -f '%LINE\n' /data/merged.vcf.gz
+time bcftools query -r "$chr:$pos-$pos" -f '%LINE\n' /data/gwas.vcf.gz > /dev/null
+time bcftools query -r "$chr:$pos-$pos" -f '%LINE\n' /data/merged.vcf.gz > /dev/null
 
 # interval
 chr="4"
 start="130766891"
 end="130717819"
 
-time bcftools query -r "$chr:$start-$end" -f '%LINE\n' /data/gwas.vcf.gz
-time bcftools query -r "$chr:$start-$end" -f '%LINE\n' /data/merged.vcf.gz
+time bcftools query -r "$chr:$start-$end" -f '%LINE\n' /data/gwas.vcf.gz > /dev/null
+time bcftools query -r "$chr:$start-$end" -f '%LINE\n' /data/merged.vcf.gz > /dev/null
 ```
