@@ -62,9 +62,16 @@ time gzip -dc /data/gwas.txt.gz | awk -v snp="$snp" -F"\t" '$3==snp' > /dev/null
 gzip -dc /data/gwas.txt.gz > /data/gwas.txt
 time awk -v snp="$snp" -F"\t" '$3==snp' /data/gwas.txt > /dev/null
 
-# compressed VCF
+# compressed VCF using bcftools
 time bcftools query -i '%ID == "$snp"' -f '%LINE\n' /data/gwas.vcf.gz > /dev/null
 time bcftools query -e '%ID != "$snp"' -f '%LINE\n' /data/gwas.vcf.gz > /dev/null
+
+# compressed VCF using awk
+time gzip -dc /data/gwas.vcf.gz | awk -v snp="$snp" -F"\t" '!/^#/ && $3==snp' > /dev/null
+
+# uncompressed VCF using awk
+gzip -dc /data/gwas.vcf.gz > /data/gwas.vcf
+awk -v snp="$snp" -F"\t" '!/^#/ && $3==snp' /data/gwas.vcf > /dev/null
 ```
 
 Extract single variant by chromosome & position. Compare execution time between VCF and text.
