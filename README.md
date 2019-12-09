@@ -34,9 +34,9 @@ Output will be a single html file ```output.html```
 
 ```sh
 docker run \
--v `pwd`: /app \
+-v `pwd`: /data \
 -it \
 --rm \
 gwas-vcf-performance \
-R -e "rmarkdown::render('/app/performance_comparison.Rmd',output_file='/app/output.html')"
+R -e "rmarkdown::render('performance_comparison.Rmd',output_file='/data/output.html')"
 ```
