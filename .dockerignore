@@ -1,0 +1,12 @@
+gwas.txt
+gwas.txt.gz
+gwas.vcf
+gwas.vcf.gz
+gwas.vcf.gz.tbi
+human_g1k_v37.fasta
+human_g1k_v37.fasta.fai
+merged.vcf.gz
+merged.vcf.gz.tbi
+schema.json
+output.html
+
