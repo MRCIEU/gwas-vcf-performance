@@ -61,8 +61,8 @@ gzip -dc /data/gwas.txt.gz > /data/gwas.txt
 time awk -v snp="$snp" -F"\t" '$3==snp' /data/gwas.txt
 
 # compressed VCF
-time bcftools query -i '%ID == "$snp" -f '%LINE\n' /data/gwas.txt.gz
-time bcftools query -e '%ID != "$snp" -f '%LINE\n' /data/gwas.txt.gz
+time bcftools query -i '%ID == "$snp"' -f '%LINE\n' /data/gwas.txt.gz
+time bcftools query -e '%ID != "$snp"' -f '%LINE\n' /data/gwas.txt.gz
 ```
 
 Extract single variant by chromosome & position. Compare execution time between VCF and text.
@@ -123,8 +123,8 @@ Compare query performance between single and multi-trait VCF files
 ```{bash}
 # ID lookup
 snp="rs10518554"
-time bcftools query -i '%ID == "$snp" -f '%LINE\n' /data/gwas.vcf.gz
-time bcftools query -i '%ID == "$snp" -f '%LINE\n' /data/merged.vcf.gz
+time bcftools query -i '%ID == "$snp"' -f '%LINE\n' /data/gwas.vcf.gz
+time bcftools query -i '%ID == "$snp"' -f '%LINE\n' /data/merged.vcf.gz
 
 # position
 chr="4"
