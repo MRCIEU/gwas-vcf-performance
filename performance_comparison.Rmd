@@ -31,10 +31,10 @@ Convert GWAS to VCF. This will perform on-the-fly harmonisation of the effect al
 
 ```{bash}
 time python /app/gwas2vcf/main.py \
---out /data \
+--out /data/gwas.vcf.gz \
 --data /data/gwas.txt.gz \
 --ref /data/human_g1k_v37.fasta \
---id "gwas" \
+--id "giant_bmi_01" \
 --json /data/schema.json
 ```
 

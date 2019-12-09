@@ -37,6 +37,8 @@ docker run \
 -v `pwd`:/data \
 -it \
 --rm \
+--memory=4G \
+--cpus=1 \
 gwas-vcf-performance \
 R -e "rmarkdown::render('performance_comparison.Rmd',output_file='/data/output.html')"
 ```
