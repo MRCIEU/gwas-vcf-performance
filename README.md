@@ -34,7 +34,7 @@ Output will be a single html file ```output.html```
 
 ```sh
 docker run \
--v `pwd`: /data \
+-v `pwd`:/data \
 -it \
 --rm \
 gwas-vcf-performance \
