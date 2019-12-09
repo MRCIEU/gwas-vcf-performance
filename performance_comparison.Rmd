@@ -61,8 +61,8 @@ gzip -dc /data/gwas.txt.gz > /data/gwas.txt
 time awk -v snp="$snp" -F"\t" '$3==snp' /data/gwas.txt
 
 # compressed VCF
-time bcftools query -i '%ID == "$snp"' -f '%LINE\n' /data/gwas.txt.gz
-time bcftools query -e '%ID != "$snp"' -f '%LINE\n' /data/gwas.txt.gz
+time bcftools query -i '%ID == "$snp"' -f '%LINE\n' /data/gwas.vcf.gz
+time bcftools query -e '%ID != "$snp"' -f '%LINE\n' /data/gwas.vcf.gz
 ```
 
 Extract single variant by chromosome & position. Compare execution time between VCF and text.
@@ -79,7 +79,7 @@ gzip -dc /data/gwas.txt.gz > /data/gwas.txt
 time awk -v chr="$chr" -v pos="$pos" -F"\t" '$1 == chr && $2 == pos' /data/gwas.txt
 
 # compressed VCF
-time bcftools query -r "$chr:$pos-$pos" /data/gwas.vcf.gz
+time bcftools query -r "$chr:$pos-$pos" -f '%LINE\n' /data/gwas.vcf.gz
 ```
 
 Extract interval with chromosome & position range. Compare execution time between VCF and text.
@@ -97,7 +97,7 @@ gzip -dc /data/gwas.txt.gz > /data/gwas.txt
 time awk -v chr="$chr" -v pos="$pos" -F"\t" '$1 == chr && $2 == pos' /data/gwas.txt
 
 # compressed VCF
-time bcftools query -r "$chr:$start-$end" /data/gwas.vcf.gz
+time bcftools query -r "$chr:$start-$end" -f '%LINE\n' /data/gwas.vcf.gz
 ```
 
 File size and performance of storing multiple traits per VCF file
@@ -105,7 +105,8 @@ File size and performance of storing multiple traits per VCF file
 Make multisample VCF to approximate storing multiple traits in a single file
 
 ```{bash}
-bcftools merge --force-samples -o /data/merged.vcf.gz /data/gwas.vcf.gz /data/gwas.vcf.gz /data/gwas.vcf.gz
+bcftools merge --force-samples -O z -o /data/merged.vcf.gz /data/gwas.vcf.gz /data/gwas.vcf.gz /data/gwas.vcf.gz
+bcftools index -t /data/merged.vcf.gz
 ```
 
 Compare file size for one trait vs three traits
@@ -129,14 +130,14 @@ time bcftools query -i '%ID == "$snp"' -f '%LINE\n' /data/merged.vcf.gz
 # position
 chr="4"
 pos="130766891"
-time bcftools query -r "$chr:$pos-$pos" /data/gwas.vcf.gz
-time bcftools query -r "$chr:$pos-$pos" /data/merged.vcf.gz
+time bcftools query -r "$chr:$pos-$pos" -f '%LINE\n' /data/gwas.vcf.gz
+time bcftools query -r "$chr:$pos-$pos" -f '%LINE\n' /data/merged.vcf.gz
 
 # interval
 chr="4"
 start="130766891"
 end="130717819"
 
-time bcftools query -r "$chr:$start-$end" /data/gwas.vcf.gz
-time bcftools query -r "$chr:$start-$end" /data/merged.vcf.gz
+time bcftools query -r "$chr:$start-$end" -f '%LINE\n' /data/gwas.vcf.gz
+time bcftools query -r "$chr:$start-$end" -f '%LINE\n' /data/merged.vcf.gz
 ```
