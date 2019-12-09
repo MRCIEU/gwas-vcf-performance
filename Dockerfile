@@ -13,4 +13,4 @@ RUN tar -xvf bcftools-1.10.tar.bz2
 RUN cd bcftools-1.10 && ./configure && make && make test && make install
 
 # install gwas2vcf
-RUN cd /app/gwas-vcf-performance/gwas2vcf && pip install -r requirements.txt && python -m unittest discover test
+RUN cd /app/gwas2vcf && pip install -r requirements.txt && python -m unittest discover test
