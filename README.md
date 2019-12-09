@@ -1,4 +1,4 @@
-# Compare VCF vs tab-separated GWAS file formats
+# VCF vs plain text GWAS storage formats
 
 To view comparison results open ```output.html``` in a web browser.
 
