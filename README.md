@@ -19,7 +19,7 @@ docker build -t gwas-vcf-performance:latest .
 
 ### download FASTA file
 
-These files are need to harmonise the data ensuring a consistent effect allele
+These files are needed to harmonise the data ensuring a consistent effect allele
 
 ```sh
 wget ftp://gsapubftp-anonymous@ftp.broadinstitute.org/bundle/b37/human_g1k_v37.fasta.gz
