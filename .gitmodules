@@ -1,0 +1,3 @@
+[submodule "gwas2vcf"]
+	path = gwas2vcf
+	url = https://github.com/MRCIEU/gwas2vcf
