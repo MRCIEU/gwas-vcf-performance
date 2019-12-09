@@ -13,7 +13,7 @@
 
 <meta name="date" content="2019-12-09" />
 
-<title>Compare VCF and plain text for storing GWAS summary statistics</title>
+<title>Compare VCF and text for storing GWAS summary statistics</title>
 
 <script>/*! jQuery v1.11.3 | (c) 2005, 2015 jQuery Foundation, Inc. | jquery.org/license */
 !function(a,b){"object"==typeof module&&"object"==typeof module.exports?module.exports=a.document?b(a,!0):function(a){if(!a.document)throw new Error("jQuery requires a window with a document");return b(a)}:b(a)}("undefined"!=typeof window?window:this,function(a,b){var c=[],d=c.slice,e=c.concat,f=c.push,g=c.indexOf,h={},i=h.toString,j=h.hasOwnProperty,k={},l="1.11.3",m=function(a,b){return new m.fn.init(a,b)},n=/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g,o=/^-ms-/,p=/-([\da-z])/gi,q=function(a,b){return b.toUpperCase()};m.fn=m.prototype={jquery:l,constructor:m,selector:"",length:0,toArray:function(){return d.call(this)},get:function(a){return null!=a?0>a?this[a+this.length]:this[a]:d.call(this)},pushStack:function(a){var b=m.merge(this.constructor(),a);return b.prevObject=this,b.context=this.context,b},each:function(a,b){return m.each(this,a,b)},map:function(a){return this.pushStack(m.map(this,function(b,c){return a.call(b,c,b)}))},slice:function(){return this.pushStack(d.apply(this,arguments))},first:function(){return this.eq(0)},last:function(){return this.eq(-1)},eq:function(a){var b=this.length,c=+a+(0>a?b:0);return this.pushStack(c>=0&&b>c?[this[c]]:[])},end:function(){return this.prevObject||this.constructor(null)},push:f,sort:c.sort,splice:c.splice},m.extend=m.fn.extend=function(){var a,b,c,d,e,f,g=arguments[0]||{},h=1,i=arguments.length,j=!1;for("boolean"==typeof g&&(j=g,g=arguments[h]||{},h++),"object"==typeof g||m.isFunction(g)||(g={}),h===i&&(g=this,h--);i>h;h++)if(null!=(e=arguments[h]))for(d in e)a=g[d],c=e[d],g!==c&&(j&&c&&(m.isPlainObject(c)||(b=m.isArray(c)))?(b?(b=!1,f=a&&m.isArray(a)?a:[]):f=a&&m.isPlainObject(a)?a:{},g[d]=m.extend(j,f,c)):void 0!==c&&(g[d]=c));return g},m.extend({expando:"jQuery"+(l+Math.random()).replace(/\D/g,""),isReady:!0,error:function(a){throw new Error(a)},noop:function(){},isFunction:function(a){return"function"===m.type(a)},isArray:Array.isArray||function(a){return"array"===m.type(a)},isWindow:function(a){return null!=a&&a==a.window},isNumeric:function(a){return!m.isArray(a)&&a-parseFloat(a)+1>=0},isEmptyObject:function(a){var b;for(b in a)return!1;return!0},isPlainObject:function(a){var b;if(!a||"object"!==m.type(a)||a.nodeType||m.isWindow(a))return!1;try{if(a.constructor&&!j.call(a,"constructor")&&!j.call(a.constructor.prototype,"isPrototypeOf"))return!1}catch(c){return!1}if(k.ownLast)for(b in a)return j.call(a,b);for(b in a);return void 0===b||j.call(a,b)},type:function(a){return null==a?a+"":"object"==typeof a||"function"==typeof a?h[i.call(a)]||"object":typeof a},globalEval:function(b){b&&m.trim(b)&&(a.execScript||function(b){a.eval.call(a,b)})(b)},camelCase:function(a){return a.replace(o,"ms-").replace(p,q)},nodeName:function(a,b){return a.nodeName&&a.nodeName.toLowerCase()===b.toLowerCase()},each:function(a,b,c){var d,e=0,f=a.length,g=r(a);if(c){if(g){for(;f>e;e++)if(d=b.apply(a[e],c),d===!1)break}else for(e in a)if(d=b.apply(a[e],c),d===!1)break}else if(g){for(;f>e;e++)if(d=b.call(a[e],e,a[e]),d===!1)break}else for(e in a)if(d=b.call(a[e],e,a[e]),d===!1)break;return a},trim:function(a){return null==a?"":(a+"").replace(n,"")},makeArray:function(a,b){var c=b||[];return null!=a&&(r(Object(a))?m.merge(c,"string"==typeof a?[a]:a):f.call(c,a)),c},inArray:function(a,b,c){var d;if(b){if(g)return g.call(b,a,c);for(d=b.length,c=c?0>c?Math.max(0,d+c):c:0;d>c;c++)if(c in b&&b[c]===a)return c}return-1},merge:function(a,b){var c=+b.length,d=0,e=a.length;while(c>d)a[e++]=b[d++];if(c!==c)while(void 0!==b[d])a[e++]=b[d++];return a.length=e,a},grep:function(a,b,c){for(var d,e=[],f=0,g=a.length,h=!c;g>f;f++)d=!b(a[f],f),d!==h&&e.push(a[f]);return e},map:function(a,b,c){var d,f=0,g=a.length,h=r(a),i=[];if(h)for(;g>f;f++)d=b(a[f],f,c),null!=d&&i.push(d);else for(f in a)d=b(a[f],f,c),null!=d&&i.push(d);return e.apply([],i)},guid:1,proxy:function(a,b){var c,e,f;return"string"==typeof b&&(f=a[b],b=a,a=f),m.isFunction(a)?(c=d.call(arguments,2),e=function(){return a.apply(b||this,c.concat(d.call(arguments)))},e.guid=a.guid=a.guid||m.guid++,e):void 0},now:function(){return+new Date},support:k}),m.each("Boolean Number String Function Array Date RegExp Object Error".split(" "),function(a,b){h["[object "+b+"]"]=b.toLowerCase()});function r(a){var b="length"in a&&a.length,c=m.type(a);return"function"===c||m.isWindow(a)?!1:1===a.nodeType&&b?!0:"array"===c||0===b||"number"==typeof b&&b>0&&b-1 in a}var s=function(a){var b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u="sizzle"+1*new Date,v=a.document,w=0,x=0,y=ha(),z=ha(),A=ha(),B=function(a,b){return a===b&&(l=!0),0},C=1<<31,D={}.hasOwnProperty,E=[],F=E.pop,G=E.push,H=E.push,I=E.slice,J=function(a,b){for(var c=0,d=a.length;d>c;c++)if(a[c]===b)return c;return-1},K="checked|selected|async|autofocus|autoplay|controls|defer|disabled|hidden|ismap|loop|multiple|open|readonly|required|scoped",L="[\\x20\\t\\r\\n\\f]",M="(?:\\\\.|[\\w-]|[^\\x00-\\xa0])+",N=M.replace("w","w#"),O="\\["+L+"*("+M+")(?:"+L+"*([*^$|!~]?=)"+L+"*(?:'((?:\\\\.|[^\\\\'])*)'|\"((?:\\\\.|[^\\\\\"])*)\"|("+N+"))|)"+L+"*\\]",P=":("+M+")(?:\\((('((?:\\\\.|[^\\\\'])*)'|\"((?:\\\\.|[^\\\\\"])*)\")|((?:\\\\.|[^\\\\()[\\]]|"+O+")*)|.*)\\)|)",Q=new RegExp(L+"+","g"),R=new RegExp("^"+L+"+|((?:^|[^\\\\])(?:\\\\.)*)"+L+"+$","g"),S=new RegExp("^"+L+"*,"+L+"*"),T=new RegExp("^"+L+"*([>+~]|"+L+")"+L+"*"),U=new RegExp("="+L+"*([^\\]'\"]*?)"+L+"*\\]","g"),V=new RegExp(P),W=new RegExp("^"+N+"$"),X={ID:new RegExp("^#("+M+")"),CLASS:new RegExp("^\\.("+M+")"),TAG:new RegExp("^("+M.replace("w","w*")+")"),ATTR:new RegExp("^"+O),PSEUDO:new RegExp("^"+P),CHILD:new RegExp("^:(only|first|last|nth|nth-last)-(child|of-type)(?:\\("+L+"*(even|odd|(([+-]|)(\\d*)n|)"+L+"*(?:([+-]|)"+L+"*(\\d+)|))"+L+"*\\)|)","i"),bool:new RegExp("^(?:"+K+")$","i"),needsContext:new RegExp("^"+L+"*[>+~]|:(even|odd|eq|gt|lt|nth|first|last)(?:\\("+L+"*((?:-\\d)?\\d*)"+L+"*\\)|)(?=[^-]|$)","i")},Y=/^(?:input|select|textarea|button)$/i,Z=/^h\d$/i,$=/^[^{]+\{\s*\[native \w/,_=/^(?:#([\w-]+)|(\w+)|\.([\w-]+))$/,aa=/[+~]/,ba=/'|\\/g,ca=new RegExp("\\\\([\\da-f]{1,6}"+L+"?|("+L+")|.)","ig"),da=function(a,b,c){var d="0x"+b-65536;return d!==d||c?b:0>d?String.fromCharCode(d+65536):String.fromCharCode(d>>10|55296,1023&d|56320)},ea=function(){m()};try{H.apply(E=I.call(v.childNodes),v.childNodes),E[v.childNodes.length].nodeType}catch(fa){H={apply:E.length?function(a,b){G.apply(a,I.call(b))}:function(a,b){var c=a.length,d=0;while(a[c++]=b[d++]);a.length=c-1}}}function ga(a,b,d,e){var f,h,j,k,l,o,r,s,w,x;if((b?b.ownerDocument||b:v)!==n&&m(b),b=b||n,d=d||[],k=b.nodeType,"string"!=typeof a||!a||1!==k&&9!==k&&11!==k)return d;if(!e&&p){if(11!==k&&(f=_.exec(a)))if(j=f[1]){if(9===k){if(h=b.getElementById(j),!h||!h.parentNode)return d;if(h.id===j)return d.push(h),d}else if(b.ownerDocument&&(h=b.ownerDocument.getElementById(j))&&t(b,h)&&h.id===j)return d.push(h),d}else{if(f[2])return H.apply(d,b.getElementsByTagName(a)),d;if((j=f[3])&&c.getElementsByClassName)return H.apply(d,b.getElementsByClassName(j)),d}if(c.qsa&&(!q||!q.test(a))){if(s=r=u,w=b,x=1!==k&&a,1===k&&"object"!==b.nodeName.toLowerCase()){o=g(a),(r=b.getAttribute("id"))?s=r.replace(ba,"\\$&"):b.setAttribute("id",s),s="[id='"+s+"'] ",l=o.length;while(l--)o[l]=s+ra(o[l]);w=aa.test(a)&&pa(b.parentNode)||b,x=o.join(",")}if(x)try{return H.apply(d,w.querySelectorAll(x)),d}catch(y){}finally{r||b.removeAttribute("id")}}}return i(a.replace(R,"$1"),b,d,e)}function ha(){var a=[];function b(c,e){return a.push(c+" ")>d.cacheLength&&delete b[a.shift()],b[c+" "]=e}return b}function ia(a){return a[u]=!0,a}function ja(a){var b=n.createElement("div");try{return!!a(b)}catch(c){return!1}finally{b.parentNode&&b.parentNode.removeChild(b),b=null}}function ka(a,b){var c=a.split("|"),e=a.length;while(e--)d.attrHandle[c[e]]=b}function la(a,b){var c=b&&a,d=c&&1===a.nodeType&&1===b.nodeType&&(~b.sourceIndex||C)-(~a.sourceIndex||C);if(d)return d;if(c)while(c=c.nextSibling)if(c===b)return-1;return a?1:-1}function ma(a){return function(b){var c=b.nodeName.toLowerCase();return"input"===c&&b.type===a}}function na(a){return function(b){var c=b.nodeName.toLowerCase();return("input"===c||"button"===c)&&b.type===a}}function oa(a){return ia(function(b){return b=+b,ia(function(c,d){var e,f=a([],c.length,b),g=f.length;while(g--)c[e=f[g]]&&(c[e]=!(d[e]=c[e]))})})}function pa(a){return a&&"undefined"!=typeof a.getElementsByTagName&&a}c=ga.support={},f=ga.isXML=function(a){var b=a&&(a.ownerDocument||a).documentElement;return b?"HTML"!==b.nodeName:!1},m=ga.setDocument=function(a){var b,e,g=a?a.ownerDocument||a:v;return g!==n&&9===g.nodeType&&g.documentElement?(n=g,o=g.documentElement,e=g.defaultView,e&&e!==e.top&&(e.addEventListener?e.addEventListener("unload",ea,!1):e.attachEvent&&e.attachEvent("onunload",ea)),p=!f(g),c.attributes=ja(function(a){return a.className="i",!a.getAttribute("className")}),c.getElementsByTagName=ja(function(a){return a.appendChild(g.createComment("")),!a.getElementsByTagName("*").length}),c.getElementsByClassName=$.test(g.getElementsByClassName),c.getById=ja(function(a){return o.appendChild(a).id=u,!g.getElementsByName||!g.getElementsByName(u).length}),c.getById?(d.find.ID=function(a,b){if("undefined"!=typeof b.getElementById&&p){var c=b.getElementById(a);return c&&c.parentNode?[c]:[]}},d.filter.ID=function(a){var b=a.replace(ca,da);return function(a){return a.getAttribute("id")===b}}):(delete d.find.ID,d.filter.ID=function(a){var b=a.replace(ca,da);return function(a){var c="undefined"!=typeof a.getAttributeNode&&a.getAttributeNode("id");return c&&c.value===b}}),d.find.TAG=c.getElementsByTagName?function(a,b){return"undefined"!=typeof b.getElementsByTagName?b.getElementsByTagName(a):c.qsa?b.querySelectorAll(a):void 0}:function(a,b){var c,d=[],e=0,f=b.getElementsByTagName(a);if("*"===a){while(c=f[e++])1===c.nodeType&&d.push(c);return d}return f},d.find.CLASS=c.getElementsByClassName&&function(a,b){return p?b.getElementsByClassName(a):void 0},r=[],q=[],(c.qsa=$.test(g.querySelectorAll))&&(ja(function(a){o.appendChild(a).innerHTML="<a id='"+u+"'></a><select id='"+u+"-\f]' msallowcapture=''><option selected=''></option></select>",a.querySelectorAll("[msallowcapture^='']").length&&q.push("[*^$]="+L+"*(?:''|\"\")"),a.querySelectorAll("[selected]").length||q.push("\\["+L+"*(?:value|"+K+")"),a.querySelectorAll("[id~="+u+"-]").length||q.push("~="),a.querySelectorAll(":checked").length||q.push(":checked"),a.querySelectorAll("a#"+u+"+*").length||q.push(".#.+[+~]")}),ja(function(a){var b=g.createElement("input");b.setAttribute("type","hidden"),a.appendChild(b).setAttribute("name","D"),a.querySelectorAll("[name=d]").length&&q.push("name"+L+"*[*^$|!~]?="),a.querySelectorAll(":enabled").length||q.push(":enabled",":disabled"),a.querySelectorAll("*,:x"),q.push(",.*:")})),(c.matchesSelector=$.test(s=o.matches||o.webkitMatchesSelector||o.mozMatchesSelector||o.oMatchesSelector||o.msMatchesSelector))&&ja(function(a){c.disconnectedMatch=s.call(a,"div"),s.call(a,"[s!='']:x"),r.push("!=",P)}),q=q.length&&new RegExp(q.join("|")),r=r.length&&new RegExp(r.join("|")),b=$.test(o.compareDocumentPosition),t=b||$.test(o.contains)?function(a,b){var c=9===a.nodeType?a.documentElement:a,d=b&&b.parentNode;return a===d||!(!d||1!==d.nodeType||!(c.contains?c.contains(d):a.compareDocumentPosition&&16&a.compareDocumentPosition(d)))}:function(a,b){if(b)while(b=b.parentNode)if(b===a)return!0;return!1},B=b?function(a,b){if(a===b)return l=!0,0;var d=!a.compareDocumentPosition-!b.compareDocumentPosition;return d?d:(d=(a.ownerDocument||a)===(b.ownerDocument||b)?a.compareDocumentPosition(b):1,1&d||!c.sortDetached&&b.compareDocumentPosition(a)===d?a===g||a.ownerDocument===v&&t(v,a)?-1:b===g||b.ownerDocument===v&&t(v,b)?1:k?J(k,a)-J(k,b):0:4&d?-1:1)}:function(a,b){if(a===b)return l=!0,0;var c,d=0,e=a.parentNode,f=b.parentNode,h=[a],i=[b];if(!e||!f)return a===g?-1:b===g?1:e?-1:f?1:k?J(k,a)-J(k,b):0;if(e===f)return la(a,b);c=a;while(c=c.parentNode)h.unshift(c);c=b;while(c=c.parentNode)i.unshift(c);while(h[d]===i[d])d++;return d?la(h[d],i[d]):h[d]===v?-1:i[d]===v?1:0},g):n},ga.matches=function(a,b){return ga(a,null,null,b)},ga.matchesSelector=function(a,b){if((a.ownerDocument||a)!==n&&m(a),b=b.replace(U,"='$1']"),!(!c.matchesSelector||!p||r&&r.test(b)||q&&q.test(b)))try{var d=s.call(a,b);if(d||c.disconnectedMatch||a.document&&11!==a.document.nodeType)return d}catch(e){}return ga(b,n,null,[a]).length>0},ga.contains=function(a,b){return(a.ownerDocument||a)!==n&&m(a),t(a,b)},ga.attr=function(a,b){(a.ownerDocument||a)!==n&&m(a);var e=d.attrHandle[b.toLowerCase()],f=e&&D.call(d.attrHandle,b.toLowerCase())?e(a,b,!p):void 0;return void 0!==f?f:c.attributes||!p?a.getAttribute(b):(f=a.getAttributeNode(b))&&f.specified?f.value:null},ga.error=function(a){throw new Error("Syntax error, unrecognized expression: "+a)},ga.uniqueSort=function(a){var b,d=[],e=0,f=0;if(l=!c.detectDuplicates,k=!c.sortStable&&a.slice(0),a.sort(B),l){while(b=a[f++])b===a[f]&&(e=d.push(f));while(e--)a.splice(d[e],1)}return k=null,a},e=ga.getText=function(a){var b,c="",d=0,f=a.nodeType;if(f){if(1===f||9===f||11===f){if("string"==typeof a.textContent)return a.textContent;for(a=a.firstChild;a;a=a.nextSibling)c+=e(a)}else if(3===f||4===f)return a.nodeValue}else while(b=a[d++])c+=e(b);return c},d=ga.selectors={cacheLength:50,createPseudo:ia,match:X,attrHandle:{},find:{},relative:{">":{dir:"parentNode",first:!0}," ":{dir:"parentNode"},"+":{dir:"previousSibling",first:!0},"~":{dir:"previousSibling"}},preFilter:{ATTR:function(a){return a[1]=a[1].replace(ca,da),a[3]=(a[3]||a[4]||a[5]||"").replace(ca,da),"~="===a[2]&&(a[3]=" "+a[3]+" "),a.slice(0,4)},CHILD:function(a){return a[1]=a[1].toLowerCase(),"nth"===a[1].slice(0,3)?(a[3]||ga.error(a[0]),a[4]=+(a[4]?a[5]+(a[6]||1):2*("even"===a[3]||"odd"===a[3])),a[5]=+(a[7]+a[8]||"odd"===a[3])):a[3]&&ga.error(a[0]),a},PSEUDO:function(a){var b,c=!a[6]&&a[2];return X.CHILD.test(a[0])?null:(a[3]?a[2]=a[4]||a[5]||"":c&&V.test(c)&&(b=g(c,!0))&&(b=c.indexOf(")",c.length-b)-c.length)&&(a[0]=a[0].slice(0,b),a[2]=c.slice(0,b)),a.slice(0,3))}},filter:{TAG:function(a){var b=a.replace(ca,da).toLowerCase();return"*"===a?function(){return!0}:function(a){return a.nodeName&&a.nodeName.toLowerCase()===b}},CLASS:function(a){var b=y[a+" "];return b||(b=new RegExp("(^|"+L+")"+a+"("+L+"|$)"))&&y(a,function(a){return b.test("string"==typeof a.className&&a.className||"undefined"!=typeof a.getAttribute&&a.getAttribute("class")||"")})},ATTR:function(a,b,c){return function(d){var e=ga.attr(d,a);return null==e?"!="===b:b?(e+="","="===b?e===c:"!="===b?e!==c:"^="===b?c&&0===e.indexOf(c):"*="===b?c&&e.indexOf(c)>-1:"$="===b?c&&e.slice(-c.length)===c:"~="===b?(" "+e.replace(Q," ")+" ").indexOf(c)>-1:"|="===b?e===c||e.slice(0,c.length+1)===c+"-":!1):!0}},CHILD:function(a,b,c,d,e){var f="nth"!==a.slice(0,3),g="last"!==a.slice(-4),h="of-type"===b;return 1===d&&0===e?function(a){return!!a.parentNode}:function(b,c,i){var j,k,l,m,n,o,p=f!==g?"nextSibling":"previousSibling",q=b.parentNode,r=h&&b.nodeName.toLowerCase(),s=!i&&!h;if(q){if(f){while(p){l=b;while(l=l[p])if(h?l.nodeName.toLowerCase()===r:1===l.nodeType)return!1;o=p="only"===a&&!o&&"nextSibling"}return!0}if(o=[g?q.firstChild:q.lastChild],g&&s){k=q[u]||(q[u]={}),j=k[a]||[],n=j[0]===w&&j[1],m=j[0]===w&&j[2],l=n&&q.childNodes[n];while(l=++n&&l&&l[p]||(m=n=0)||o.pop())if(1===l.nodeType&&++m&&l===b){k[a]=[w,n,m];break}}else if(s&&(j=(b[u]||(b[u]={}))[a])&&j[0]===w)m=j[1];else while(l=++n&&l&&l[p]||(m=n=0)||o.pop())if((h?l.nodeName.toLowerCase()===r:1===l.nodeType)&&++m&&(s&&((l[u]||(l[u]={}))[a]=[w,m]),l===b))break;return m-=e,m===d||m%d===0&&m/d>=0}}},PSEUDO:function(a,b){var c,e=d.pseudos[a]||d.setFilters[a.toLowerCase()]||ga.error("unsupported pseudo: "+a);return e[u]?e(b):e.length>1?(c=[a,a,"",b],d.setFilters.hasOwnProperty(a.toLowerCase())?ia(function(a,c){var d,f=e(a,b),g=f.length;while(g--)d=J(a,f[g]),a[d]=!(c[d]=f[g])}):function(a){return e(a,0,c)}):e}},pseudos:{not:ia(function(a){var b=[],c=[],d=h(a.replace(R,"$1"));return d[u]?ia(function(a,b,c,e){var f,g=d(a,null,e,[]),h=a.length;while(h--)(f=g[h])&&(a[h]=!(b[h]=f))}):function(a,e,f){return b[0]=a,d(b,null,f,c),b[0]=null,!c.pop()}}),has:ia(function(a){return function(b){return ga(a,b).length>0}}),contains:ia(function(a){return a=a.replace(ca,da),function(b){return(b.textContent||b.innerText||e(b)).indexOf(a)>-1}}),lang:ia(function(a){return W.test(a||"")||ga.error("unsupported lang: "+a),a=a.replace(ca,da).toLowerCase(),function(b){var c;do if(c=p?b.lang:b.getAttribute("xml:lang")||b.getAttribute("lang"))return c=c.toLowerCase(),c===a||0===c.indexOf(a+"-");while((b=b.parentNode)&&1===b.nodeType);return!1}}),target:function(b){var c=a.location&&a.location.hash;return c&&c.slice(1)===b.id},root:function(a){return a===o},focus:function(a){return a===n.activeElement&&(!n.hasFocus||n.hasFocus())&&!!(a.type||a.href||~a.tabIndex)},enabled:function(a){return a.disabled===!1},disabled:function(a){return a.disabled===!0},checked:function(a){var b=a.nodeName.toLowerCase();return"input"===b&&!!a.checked||"option"===b&&!!a.selected},selected:function(a){return a.parentNode&&a.parentNode.selectedIndex,a.selected===!0},empty:function(a){for(a=a.firstChild;a;a=a.nextSibling)if(a.nodeType<6)return!1;return!0},parent:function(a){return!d.pseudos.empty(a)},header:function(a){return Z.test(a.nodeName)},input:function(a){return Y.test(a.nodeName)},button:function(a){var b=a.nodeName.toLowerCase();return"input"===b&&"button"===a.type||"button"===b},text:function(a){var b;return"input"===a.nodeName.toLowerCase()&&"text"===a.type&&(null==(b=a.getAttribute("type"))||"text"===b.toLowerCase())},first:oa(function(){return[0]}),last:oa(function(a,b){return[b-1]}),eq:oa(function(a,b,c){return[0>c?c+b:c]}),even:oa(function(a,b){for(var c=0;b>c;c+=2)a.push(c);return a}),odd:oa(function(a,b){for(var c=1;b>c;c+=2)a.push(c);return a}),lt:oa(function(a,b,c){for(var d=0>c?c+b:c;--d>=0;)a.push(d);return a}),gt:oa(function(a,b,c){for(var d=0>c?c+b:c;++d<b;)a.push(d);return a})}},d.pseudos.nth=d.pseudos.eq;for(b in{radio:!0,checkbox:!0,file:!0,password:!0,image:!0})d.pseudos[b]=ma(b);for(b in{submit:!0,reset:!0})d.pseudos[b]=na(b);function qa(){}qa.prototype=d.filters=d.pseudos,d.setFilters=new qa,g=ga.tokenize=function(a,b){var c,e,f,g,h,i,j,k=z[a+" "];if(k)return b?0:k.slice(0);h=a,i=[],j=d.preFilter;while(h){(!c||(e=S.exec(h)))&&(e&&(h=h.slice(e[0].length)||h),i.push(f=[])),c=!1,(e=T.exec(h))&&(c=e.shift(),f.push({value:c,type:e[0].replace(R," ")}),h=h.slice(c.length));for(g in d.filter)!(e=X[g].exec(h))||j[g]&&!(e=j[g](e))||(c=e.shift(),f.push({value:c,type:g,matches:e}),h=h.slice(c.length));if(!c)break}return b?h.length:h?ga.error(a):z(a,i).slice(0)};function ra(a){for(var b=0,c=a.length,d="";c>b;b++)d+=a[b].value;return d}function sa(a,b,c){var d=b.dir,e=c&&"parentNode"===d,f=x++;return b.first?function(b,c,f){while(b=b[d])if(1===b.nodeType||e)return a(b,c,f)}:function(b,c,g){var h,i,j=[w,f];if(g){while(b=b[d])if((1===b.nodeType||e)&&a(b,c,g))return!0}else while(b=b[d])if(1===b.nodeType||e){if(i=b[u]||(b[u]={}),(h=i[d])&&h[0]===w&&h[1]===f)return j[2]=h[2];if(i[d]=j,j[2]=a(b,c,g))return!0}}}function ta(a){return a.length>1?function(b,c,d){var e=a.length;while(e--)if(!a[e](b,c,d))return!1;return!0}:a[0]}function ua(a,b,c){for(var d=0,e=b.length;e>d;d++)ga(a,b[d],c);return c}function va(a,b,c,d,e){for(var f,g=[],h=0,i=a.length,j=null!=b;i>h;h++)(f=a[h])&&(!c||c(f,d,e))&&(g.push(f),j&&b.push(h));return g}function wa(a,b,c,d,e,f){return d&&!d[u]&&(d=wa(d)),e&&!e[u]&&(e=wa(e,f)),ia(function(f,g,h,i){var j,k,l,m=[],n=[],o=g.length,p=f||ua(b||"*",h.nodeType?[h]:h,[]),q=!a||!f&&b?p:va(p,m,a,h,i),r=c?e||(f?a:o||d)?[]:g:q;if(c&&c(q,r,h,i),d){j=va(r,n),d(j,[],h,i),k=j.length;while(k--)(l=j[k])&&(r[n[k]]=!(q[n[k]]=l))}if(f){if(e||a){if(e){j=[],k=r.length;while(k--)(l=r[k])&&j.push(q[k]=l);e(null,r=[],j,i)}k=r.length;while(k--)(l=r[k])&&(j=e?J(f,l):m[k])>-1&&(f[j]=!(g[j]=l))}}else r=va(r===g?r.splice(o,r.length):r),e?e(null,g,r,i):H.apply(g,r)})}function xa(a){for(var b,c,e,f=a.length,g=d.relative[a[0].type],h=g||d.relative[" "],i=g?1:0,k=sa(function(a){return a===b},h,!0),l=sa(function(a){return J(b,a)>-1},h,!0),m=[function(a,c,d){var e=!g&&(d||c!==j)||((b=c).nodeType?k(a,c,d):l(a,c,d));return b=null,e}];f>i;i++)if(c=d.relative[a[i].type])m=[sa(ta(m),c)];else{if(c=d.filter[a[i].type].apply(null,a[i].matches),c[u]){for(e=++i;f>e;e++)if(d.relative[a[e].type])break;return wa(i>1&&ta(m),i>1&&ra(a.slice(0,i-1).concat({value:" "===a[i-2].type?"*":""})).replace(R,"$1"),c,e>i&&xa(a.slice(i,e)),f>e&&xa(a=a.slice(e)),f>e&&ra(a))}m.push(c)}return ta(m)}function ya(a,b){var c=b.length>0,e=a.length>0,f=function(f,g,h,i,k){var l,m,o,p=0,q="0",r=f&&[],s=[],t=j,u=f||e&&d.find.TAG("*",k),v=w+=null==t?1:Math.random()||.1,x=u.length;for(k&&(j=g!==n&&g);q!==x&&null!=(l=u[q]);q++){if(e&&l){m=0;while(o=a[m++])if(o(l,g,h)){i.push(l);break}k&&(w=v)}c&&((l=!o&&l)&&p--,f&&r.push(l))}if(p+=q,c&&q!==p){m=0;while(o=b[m++])o(r,s,g,h);if(f){if(p>0)while(q--)r[q]||s[q]||(s[q]=F.call(i));s=va(s)}H.apply(i,s),k&&!f&&s.length>0&&p+b.length>1&&ga.uniqueSort(i)}return k&&(w=v,j=t),r};return c?ia(f):f}return h=ga.compile=function(a,b){var c,d=[],e=[],f=A[a+" "];if(!f){b||(b=g(a)),c=b.length;while(c--)f=xa(b[c]),f[u]?d.push(f):e.push(f);f=A(a,ya(e,d)),f.selector=a}return f},i=ga.select=function(a,b,e,f){var i,j,k,l,m,n="function"==typeof a&&a,o=!f&&g(a=n.selector||a);if(e=e||[],1===o.length){if(j=o[0]=o[0].slice(0),j.length>2&&"ID"===(k=j[0]).type&&c.getById&&9===b.nodeType&&p&&d.relative[j[1].type]){if(b=(d.find.ID(k.matches[0].replace(ca,da),b)||[])[0],!b)return e;n&&(b=b.parentNode),a=a.slice(j.shift().value.length)}i=X.needsContext.test(a)?0:j.length;while(i--){if(k=j[i],d.relative[l=k.type])break;if((m=d.find[l])&&(f=m(k.matches[0].replace(ca,da),aa.test(j[0].type)&&pa(b.parentNode)||b))){if(j.splice(i,1),a=f.length&&ra(j),!a)return H.apply(e,f),e;break}}}return(n||h(a,o))(f,b,!p,e,aa.test(a)&&pa(b.parentNode)||b),e},c.sortStable=u.split("").sort(B).join("")===u,c.detectDuplicates=!!l,m(),c.sortDetached=ja(function(a){return 1&a.compareDocumentPosition(n.createElement("div"))}),ja(function(a){return a.innerHTML="<a href='#'></a>","#"===a.firstChild.getAttribute("href")})||ka("type|href|height|width",function(a,b,c){return c?void 0:a.getAttribute(b,"type"===b.toLowerCase()?1:2)}),c.attributes&&ja(function(a){return a.innerHTML="<input/>",a.firstChild.setAttribute("value",""),""===a.firstChild.getAttribute("value")})||ka("value",function(a,b,c){return c||"input"!==a.nodeName.toLowerCase()?void 0:a.defaultValue}),ja(function(a){return null==a.getAttribute("disabled")})||ka(K,function(a,b,c){var d;return c?void 0:a[b]===!0?b.toLowerCase():(d=a.getAttributeNode(b))&&d.specified?d.value:null}),ga}(a);m.find=s,m.expr=s.selectors,m.expr[":"]=m.expr.pseudos,m.unique=s.uniqueSort,m.text=s.getText,m.isXMLDoc=s.isXML,m.contains=s.contains;var t=m.expr.match.needsContext,u=/^<(\w+)\s*\/?>(?:<\/\1>|)$/,v=/^.[^:#\[\.,]*$/;function w(a,b,c){if(m.isFunction(b))return m.grep(a,function(a,d){return!!b.call(a,d,a)!==c});if(b.nodeType)return m.grep(a,function(a){return a===b!==c});if("string"==typeof b){if(v.test(b))return m.filter(b,a,c);b=m.filter(b,a)}return m.grep(a,function(a){return m.inArray(a,b)>=0!==c})}m.filter=function(a,b,c){var d=b[0];return c&&(a=":not("+a+")"),1===b.length&&1===d.nodeType?m.find.matchesSelector(d,a)?[d]:[]:m.find.matches(a,m.grep(b,function(a){return 1===a.nodeType}))},m.fn.extend({find:function(a){var b,c=[],d=this,e=d.length;if("string"!=typeof a)return this.pushStack(m(a).filter(function(){for(b=0;e>b;b++)if(m.contains(d[b],this))return!0}));for(b=0;e>b;b++)m.find(a,d[b],c);return c=this.pushStack(e>1?m.unique(c):c),c.selector=this.selector?this.selector+" "+a:a,c},filter:function(a){return this.pushStack(w(this,a||[],!1))},not:function(a){return this.pushStack(w(this,a||[],!0))},is:function(a){return!!w(this,"string"==typeof a&&t.test(a)?m(a):a||[],!1).length}});var x,y=a.document,z=/^(?:\s*(<[\w\W]+>)[^>]*|#([\w-]*))$/,A=m.fn.init=function(a,b){var c,d;if(!a)return this;if("string"==typeof a){if(c="<"===a.charAt(0)&&">"===a.charAt(a.length-1)&&a.length>=3?[null,a,null]:z.exec(a),!c||!c[1]&&b)return!b||b.jquery?(b||x).find(a):this.constructor(b).find(a);if(c[1]){if(b=b instanceof m?b[0]:b,m.merge(this,m.parseHTML(c[1],b&&b.nodeType?b.ownerDocument||b:y,!0)),u.test(c[1])&&m.isPlainObject(b))for(c in b)m.isFunction(this[c])?this[c](b[c]):this.attr(c,b[c]);return this}if(d=y.getElementById(c[2]),d&&d.parentNode){if(d.id!==c[2])return x.find(a);this.length=1,this[0]=d}return this.context=y,this.selector=a,this}return a.nodeType?(this.context=this[0]=a,this.length=1,this):m.isFunction(a)?"undefined"!=typeof x.ready?x.ready(a):a(m):(void 0!==a.selector&&(this.selector=a.selector,this.context=a.context),m.makeArray(a,this))};A.prototype=m.fn,x=m(y);var B=/^(?:parents|prev(?:Until|All))/,C={children:!0,contents:!0,next:!0,prev:!0};m.extend({dir:function(a,b,c){var d=[],e=a[b];while(e&&9!==e.nodeType&&(void 0===c||1!==e.nodeType||!m(e).is(c)))1===e.nodeType&&d.push(e),e=e[b];return d},sibling:function(a,b){for(var c=[];a;a=a.nextSibling)1===a.nodeType&&a!==b&&c.push(a);return c}}),m.fn.extend({has:function(a){var b,c=m(a,this),d=c.length;return this.filter(function(){for(b=0;d>b;b++)if(m.contains(this,c[b]))return!0})},closest:function(a,b){for(var c,d=0,e=this.length,f=[],g=t.test(a)||"string"!=typeof a?m(a,b||this.context):0;e>d;d++)for(c=this[d];c&&c!==b;c=c.parentNode)if(c.nodeType<11&&(g?g.index(c)>-1:1===c.nodeType&&m.find.matchesSelector(c,a))){f.push(c);break}return this.pushStack(f.length>1?m.unique(f):f)},index:function(a){return a?"string"==typeof a?m.inArray(this[0],m(a)):m.inArray(a.jquery?a[0]:a,this):this[0]&&this[0].parentNode?this.first().prevAll().length:-1},add:function(a,b){return this.pushStack(m.unique(m.merge(this.get(),m(a,b))))},addBack:function(a){return this.add(null==a?this.prevObject:this.prevObject.filter(a))}});function D(a,b){do a=a[b];while(a&&1!==a.nodeType);return a}m.each({parent:function(a){var b=a.parentNode;return b&&11!==b.nodeType?b:null},parents:function(a){return m.dir(a,"parentNode")},parentsUntil:function(a,b,c){return m.dir(a,"parentNode",c)},next:function(a){return D(a,"nextSibling")},prev:function(a){return D(a,"previousSibling")},nextAll:function(a){return m.dir(a,"nextSibling")},prevAll:function(a){return m.dir(a,"previousSibling")},nextUntil:function(a,b,c){return m.dir(a,"nextSibling",c)},prevUntil:function(a,b,c){return m.dir(a,"previousSibling",c)},siblings:function(a){return m.sibling((a.parentNode||{}).firstChild,a)},children:function(a){return m.sibling(a.firstChild)},contents:function(a){return m.nodeName(a,"iframe")?a.contentDocument||a.contentWindow.document:m.merge([],a.childNodes)}},function(a,b){m.fn[a]=function(c,d){var e=m.map(this,b,c);return"Until"!==a.slice(-5)&&(d=c),d&&"string"==typeof d&&(e=m.filter(d,e)),this.length>1&&(C[a]||(e=m.unique(e)),B.test(a)&&(e=e.reverse())),this.pushStack(e)}});var E=/\S+/g,F={};function G(a){var b=F[a]={};return m.each(a.match(E)||[],function(a,c){b[c]=!0}),b}m.Callbacks=function(a){a="string"==typeof a?F[a]||G(a):m.extend({},a);var b,c,d,e,f,g,h=[],i=!a.once&&[],j=function(l){for(c=a.memory&&l,d=!0,f=g||0,g=0,e=h.length,b=!0;h&&e>f;f++)if(h[f].apply(l[0],l[1])===!1&&a.stopOnFalse){c=!1;break}b=!1,h&&(i?i.length&&j(i.shift()):c?h=[]:k.disable())},k={add:function(){if(h){var d=h.length;!function f(b){m.each(b,function(b,c){var d=m.type(c);"function"===d?a.unique&&k.has(c)||h.push(c):c&&c.length&&"string"!==d&&f(c)})}(arguments),b?e=h.length:c&&(g=d,j(c))}return this},remove:function(){return h&&m.each(arguments,function(a,c){var d;while((d=m.inArray(c,h,d))>-1)h.splice(d,1),b&&(e>=d&&e--,f>=d&&f--)}),this},has:function(a){return a?m.inArray(a,h)>-1:!(!h||!h.length)},empty:function(){return h=[],e=0,this},disable:function(){return h=i=c=void 0,this},disabled:function(){return!h},lock:function(){return i=void 0,c||k.disable(),this},locked:function(){return!i},fireWith:function(a,c){return!h||d&&!i||(c=c||[],c=[a,c.slice?c.slice():c],b?i.push(c):j(c)),this},fire:function(){return k.fireWith(this,arguments),this},fired:function(){return!!d}};return k},m.extend({Deferred:function(a){var b=[["resolve","done",m.Callbacks("once memory"),"resolved"],["reject","fail",m.Callbacks("once memory"),"rejected"],["notify","progress",m.Callbacks("memory")]],c="pending",d={state:function(){return c},always:function(){return e.done(arguments).fail(arguments),this},then:function(){var a=arguments;return m.Deferred(function(c){m.each(b,function(b,f){var g=m.isFunction(a[b])&&a[b];e[f[1]](function(){var a=g&&g.apply(this,arguments);a&&m.isFunction(a.promise)?a.promise().done(c.resolve).fail(c.reject).progress(c.notify):c[f[0]+"With"](this===d?c.promise():this,g?[a]:arguments)})}),a=null}).promise()},promise:function(a){return null!=a?m.extend(a,d):d}},e={};return d.pipe=d.then,m.each(b,function(a,f){var g=f[2],h=f[3];d[f[1]]=g.add,h&&g.add(function(){c=h},b[1^a][2].disable,b[2][2].lock),e[f[0]]=function(){return e[f[0]+"With"](this===e?d:this,arguments),this},e[f[0]+"With"]=g.fireWith}),d.promise(e),a&&a.call(e,e),e},when:function(a){var b=0,c=d.call(arguments),e=c.length,f=1!==e||a&&m.isFunction(a.promise)?e:0,g=1===f?a:m.Deferred(),h=function(a,b,c){return function(e){b[a]=this,c[a]=arguments.length>1?d.call(arguments):e,c===i?g.notifyWith(b,c):--f||g.resolveWith(b,c)}},i,j,k;if(e>1)for(i=new Array(e),j=new Array(e),k=new Array(e);e>b;b++)c[b]&&m.isFunction(c[b].promise)?c[b].promise().done(h(b,k,c)).fail(g.reject).progress(h(b,j,i)):--f;return f||g.resolveWith(k,c),g.promise()}});var H;m.fn.ready=function(a){return m.ready.promise().done(a),this},m.extend({isReady:!1,readyWait:1,holdReady:function(a){a?m.readyWait++:m.ready(!0)},ready:function(a){if(a===!0?!--m.readyWait:!m.isReady){if(!y.body)return setTimeout(m.ready);m.isReady=!0,a!==!0&&--m.readyWait>0||(H.resolveWith(y,[m]),m.fn.triggerHandler&&(m(y).triggerHandler("ready"),m(y).off("ready")))}}});function I(){y.addEventListener?(y.removeEventListener("DOMContentLoaded",J,!1),a.removeEventListener("load",J,!1)):(y.detachEvent("onreadystatechange",J),a.detachEvent("onload",J))}function J(){(y.addEventListener||"load"===event.type||"complete"===y.readyState)&&(I(),m.ready())}m.ready.promise=function(b){if(!H)if(H=m.Deferred(),"complete"===y.readyState)setTimeout(m.ready);else if(y.addEventListener)y.addEventListener("DOMContentLoaded",J,!1),a.addEventListener("load",J,!1);else{y.attachEvent("onreadystatechange",J),a.attachEvent("onload",J);var c=!1;try{c=null==a.frameElement&&y.documentElement}catch(d){}c&&c.doScroll&&!function e(){if(!m.isReady){try{c.doScroll("left")}catch(a){return setTimeout(e,50)}I(),m.ready()}}()}return H.promise(b)};var K="undefined",L;for(L in m(k))break;k.ownLast="0"!==L,k.inlineBlockNeedsLayout=!1,m(function(){var a,b,c,d;c=y.getElementsByTagName("body")[0],c&&c.style&&(b=y.createElement("div"),d=y.createElement("div"),d.style.cssText="position:absolute;border:0;width:0;height:0;top:0;left:-9999px",c.appendChild(d).appendChild(b),typeof b.style.zoom!==K&&(b.style.cssText="display:inline;margin:0;border:0;padding:1px;width:1px;zoom:1",k.inlineBlockNeedsLayout=a=3===b.offsetWidth,a&&(c.style.zoom=1)),c.removeChild(d))}),function(){var a=y.createElement("div");if(null==k.deleteExpando){k.deleteExpando=!0;try{delete a.test}catch(b){k.deleteExpando=!1}}a=null}(),m.acceptData=function(a){var b=m.noData[(a.nodeName+" ").toLowerCase()],c=+a.nodeType||1;return 1!==c&&9!==c?!1:!b||b!==!0&&a.getAttribute("classid")===b};var M=/^(?:\{[\w\W]*\}|\[[\w\W]*\])$/,N=/([A-Z])/g;function O(a,b,c){if(void 0===c&&1===a.nodeType){var d="data-"+b.replace(N,"-$1").toLowerCase();if(c=a.getAttribute(d),"string"==typeof c){try{c="true"===c?!0:"false"===c?!1:"null"===c?null:+c+""===c?+c:M.test(c)?m.parseJSON(c):c}catch(e){}m.data(a,b,c)}else c=void 0}return c}function P(a){var b;for(b in a)if(("data"!==b||!m.isEmptyObject(a[b]))&&"toJSON"!==b)return!1;
@@ -375,7 +375,7 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Compare VCF and plain text for storing GWAS summary statistics</h1>
+<h1 class="title toc-ignore">Compare VCF and text for storing GWAS summary statistics</h1>
 <h4 class="author">Matt Lyon</h4>
 <h4 class="date">2019-12-09</h4>
 
@@ -384,934 +384,11 @@ $(document).ready(function () {
 
 <p>Download a typical GWAS in plain text</p>
 <pre class="bash"><code># Yengo L, Sidorenko J, Kemper KE, Zheng Z, Wood AR, Weedon MN, Frayling TM, Hirschhorn J, Yang J, Visscher PM, GIANT Consortium. (2018). Meta-analysis of genome-wide association studies for height and body mass index in ~700,000 individuals of European ancestry. Biorxiv.
-wget -O /data/gwas.txt.gz https://portals.broadinstitute.org/collaboration/giant/images/c/c8/Meta-analysis_Locke_et_al%2BUKBiobank_2018_UPDATED.txt.gz</code></pre>
-<pre><code>## --2019-12-09 15:05:40--  https://portals.broadinstitute.org/collaboration/giant/images/c/c8/Meta-analysis_Locke_et_al%2BUKBiobank_2018_UPDATED.txt.gz
-## Resolving portals.broadinstitute.org (portals.broadinstitute.org)... 69.173.92.38
-## Connecting to portals.broadinstitute.org (portals.broadinstitute.org)|69.173.92.38|:443... connected.
-## HTTP request sent, awaiting response... 200 OK
-## Length: 46754937 (45M) [application/x-gzip]
-## Saving to: ‘/data/gwas.txt.gz’
-## 
-##      0K .......... .......... .......... .......... ..........  0%  582K 78s
-##     50K .......... .......... .......... .......... ..........  0% 1.24M 57s
-##    100K .......... .......... .......... .......... ..........  0% 80.3M 38s
-##    150K .......... .......... .......... .......... ..........  0% 1.15M 38s
-##    200K .......... .......... .......... .......... ..........  0% 6.73M 32s
-##    250K .......... .......... .......... .......... ..........  0% 1.53M 31s
-##    300K .......... .......... .......... .......... ..........  0% 1.16M 32s
-##    350K .......... .......... .......... .......... ..........  0% 60.1M 28s
-##    400K .......... .......... .......... .......... ..........  0% 35.5M 25s
-##    450K .......... .......... .......... .......... ..........  1% 2.07M 25s
-##    500K .......... .......... .......... .......... ..........  1% 3.43M 24s
-##    550K .......... .......... .......... .......... ..........  1% 1.17M 25s
-##    600K .......... .......... .......... .......... ..........  1% 19.1M 23s
-##    650K .......... .......... .......... .......... ..........  1% 19.3M 22s
-##    700K .......... .......... .......... .......... ..........  1% 2.35M 21s
-##    750K .......... .......... .......... .......... ..........  1% 3.36M 21s
-##    800K .......... .......... .......... .......... ..........  1% 1.18M 22s
-##    850K .......... .......... .......... .......... ..........  1% 20.1M 21s
-##    900K .......... .......... .......... .......... ..........  2% 19.1M 20s
-##    950K .......... .......... .......... .......... ..........  2% 2.35M 20s
-##   1000K .......... .......... .......... .......... ..........  2% 3.31M 19s
-##   1050K .......... .......... .......... .......... ..........  2% 19.0M 18s
-##   1100K .......... .......... .......... .......... ..........  2% 1.20M 19s
-##   1150K .......... .......... .......... .......... ..........  2% 15.9M 19s
-##   1200K .......... .......... .......... .......... ..........  2% 2.35M 19s
-##   1250K .......... .......... .......... .......... ..........  2% 3.33M 18s
-##   1300K .......... .......... .......... .......... ..........  2% 16.8M 18s
-##   1350K .......... .......... .......... .......... ..........  3% 1.21M 18s
-##   1400K .......... .......... .......... .......... ..........  3% 13.2M 18s
-##   1450K .......... .......... .......... .......... ..........  3% 10.4M 17s
-##   1500K .......... .......... .......... .......... ..........  3% 1.61M 18s
-##   1550K .......... .......... .......... .......... ..........  3% 19.2M 17s
-##   1600K .......... .......... .......... .......... ..........  3% 1.21M 18s
-##   1650K .......... .......... .......... .......... ..........  3% 13.5M 17s
-##   1700K .......... .......... .......... .......... ..........  3% 12.5M 17s
-##   1750K .......... .......... .......... .......... ..........  3% 1.57M 17s
-##   1800K .......... .......... .......... .......... ..........  4% 17.1M 17s
-##   1850K .......... .......... .......... .......... ..........  4% 1.22M 17s
-##   1900K .......... .......... .......... .......... ..........  4% 12.4M 17s
-##   1950K .......... .......... .......... .......... ..........  4% 13.4M 16s
-##   2000K .......... .......... .......... .......... ..........  4% 1.54M 17s
-##   2050K .......... .......... .......... .......... ..........  4% 18.4M 16s
-##   2100K .......... .......... .......... .......... ..........  4% 1.23M 17s
-##   2150K .......... .......... .......... .......... ..........  4% 12.8M 16s
-##   2200K .......... .......... .......... .......... ..........  4% 10.6M 16s
-##   2250K .......... .......... .......... .......... ..........  5% 1.60M 16s
-##   2300K .......... .......... .......... .......... ..........  5% 17.5M 16s
-##   2350K .......... .......... .......... .......... ..........  5% 1.23M 16s
-##   2400K .......... .......... .......... .......... ..........  5% 11.2M 16s
-##   2450K .......... .......... .......... .......... ..........  5% 11.0M 16s
-##   2500K .......... .......... .......... .......... ..........  5% 2.61M 16s
-##   2550K .......... .......... .......... .......... ..........  5% 3.33M 16s
-##   2600K .......... .......... .......... .......... ..........  5% 1.23M 16s
-##   2650K .......... .......... .......... .......... ..........  5% 11.2M 16s
-##   2700K .......... .......... .......... .......... ..........  6% 13.6M 16s
-##   2750K .......... .......... .......... .......... ..........  6% 2.66M 16s
-##   2800K .......... .......... .......... .......... ..........  6% 3.11M 15s
-##   2850K .......... .......... .......... .......... ..........  6% 1.23M 16s
-##   2900K .......... .......... .......... .......... ..........  6% 17.3M 16s
-##   2950K .......... .......... .......... .......... ..........  6% 9.47M 15s
-##   3000K .......... .......... .......... .......... ..........  6% 2.64M 15s
-##   3050K .......... .......... .......... .......... ..........  6% 3.28M 15s
-##   3100K .......... .......... .......... .......... ..........  6% 18.0M 15s
-##   3150K .......... .......... .......... .......... ..........  7% 1.22M 15s
-##   3200K .......... .......... .......... .......... ..........  7% 8.53M 15s
-##   3250K .......... .......... .......... .......... ..........  7% 2.66M 15s
-##   3300K .......... .......... .......... .......... ..........  7% 3.12M 15s
-##   3350K .......... .......... .......... .......... ..........  7% 20.7M 15s
-##   3400K .......... .......... .......... .......... ..........  7% 1.23M 15s
-##   3450K .......... .......... .......... .......... ..........  7% 9.42M 15s
-##   3500K .......... .......... .......... .......... ..........  7% 2.67M 15s
-##   3550K .......... .......... .......... .......... ..........  7% 3.03M 15s
-##   3600K .......... .......... .......... .......... ..........  7% 15.9M 15s
-##   3650K .......... .......... .......... .......... ..........  8% 1.25M 15s
-##   3700K .......... .......... .......... .......... ..........  8% 12.1M 15s
-##   3750K .......... .......... .......... .......... ..........  8% 13.1M 15s
-##   3800K .......... .......... .......... .......... ..........  8% 1.51M 15s
-##   3850K .......... .......... .......... .......... ..........  8% 18.9M 15s
-##   3900K .......... .......... .......... .......... ..........  8% 1.27M 15s
-##   3950K .......... .......... .......... .......... ..........  8% 11.8M 15s
-##   4000K .......... .......... .......... .......... ..........  8% 10.9M 14s
-##   4050K .......... .......... .......... .......... ..........  8% 1.53M 15s
-##   4100K .......... .......... .......... .......... ..........  9% 16.5M 14s
-##   4150K .......... .......... .......... .......... ..........  9% 1.28M 15s
-##   4200K .......... .......... .......... .......... ..........  9% 11.5M 14s
-##   4250K .......... .......... .......... .......... ..........  9% 10.8M 14s
-##   4300K .......... .......... .......... .......... ..........  9% 1.56M 14s
-##   4350K .......... .......... .......... .......... ..........  9% 14.7M 14s
-##   4400K .......... .......... .......... .......... ..........  9% 1.27M 14s
-##   4450K .......... .......... .......... .......... ..........  9% 12.1M 14s
-##   4500K .......... .......... .......... .......... ..........  9% 9.82M 14s
-##   4550K .......... .......... .......... .......... .......... 10% 1.65M 14s
-##   4600K .......... .......... .......... .......... .......... 10% 10.2M 14s
-##   4650K .......... .......... .......... .......... .......... 10% 1.29M 14s
-##   4700K .......... .......... .......... .......... .......... 10% 12.0M 14s
-##   4750K .......... .......... .......... .......... .......... 10% 8.66M 14s
-##   4800K .......... .......... .......... .......... .......... 10% 1.65M 14s
-##   4850K .......... .......... .......... .......... .......... 10% 11.0M 14s
-##   4900K .......... .......... .......... .......... .......... 10% 1.27M 14s
-##   4950K .......... .......... .......... .......... .......... 10% 13.8M 14s
-##   5000K .......... .......... .......... .......... .......... 11% 8.40M 14s
-##   5050K .......... .......... .......... .......... .......... 11% 2.96M 14s
-##   5100K .......... .......... .......... .......... .......... 11% 2.87M 14s
-##   5150K .......... .......... .......... .......... .......... 11% 1.27M 14s
-##   5200K .......... .......... .......... .......... .......... 11% 11.6M 14s
-##   5250K .......... .......... .......... .......... .......... 11% 8.42M 14s
-##   5300K .......... .......... .......... .......... .......... 11% 3.00M 14s
-##   5350K .......... .......... .......... .......... .......... 11% 3.01M 14s
-##   5400K .......... .......... .......... .......... .......... 11% 1.24M 14s
-##   5450K .......... .......... .......... .......... .......... 12% 17.2M 14s
-##   5500K .......... .......... .......... .......... .......... 12% 6.81M 14s
-##   5550K .......... .......... .......... .......... .......... 12% 3.14M 14s
-##   5600K .......... .......... .......... .......... .......... 12% 2.88M 14s
-##   5650K .......... .......... .......... .......... .......... 12% 1.24M 14s
-##   5700K .......... .......... .......... .......... .......... 12% 17.1M 14s
-##   5750K .......... .......... .......... .......... .......... 12% 6.92M 14s
-##   5800K .......... .......... .......... .......... .......... 12% 3.10M 14s
-##   5850K .......... .......... .......... .......... .......... 12% 3.00M 14s
-##   5900K .......... .......... .......... .......... .......... 13% 11.0M 13s
-##   5950K .......... .......... .......... .......... .......... 13% 1.30M 14s
-##   6000K .......... .......... .......... .......... .......... 13% 5.82M 13s
-##   6050K .......... .......... .......... .......... .......... 13% 3.17M 13s
-##   6100K .......... .......... .......... .......... .......... 13% 3.05M 13s
-##   6150K .......... .......... .......... .......... .......... 13% 11.1M 13s
-##   6200K .......... .......... .......... .......... .......... 13% 1.29M 13s
-##   6250K .......... .......... .......... .......... .......... 13% 5.84M 13s
-##   6300K .......... .......... .......... .......... .......... 13% 3.31M 13s
-##   6350K .......... .......... .......... .......... .......... 14% 2.99M 13s
-##   6400K .......... .......... .......... .......... .......... 14% 10.2M 13s
-##   6450K .......... .......... .......... .......... .......... 14% 1.30M 13s
-##   6500K .......... .......... .......... .......... .......... 14% 5.87M 13s
-##   6550K .......... .......... .......... .......... .......... 14% 17.6M 13s
-##   6600K .......... .......... .......... .......... .......... 14% 1.69M 13s
-##   6650K .......... .......... .......... .......... .......... 14% 13.6M 13s
-##   6700K .......... .......... .......... .......... .......... 14% 1.29M 13s
-##   6750K .......... .......... .......... .......... .......... 14% 17.5M 13s
-##   6800K .......... .......... .......... .......... .......... 15% 5.35M 13s
-##   6850K .......... .......... .......... .......... .......... 15% 1.82M 13s
-##   6900K .......... .......... .......... .......... .......... 15% 10.2M 13s
-##   6950K .......... .......... .......... .......... .......... 15% 1.30M 13s
-##   7000K .......... .......... .......... .......... .......... 15% 12.2M 13s
-##   7050K .......... .......... .......... .......... .......... 15% 5.70M 13s
-##   7100K .......... .......... .......... .......... .......... 15% 1.88M 13s
-##   7150K .......... .......... .......... .......... .......... 15% 9.67M 13s
-##   7200K .......... .......... .......... .......... .......... 15% 1.25M 13s
-##   7250K .......... .......... .......... .......... .......... 15% 14.3M 13s
-##   7300K .......... .......... .......... .......... .......... 16% 5.76M 13s
-##   7350K .......... .......... .......... .......... .......... 16% 3.65M 13s
-##   7400K .......... .......... .......... .......... .......... 16% 2.76M 13s
-##   7450K .......... .......... .......... .......... .......... 16% 1.27M 13s
-##   7500K .......... .......... .......... .......... .......... 16% 14.2M 13s
-##   7550K .......... .......... .......... .......... .......... 16% 5.67M 13s
-##   7600K .......... .......... .......... .......... .......... 16% 3.57M 13s
-##   7650K .......... .......... .......... .......... .......... 16% 2.91M 13s
-##   7700K .......... .......... .......... .......... .......... 16% 1.23M 13s
-##   7750K .......... .......... .......... .......... .......... 17% 15.5M 13s
-##   7800K .......... .......... .......... .......... .......... 17% 5.72M 13s
-##   7850K .......... .......... .......... .......... .......... 17% 3.74M 13s
-##   7900K .......... .......... .......... .......... .......... 17% 2.88M 13s
-##   7950K .......... .......... .......... .......... .......... 17% 1.23M 13s
-##   8000K .......... .......... .......... .......... .......... 17% 13.7M 13s
-##   8050K .......... .......... .......... .......... .......... 17% 6.51M 13s
-##   8100K .......... .......... .......... .......... .......... 17% 3.48M 13s
-##   8150K .......... .......... .......... .......... .......... 17% 2.91M 13s
-##   8200K .......... .......... .......... .......... .......... 18% 1.22M 13s
-##   8250K .......... .......... .......... .......... .......... 18% 16.5M 13s
-##   8300K .......... .......... .......... .......... .......... 18% 6.64M 13s
-##   8350K .......... .......... .......... .......... .......... 18% 3.41M 12s
-##   8400K .......... .......... .......... .......... .......... 18% 2.84M 12s
-##   8450K .......... .......... .......... .......... .......... 18% 15.1M 12s
-##   8500K .......... .......... .......... .......... .......... 18% 1.22M 12s
-##   8550K .......... .......... .......... .......... .......... 18% 7.04M 12s
-##   8600K .......... .......... .......... .......... .......... 18% 3.35M 12s
-##   8650K .......... .......... .......... .......... .......... 19% 2.93M 12s
-##   8700K .......... .......... .......... .......... .......... 19% 12.9M 12s
-##   8750K .......... .......... .......... .......... .......... 19% 1.24M 12s
-##   8800K .......... .......... .......... .......... .......... 19% 6.25M 12s
-##   8850K .......... .......... .......... .......... .......... 19% 3.45M 12s
-##   8900K .......... .......... .......... .......... .......... 19% 3.22M 12s
-##   8950K .......... .......... .......... .......... .......... 19% 10.5M 12s
-##   9000K .......... .......... .......... .......... .......... 19% 1.20M 12s
-##   9050K .......... .......... .......... .......... .......... 19% 7.47M 12s
-##   9100K .......... .......... .......... .......... .......... 20% 11.8M 12s
-##   9150K .......... .......... .......... .......... .......... 20% 1.98M 12s
-##   9200K .......... .......... .......... .......... .......... 20% 7.69M 12s
-##   9250K .......... .......... .......... .......... .......... 20% 1.21M 12s
-##   9300K .......... .......... .......... .......... .......... 20% 21.9M 12s
-##   9350K .......... .......... .......... .......... .......... 20% 6.08M 12s
-##   9400K .......... .......... .......... .......... .......... 20% 1.95M 12s
-##   9450K .......... .......... .......... .......... .......... 20% 8.73M 12s
-##   9500K .......... .......... .......... .......... .......... 20% 1.24M 12s
-##   9550K .......... .......... .......... .......... .......... 21% 15.2M 12s
-##   9600K .......... .......... .......... .......... .......... 21% 5.76M 12s
-##   9650K .......... .......... .......... .......... .......... 21% 3.80M 12s
-##   9700K .......... .......... .......... .......... .......... 21% 2.73M 12s
-##   9750K .......... .......... .......... .......... .......... 21% 1.25M 12s
-##   9800K .......... .......... .......... .......... .......... 21% 14.0M 12s
-##   9850K .......... .......... .......... .......... .......... 21% 6.24M 12s
-##   9900K .......... .......... .......... .......... .......... 21% 3.84M 12s
-##   9950K .......... .......... .......... .......... .......... 21% 2.71M 12s
-##  10000K .......... .......... .......... .......... .......... 22% 1.21M 12s
-##  10050K .......... .......... .......... .......... .......... 22% 15.5M 12s
-##  10100K .......... .......... .......... .......... .......... 22% 6.71M 12s
-##  10150K .......... .......... .......... .......... .......... 22% 3.83M 12s
-##  10200K .......... .......... .......... .......... .......... 22% 2.66M 12s
-##  10250K .......... .......... .......... .......... .......... 22% 1.23M 12s
-##  10300K .......... .......... .......... .......... .......... 22% 15.4M 12s
-##  10350K .......... .......... .......... .......... .......... 22% 6.85M 12s
-##  10400K .......... .......... .......... .......... .......... 22% 3.66M 12s
-##  10450K .......... .......... .......... .......... .......... 22% 2.88M 12s
-##  10500K .......... .......... .......... .......... .......... 23% 1.23M 12s
-##  10550K .......... .......... .......... .......... .......... 23% 9.41M 12s
-##  10600K .......... .......... .......... .......... .......... 23% 7.61M 12s
-##  10650K .......... .......... .......... .......... .......... 23% 3.79M 12s
-##  10700K .......... .......... .......... .......... .......... 23% 2.86M 12s
-##  10750K .......... .......... .......... .......... .......... 23% 13.5M 12s
-##  10800K .......... .......... .......... .......... .......... 23% 1.16M 12s
-##  10850K .......... .......... .......... .......... .......... 23% 9.81M 12s
-##  10900K .......... .......... .......... .......... .......... 23% 3.49M 12s
-##  10950K .......... .......... .......... .......... .......... 24% 2.85M 11s
-##  11000K .......... .......... .......... .......... .......... 24% 13.4M 11s
-##  11050K .......... .......... .......... .......... .......... 24% 1.17M 12s
-##  11100K .......... .......... .......... .......... .......... 24% 9.91M 11s
-##  11150K .......... .......... .......... .......... .......... 24% 11.7M 11s
-##  11200K .......... .......... .......... .......... .......... 24% 1.76M 11s
-##  11250K .......... .......... .......... .......... .......... 24% 15.6M 11s
-##  11300K .......... .......... .......... .......... .......... 24% 1.17M 11s
-##  11350K .......... .......... .......... .......... .......... 24% 9.86M 11s
-##  11400K .......... .......... .......... .......... .......... 25% 11.2M 11s
-##  11450K .......... .......... .......... .......... .......... 25% 1.92M 11s
-##  11500K .......... .......... .......... .......... .......... 25% 10.0M 11s
-##  11550K .......... .......... .......... .......... .......... 25% 1.19M 11s
-##  11600K .......... .......... .......... .......... .......... 25% 7.65M 11s
-##  11650K .......... .......... .......... .......... .......... 25% 11.4M 11s
-##  11700K .......... .......... .......... .......... .......... 25% 1.94M 11s
-##  11750K .......... .......... .......... .......... .......... 25% 9.56M 11s
-##  11800K .......... .......... .......... .......... .......... 25% 1.19M 11s
-##  11850K .......... .......... .......... .......... .......... 26% 13.2M 11s
-##  11900K .......... .......... .......... .......... .......... 26% 7.81M 11s
-##  11950K .......... .......... .......... .......... .......... 26% 1.92M 11s
-##  12000K .......... .......... .......... .......... .......... 26% 8.69M 11s
-##  12050K .......... .......... .......... .......... .......... 26% 1.19M 11s
-##  12100K .......... .......... .......... .......... .......... 26% 13.2M 11s
-##  12150K .......... .......... .......... .......... .......... 26% 9.35M 11s
-##  12200K .......... .......... .......... .......... .......... 26% 1.85M 11s
-##  12250K .......... .......... .......... .......... .......... 26% 9.46M 11s
-##  12300K .......... .......... .......... .......... .......... 27% 1.20M 11s
-##  12350K .......... .......... .......... .......... .......... 27% 12.4M 11s
-##  12400K .......... .......... .......... .......... .......... 27% 8.00M 11s
-##  12450K .......... .......... .......... .......... .......... 27% 3.60M 11s
-##  12500K .......... .......... .......... .......... .......... 27% 2.71M 11s
-##  12550K .......... .......... .......... .......... .......... 27% 1.28M 11s
-##  12600K .......... .......... .......... .......... .......... 27% 8.09M 11s
-##  12650K .......... .......... .......... .......... .......... 27% 8.76M 11s
-##  12700K .......... .......... .......... .......... .......... 27% 3.61M 11s
-##  12750K .......... .......... .......... .......... .......... 28% 2.64M 11s
-##  12800K .......... .......... .......... .......... .......... 28% 1.27M 11s
-##  12850K .......... .......... .......... .......... .......... 28% 8.58M 11s
-##  12900K .......... .......... .......... .......... .......... 28% 11.0M 11s
-##  12950K .......... .......... .......... .......... .......... 28% 3.31M 11s
-##  13000K .......... .......... .......... .......... .......... 28% 2.62M 11s
-##  13050K .......... .......... .......... .......... .......... 28% 1.29M 11s
-##  13100K .......... .......... .......... .......... .......... 28% 8.62M 11s
-##  13150K .......... .......... .......... .......... .......... 28% 11.2M 11s
-##  13200K .......... .......... .......... .......... .......... 29% 3.18M 11s
-##  13250K .......... .......... .......... .......... .......... 29% 2.59M 11s
-##  13300K .......... .......... .......... .......... .......... 29% 19.1M 11s
-##  13350K .......... .......... .......... .......... .......... 29% 1.20M 11s
-##  13400K .......... .......... .......... .......... .......... 29% 10.7M 11s
-##  13450K .......... .......... .......... .......... .......... 29% 10.9M 11s
-##  13500K .......... .......... .......... .......... .......... 29% 1.74M 11s
-##  13550K .......... .......... .......... .......... .......... 29% 13.9M 11s
-##  13600K .......... .......... .......... .......... .......... 29% 1.18M 11s
-##  13650K .......... .......... .......... .......... .......... 30% 12.3M 11s
-##  13700K .......... .......... .......... .......... .......... 30% 9.49M 10s
-##  13750K .......... .......... .......... .......... .......... 30% 1.73M 11s
-##  13800K .......... .......... .......... .......... .......... 30% 13.9M 10s
-##  13850K .......... .......... .......... .......... .......... 30% 1.23M 10s
-##  13900K .......... .......... .......... .......... .......... 30% 12.0M 10s
-##  13950K .......... .......... .......... .......... .......... 30% 8.43M 10s
-##  14000K .......... .......... .......... .......... .......... 30% 1.68M 10s
-##  14050K .......... .......... .......... .......... .......... 30% 15.3M 10s
-##  14100K .......... .......... .......... .......... .......... 30% 1.24M 10s
-##  14150K .......... .......... .......... .......... .......... 31% 11.5M 10s
-##  14200K .......... .......... .......... .......... .......... 31% 8.26M 10s
-##  14250K .......... .......... .......... .......... .......... 31% 1.70M 10s
-##  14300K .......... .......... .......... .......... .......... 31% 15.8M 10s
-##  14350K .......... .......... .......... .......... .......... 31% 1.24M 10s
-##  14400K .......... .......... .......... .......... .......... 31% 9.85M 10s
-##  14450K .......... .......... .......... .......... .......... 31% 8.53M 10s
-##  14500K .......... .......... .......... .......... .......... 31% 1.99M 10s
-##  14550K .......... .......... .......... .......... .......... 31% 6.91M 10s
-##  14600K .......... .......... .......... .......... .......... 32% 1.23M 10s
-##  14650K .......... .......... .......... .......... .......... 32% 11.1M 10s
-##  14700K .......... .......... .......... .......... .......... 32% 8.68M 10s
-##  14750K .......... .......... .......... .......... .......... 32% 3.89M 10s
-##  14800K .......... .......... .......... .......... .......... 32% 2.37M 10s
-##  14850K .......... .......... .......... .......... .......... 32% 1.34M 10s
-##  14900K .......... .......... .......... .......... .......... 32% 7.58M 10s
-##  14950K .......... .......... .......... .......... .......... 32% 8.43M 10s
-##  15000K .......... .......... .......... .......... .......... 32% 1.94M 10s
-##  15050K .......... .......... .......... .......... .......... 33% 7.08M 10s
-##  15100K .......... .......... .......... .......... .......... 33% 1.32M 10s
-##  15150K .......... .......... .......... .......... .......... 33% 7.56M 10s
-##  15200K .......... .......... .......... .......... .......... 33% 7.60M 10s
-##  15250K .......... .......... .......... .......... .......... 33% 3.94M 10s
-##  15300K .......... .......... .......... .......... .......... 33% 2.53M 10s
-##  15350K .......... .......... .......... .......... .......... 33% 14.7M 10s
-##  15400K .......... .......... .......... .......... .......... 33% 1.21M 10s
-##  15450K .......... .......... .......... .......... .......... 33% 8.83M 10s
-##  15500K .......... .......... .......... .......... .......... 34% 14.3M 10s
-##  15550K .......... .......... .......... .......... .......... 34% 1.69M 10s
-##  15600K .......... .......... .......... .......... .......... 34% 14.0M 10s
-##  15650K .......... .......... .......... .......... .......... 34% 1.23M 10s
-##  15700K .......... .......... .......... .......... .......... 34% 8.01M 10s
-##  15750K .......... .......... .......... .......... .......... 34% 14.6M 10s
-##  15800K .......... .......... .......... .......... .......... 34% 1.67M 10s
-##  15850K .......... .......... .......... .......... .......... 34% 15.8M 10s
-##  15900K .......... .......... .......... .......... .......... 34% 1.22M 10s
-##  15950K .......... .......... .......... .......... .......... 35% 7.73M 10s
-##  16000K .......... .......... .......... .......... .......... 35% 13.5M 10s
-##  16050K .......... .......... .......... .......... .......... 35% 1.73M 10s
-##  16100K .......... .......... .......... .......... .......... 35% 14.3M 10s
-##  16150K .......... .......... .......... .......... .......... 35% 1.23M 10s
-##  16200K .......... .......... .......... .......... .......... 35% 7.03M 10s
-##  16250K .......... .......... .......... .......... .......... 35% 16.1M 10s
-##  16300K .......... .......... .......... .......... .......... 35% 1.76M 10s
-##  16350K .......... .......... .......... .......... .......... 35% 13.1M 10s
-##  16400K .......... .......... .......... .......... .......... 36% 1.20M 10s
-##  16450K .......... .......... .......... .......... .......... 36% 12.7M 10s
-##  16500K .......... .......... .......... .......... .......... 36% 8.25M 10s
-##  16550K .......... .......... .......... .......... .......... 36% 1.76M 10s
-##  16600K .......... .......... .......... .......... .......... 36% 13.1M 10s
-##  16650K .......... .......... .......... .......... .......... 36% 1.28M 10s
-##  16700K .......... .......... .......... .......... .......... 36% 7.81M 9s
-##  16750K .......... .......... .......... .......... .......... 36% 9.46M 9s
-##  16800K .......... .......... .......... .......... .......... 36% 1.71M 9s
-##  16850K .......... .......... .......... .......... .......... 37% 14.3M 9s
-##  16900K .......... .......... .......... .......... .......... 37% 1.35M 9s
-##  16950K .......... .......... .......... .......... .......... 37% 6.25M 9s
-##  17000K .......... .......... .......... .......... .......... 37% 8.25M 9s
-##  17050K .......... .......... .......... .......... .......... 37% 2.09M 9s
-##  17100K .......... .......... .......... .......... .......... 37% 6.10M 9s
-##  17150K .......... .......... .......... .......... .......... 37% 1.34M 9s
-##  17200K .......... .......... .......... .......... .......... 37% 5.85M 9s
-##  17250K .......... .......... .......... .......... .......... 37% 9.43M 9s
-##  17300K .......... .......... .......... .......... .......... 37% 4.27M 9s
-##  17350K .......... .......... .......... .......... .......... 38% 2.40M 9s
-##  17400K .......... .......... .......... .......... .......... 38% 1.33M 9s
-##  17450K .......... .......... .......... .......... .......... 38% 5.98M 9s
-##  17500K .......... .......... .......... .......... .......... 38% 8.97M 9s
-##  17550K .......... .......... .......... .......... .......... 38% 4.33M 9s
-##  17600K .......... .......... .......... .......... .......... 38% 2.38M 9s
-##  17650K .......... .......... .......... .......... .......... 38% 19.6M 9s
-##  17700K .......... .......... .......... .......... .......... 38% 1.18M 9s
-##  17750K .......... .......... .......... .......... .......... 38% 8.57M 9s
-##  17800K .......... .......... .......... .......... .......... 39% 4.20M 9s
-##  17850K .......... .......... .......... .......... .......... 39% 2.46M 9s
-##  17900K .......... .......... .......... .......... .......... 39% 18.4M 9s
-##  17950K .......... .......... .......... .......... .......... 39% 1.18M 9s
-##  18000K .......... .......... .......... .......... .......... 39% 7.83M 9s
-##  18050K .......... .......... .......... .......... .......... 39% 13.3M 9s
-##  18100K .......... .......... .......... .......... .......... 39% 1.78M 9s
-##  18150K .......... .......... .......... .......... .......... 39% 16.4M 9s
-##  18200K .......... .......... .......... .......... .......... 39% 1.17M 9s
-##  18250K .......... .......... .......... .......... .......... 40% 8.75M 9s
-##  18300K .......... .......... .......... .......... .......... 40% 15.4M 9s
-##  18350K .......... .......... .......... .......... .......... 40% 1.72M 9s
-##  18400K .......... .......... .......... .......... .......... 40% 15.4M 9s
-##  18450K .......... .......... .......... .......... .......... 40% 1.22M 9s
-##  18500K .......... .......... .......... .......... .......... 40% 9.59M 9s
-##  18550K .......... .......... .......... .......... .......... 40% 10.3M 9s
-##  18600K .......... .......... .......... .......... .......... 40% 1.66M 9s
-##  18650K .......... .......... .......... .......... .......... 40% 18.8M 9s
-##  18700K .......... .......... .......... .......... .......... 41% 1.23M 9s
-##  18750K .......... .......... .......... .......... .......... 41% 10.0M 9s
-##  18800K .......... .......... .......... .......... .......... 41% 9.18M 9s
-##  18850K .......... .......... .......... .......... .......... 41% 1.71M 9s
-##  18900K .......... .......... .......... .......... .......... 41% 14.7M 9s
-##  18950K .......... .......... .......... .......... .......... 41% 1.38M 9s
-##  19000K .......... .......... .......... .......... .......... 41% 5.30M 9s
-##  19050K .......... .......... .......... .......... .......... 41% 10.3M 9s
-##  19100K .......... .......... .......... .......... .......... 41% 1.71M 9s
-##  19150K .......... .......... .......... .......... .......... 42% 12.5M 9s
-##  19200K .......... .......... .......... .......... .......... 42% 1.35M 9s
-##  19250K .......... .......... .......... .......... .......... 42% 6.37M 9s
-##  19300K .......... .......... .......... .......... .......... 42% 8.71M 9s
-##  19350K .......... .......... .......... .......... .......... 42% 4.42M 9s
-##  19400K .......... .......... .......... .......... .......... 42% 2.28M 9s
-##  19450K .......... .......... .......... .......... .......... 42% 1.38M 9s
-##  19500K .......... .......... .......... .......... .......... 42% 6.33M 9s
-##  19550K .......... .......... .......... .......... .......... 42% 7.72M 9s
-##  19600K .......... .......... .......... .......... .......... 43% 4.42M 8s
-##  19650K .......... .......... .......... .......... .......... 43% 2.32M 8s
-##  19700K .......... .......... .......... .......... .......... 43% 1.39M 8s
-##  19750K .......... .......... .......... .......... .......... 43% 5.98M 8s
-##  19800K .......... .......... .......... .......... .......... 43% 7.45M 8s
-##  19850K .......... .......... .......... .......... .......... 43% 4.71M 8s
-##  19900K .......... .......... .......... .......... .......... 43% 2.24M 8s
-##  19950K .......... .......... .......... .......... .......... 43% 15.4M 8s
-##  20000K .......... .......... .......... .......... .......... 43% 1.22M 8s
-##  20050K .......... .......... .......... .......... .......... 44% 8.76M 8s
-##  20100K .......... .......... .......... .......... .......... 44% 14.4M 8s
-##  20150K .......... .......... .......... .......... .......... 44% 1.67M 8s
-##  20200K .......... .......... .......... .......... .......... 44% 12.4M 8s
-##  20250K .......... .......... .......... .......... .......... 44% 1.24M 8s
-##  20300K .......... .......... .......... .......... .......... 44% 8.65M 8s
-##  20350K .......... .......... .......... .......... .......... 44% 14.3M 8s
-##  20400K .......... .......... .......... .......... .......... 44% 1.64M 8s
-##  20450K .......... .......... .......... .......... .......... 44% 13.8M 8s
-##  20500K .......... .......... .......... .......... .......... 45% 1.29M 8s
-##  20550K .......... .......... .......... .......... .......... 45% 8.99M 8s
-##  20600K .......... .......... .......... .......... .......... 45% 9.10M 8s
-##  20650K .......... .......... .......... .......... .......... 45% 1.68M 8s
-##  20700K .......... .......... .......... .......... .......... 45% 16.7M 8s
-##  20750K .......... .......... .......... .......... .......... 45% 1.26M 8s
-##  20800K .......... .......... .......... .......... .......... 45% 8.22M 8s
-##  20850K .......... .......... .......... .......... .......... 45% 8.57M 8s
-##  20900K .......... .......... .......... .......... .......... 45% 1.72M 8s
-##  20950K .......... .......... .......... .......... .......... 45% 14.2M 8s
-##  21000K .......... .......... .......... .......... .......... 46% 1.26M 8s
-##  21050K .......... .......... .......... .......... .......... 46% 9.75M 8s
-##  21100K .......... .......... .......... .......... .......... 46% 8.81M 8s
-##  21150K .......... .......... .......... .......... .......... 46% 1.71M 8s
-##  21200K .......... .......... .......... .......... .......... 46% 12.9M 8s
-##  21250K .......... .......... .......... .......... .......... 46% 1.26M 8s
-##  21300K .......... .......... .......... .......... .......... 46% 9.83M 8s
-##  21350K .......... .......... .......... .......... .......... 46% 8.67M 8s
-##  21400K .......... .......... .......... .......... .......... 46% 1.70M 8s
-##  21450K .......... .......... .......... .......... .......... 47% 15.9M 8s
-##  21500K .......... .......... .......... .......... .......... 47% 1.26M 8s
-##  21550K .......... .......... .......... .......... .......... 47% 17.0M 8s
-##  21600K .......... .......... .......... .......... .......... 47% 5.98M 8s
-##  21650K .......... .......... .......... .......... .......... 47% 5.12M 8s
-##  21700K .......... .......... .......... .......... .......... 47% 2.26M 8s
-##  21750K .......... .......... .......... .......... .......... 47% 1.41M 8s
-##  21800K .......... .......... .......... .......... .......... 47% 5.93M 8s
-##  21850K .......... .......... .......... .......... .......... 47% 6.69M 8s
-##  21900K .......... .......... .......... .......... .......... 48% 5.10M 8s
-##  21950K .......... .......... .......... .......... .......... 48% 2.27M 8s
-##  22000K .......... .......... .......... .......... .......... 48% 1.38M 8s
-##  22050K .......... .......... .......... .......... .......... 48% 6.06M 8s
-##  22100K .......... .......... .......... .......... .......... 48% 7.35M 8s
-##  22150K .......... .......... .......... .......... .......... 48% 4.74M 8s
-##  22200K .......... .......... .......... .......... .......... 48% 2.26M 8s
-##  22250K .......... .......... .......... .......... .......... 48% 13.1M 8s
-##  22300K .......... .......... .......... .......... .......... 48% 1.24M 8s
-##  22350K .......... .......... .......... .......... .......... 49% 8.48M 8s
-##  22400K .......... .......... .......... .......... .......... 49% 4.14M 8s
-##  22450K .......... .......... .......... .......... .......... 49% 2.32M 8s
-##  22500K .......... .......... .......... .......... .......... 49% 13.3M 8s
-##  22550K .......... .......... .......... .......... .......... 49% 1.24M 8s
-##  22600K .......... .......... .......... .......... .......... 49% 7.52M 8s
-##  22650K .......... .......... .......... .......... .......... 49% 4.61M 7s
-##  22700K .......... .......... .......... .......... .......... 49% 2.28M 7s
-##  22750K .......... .......... .......... .......... .......... 49% 13.6M 7s
-##  22800K .......... .......... .......... .......... .......... 50% 1.22M 7s
-##  22850K .......... .......... .......... .......... .......... 50% 7.77M 7s
-##  22900K .......... .......... .......... .......... .......... 50% 13.4M 7s
-##  22950K .......... .......... .......... .......... .......... 50% 1.70M 7s
-##  23000K .......... .......... .......... .......... .......... 50% 15.2M 7s
-##  23050K .......... .......... .......... .......... .......... 50% 1.24M 7s
-##  23100K .......... .......... .......... .......... .......... 50% 7.71M 7s
-##  23150K .......... .......... .......... .......... .......... 50% 13.0M 7s
-##  23200K .......... .......... .......... .......... .......... 50% 1.63M 7s
-##  23250K .......... .......... .......... .......... .......... 51% 21.3M 7s
-##  23300K .......... .......... .......... .......... .......... 51% 1.28M 7s
-##  23350K .......... .......... .......... .......... .......... 51% 8.86M 7s
-##  23400K .......... .......... .......... .......... .......... 51% 7.74M 7s
-##  23450K .......... .......... .......... .......... .......... 51% 1.67M 7s
-##  23500K .......... .......... .......... .......... .......... 51% 18.2M 7s
-##  23550K .......... .......... .......... .......... .......... 51% 1.30M 7s
-##  23600K .......... .......... .......... .......... .......... 51% 7.89M 7s
-##  23650K .......... .......... .......... .......... .......... 51% 8.17M 7s
-##  23700K .......... .......... .......... .......... .......... 52% 1.72M 7s
-##  23750K .......... .......... .......... .......... .......... 52% 12.2M 7s
-##  23800K .......... .......... .......... .......... .......... 52% 1.30M 7s
-##  23850K .......... .......... .......... .......... .......... 52% 8.63M 7s
-##  23900K .......... .......... .......... .......... .......... 52% 9.77M 7s
-##  23950K .......... .......... .......... .......... .......... 52% 5.04M 7s
-##  24000K .......... .......... .......... .......... .......... 52% 2.05M 7s
-##  24050K .......... .......... .......... .......... .......... 52% 1.30M 7s
-##  24100K .......... .......... .......... .......... .......... 52% 8.53M 7s
-##  24150K .......... .......... .......... .......... .......... 53% 9.82M 7s
-##  24200K .......... .......... .......... .......... .......... 53% 4.99M 7s
-##  24250K .......... .......... .......... .......... .......... 53% 2.05M 7s
-##  24300K .......... .......... .......... .......... .......... 53% 1.50M 7s
-##  24350K .......... .......... .......... .......... .......... 53% 6.09M 7s
-##  24400K .......... .......... .......... .......... .......... 53% 6.08M 7s
-##  24450K .......... .......... .......... .......... .......... 53% 5.35M 7s
-##  24500K .......... .......... .......... .......... .......... 53% 2.03M 7s
-##  24550K .......... .......... .......... .......... .......... 53% 1.51M 7s
-##  24600K .......... .......... .......... .......... .......... 53% 5.66M 7s
-##  24650K .......... .......... .......... .......... .......... 54% 6.80M 7s
-##  24700K .......... .......... .......... .......... .......... 54% 5.19M 7s
-##  24750K .......... .......... .......... .......... .......... 54% 2.05M 7s
-##  24800K .......... .......... .......... .......... .......... 54% 1.48M 7s
-##  24850K .......... .......... .......... .......... .......... 54% 5.88M 7s
-##  24900K .......... .......... .......... .......... .......... 54% 6.74M 7s
-##  24950K .......... .......... .......... .......... .......... 54% 13.7M 7s
-##  25000K .......... .......... .......... .......... .......... 54% 1.63M 7s
-##  25050K .......... .......... .......... .......... .......... 54% 18.5M 7s
-##  25100K .......... .......... .......... .......... .......... 55% 1.29M 7s
-##  25150K .......... .......... .......... .......... .......... 55% 6.16M 7s
-##  25200K .......... .......... .......... .......... .......... 55% 14.2M 7s
-##  25250K .......... .......... .......... .......... .......... 55% 1.68M 7s
-##  25300K .......... .......... .......... .......... .......... 55% 14.7M 7s
-##  25350K .......... .......... .......... .......... .......... 55% 1.29M 7s
-##  25400K .......... .......... .......... .......... .......... 55% 5.95M 7s
-##  25450K .......... .......... .......... .......... .......... 55% 19.2M 7s
-##  25500K .......... .......... .......... .......... .......... 55% 1.67M 7s
-##  25550K .......... .......... .......... .......... .......... 56% 13.4M 7s
-##  25600K .......... .......... .......... .......... .......... 56% 1.27M 7s
-##  25650K .......... .......... .......... .......... .......... 56% 6.12M 7s
-##  25700K .......... .......... .......... .......... .......... 56% 20.7M 6s
-##  25750K .......... .......... .......... .......... .......... 56% 1.74M 6s
-##  25800K .......... .......... .......... .......... .......... 56% 9.57M 6s
-##  25850K .......... .......... .......... .......... .......... 56% 1.33M 6s
-##  25900K .......... .......... .......... .......... .......... 56% 5.46M 6s
-##  25950K .......... .......... .......... .......... .......... 56% 20.9M 6s
-##  26000K .......... .......... .......... .......... .......... 57% 1.69M 6s
-##  26050K .......... .......... .......... .......... .......... 57% 10.0M 6s
-##  26100K .......... .......... .......... .......... .......... 57% 1.33M 6s
-##  26150K .......... .......... .......... .......... .......... 57% 5.45M 6s
-##  26200K .......... .......... .......... .......... .......... 57% 17.5M 6s
-##  26250K .......... .......... .......... .......... .......... 57% 1.71M 6s
-##  26300K .......... .......... .......... .......... .......... 57% 12.2M 6s
-##  26350K .......... .......... .......... .......... .......... 57% 1.30M 6s
-##  26400K .......... .......... .......... .......... .......... 57% 5.45M 6s
-##  26450K .......... .......... .......... .......... .......... 58% 19.8M 6s
-##  26500K .......... .......... .......... .......... .......... 58% 5.69M 6s
-##  26550K .......... .......... .......... .......... .......... 58% 1.98M 6s
-##  26600K .......... .......... .......... .......... .......... 58% 1.31M 6s
-##  26650K .......... .......... .......... .......... .......... 58% 8.73M 6s
-##  26700K .......... .......... .......... .......... .......... 58% 8.33M 6s
-##  26750K .......... .......... .......... .......... .......... 58% 6.22M 6s
-##  26800K .......... .......... .......... .......... .......... 58% 1.93M 6s
-##  26850K .......... .......... .......... .......... .......... 58% 1.50M 6s
-##  26900K .......... .......... .......... .......... .......... 59% 4.82M 6s
-##  26950K .......... .......... .......... .......... .......... 59% 7.89M 6s
-##  27000K .......... .......... .......... .......... .......... 59% 6.44M 6s
-##  27050K .......... .......... .......... .......... .......... 59% 1.97M 6s
-##  27100K .......... .......... .......... .......... .......... 59% 1.50M 6s
-##  27150K .......... .......... .......... .......... .......... 59% 5.67M 6s
-##  27200K .......... .......... .......... .......... .......... 59% 5.51M 6s
-##  27250K .......... .......... .......... .......... .......... 59% 20.7M 6s
-##  27300K .......... .......... .......... .......... .......... 59% 1.64M 6s
-##  27350K .......... .......... .......... .......... .......... 60% 16.5M 6s
-##  27400K .......... .......... .......... .......... .......... 60% 1.29M 6s
-##  27450K .......... .......... .......... .......... .......... 60% 5.87M 6s
-##  27500K .......... .......... .......... .......... .......... 60% 17.5M 6s
-##  27550K .......... .......... .......... .......... .......... 60% 1.79M 6s
-##  27600K .......... .......... .......... .......... .......... 60% 8.59M 6s
-##  27650K .......... .......... .......... .......... .......... 60% 1.29M 6s
-##  27700K .......... .......... .......... .......... .......... 60% 6.06M 6s
-##  27750K .......... .......... .......... .......... .......... 60% 17.6M 6s
-##  27800K .......... .......... .......... .......... .......... 60% 1.77M 6s
-##  27850K .......... .......... .......... .......... .......... 61% 9.07M 6s
-##  27900K .......... .......... .......... .......... .......... 61% 1.30M 6s
-##  27950K .......... .......... .......... .......... .......... 61% 6.76M 6s
-##  28000K .......... .......... .......... .......... .......... 61% 11.4M 6s
-##  28050K .......... .......... .......... .......... .......... 61% 1.82M 6s
-##  28100K .......... .......... .......... .......... .......... 61% 9.45M 6s
-##  28150K .......... .......... .......... .......... .......... 61% 1.28M 6s
-##  28200K .......... .......... .......... .......... .......... 61% 6.71M 6s
-##  28250K .......... .......... .......... .......... .......... 61% 13.9M 6s
-##  28300K .......... .......... .......... .......... .......... 62% 1.81M 6s
-##  28350K .......... .......... .......... .......... .......... 62% 9.71M 6s
-##  28400K .......... .......... .......... .......... .......... 62% 1.24M 6s
-##  28450K .......... .......... .......... .......... .......... 62% 7.32M 6s
-##  28500K .......... .......... .......... .......... .......... 62% 12.0M 6s
-##  28550K .......... .......... .......... .......... .......... 62% 7.87M 6s
-##  28600K .......... .......... .......... .......... .......... 62% 1.91M 6s
-##  28650K .......... .......... .......... .......... .......... 62% 1.27M 6s
-##  28700K .......... .......... .......... .......... .......... 62% 6.90M 6s
-##  28750K .......... .......... .......... .......... .......... 63% 10.4M 5s
-##  28800K .......... .......... .......... .......... .......... 63% 1.82M 5s
-##  28850K .......... .......... .......... .......... .......... 63% 9.44M 5s
-##  28900K .......... .......... .......... .......... .......... 63% 1.33M 5s
-##  28950K .......... .......... .......... .......... .......... 63% 9.62M 5s
-##  29000K .......... .......... .......... .......... .......... 63% 5.95M 5s
-##  29050K .......... .......... .......... .......... .......... 63% 9.48M 5s
-##  29100K .......... .......... .......... .......... .......... 63% 1.87M 5s
-##  29150K .......... .......... .......... .......... .......... 63% 1.33M 5s
-##  29200K .......... .......... .......... .......... .......... 64% 8.73M 5s
-##  29250K .......... .......... .......... .......... .......... 64% 6.54M 5s
-##  29300K .......... .......... .......... .......... .......... 64% 14.4M 5s
-##  29350K .......... .......... .......... .......... .......... 64% 1.71M 5s
-##  29400K .......... .......... .......... .......... .......... 64% 1.32M 5s
-##  29450K .......... .......... .......... .......... .......... 64% 9.86M 5s
-##  29500K .......... .......... .......... .......... .......... 64% 6.86M 5s
-##  29550K .......... .......... .......... .......... .......... 64% 11.6M 5s
-##  29600K .......... .......... .......... .......... .......... 64% 1.70M 5s
-##  29650K .......... .......... .......... .......... .......... 65% 18.8M 5s
-##  29700K .......... .......... .......... .......... .......... 65% 1.25M 5s
-##  29750K .......... .......... .......... .......... .......... 65% 6.83M 5s
-##  29800K .......... .......... .......... .......... .......... 65% 9.40M 5s
-##  29850K .......... .......... .......... .......... .......... 65% 1.80M 5s
-##  29900K .......... .......... .......... .......... .......... 65% 18.5M 5s
-##  29950K .......... .......... .......... .......... .......... 65% 1.24M 5s
-##  30000K .......... .......... .......... .......... .......... 65% 6.55M 5s
-##  30050K .......... .......... .......... .......... .......... 65% 9.59M 5s
-##  30100K .......... .......... .......... .......... .......... 66% 1.94M 5s
-##  30150K .......... .......... .......... .......... .......... 66% 10.7M 5s
-##  30200K .......... .......... .......... .......... .......... 66% 1.22M 5s
-##  30250K .......... .......... .......... .......... .......... 66% 9.62M 5s
-##  30300K .......... .......... .......... .......... .......... 66% 9.15M 5s
-##  30350K .......... .......... .......... .......... .......... 66% 1.86M 5s
-##  30400K .......... .......... .......... .......... .......... 66% 9.53M 5s
-##  30450K .......... .......... .......... .......... .......... 66% 1.21M 5s
-##  30500K .......... .......... .......... .......... .......... 66% 11.1M 5s
-##  30550K .......... .......... .......... .......... .......... 67% 8.82M 5s
-##  30600K .......... .......... .......... .......... .......... 67% 1.81M 5s
-##  30650K .......... .......... .......... .......... .......... 67% 12.1M 5s
-##  30700K .......... .......... .......... .......... .......... 67% 1.19M 5s
-##  30750K .......... .......... .......... .......... .......... 67% 12.2M 5s
-##  30800K .......... .......... .......... .......... .......... 67% 7.48M 5s
-##  30850K .......... .......... .......... .......... .......... 67% 1.97M 5s
-##  30900K .......... .......... .......... .......... .......... 67% 9.20M 5s
-##  30950K .......... .......... .......... .......... .......... 67% 1.20M 5s
-##  31000K .......... .......... .......... .......... .......... 68% 10.1M 5s
-##  31050K .......... .......... .......... .......... .......... 68% 8.48M 5s
-##  31100K .......... .......... .......... .......... .......... 68% 12.4M 5s
-##  31150K .......... .......... .......... .......... .......... 68% 1.87M 5s
-##  31200K .......... .......... .......... .......... .......... 68% 1.19M 5s
-##  31250K .......... .......... .......... .......... .......... 68% 11.4M 5s
-##  31300K .......... .......... .......... .......... .......... 68% 9.25M 5s
-##  31350K .......... .......... .......... .......... .......... 68% 10.8M 5s
-##  31400K .......... .......... .......... .......... .......... 68% 1.83M 5s
-##  31450K .......... .......... .......... .......... .......... 68% 1.20M 5s
-##  31500K .......... .......... .......... .......... .......... 69% 10.9M 5s
-##  31550K .......... .......... .......... .......... .......... 69% 9.93M 5s
-##  31600K .......... .......... .......... .......... .......... 69% 8.63M 5s
-##  31650K .......... .......... .......... .......... .......... 69% 1.87M 5s
-##  31700K .......... .......... .......... .......... .......... 69% 1.20M 5s
-##  31750K .......... .......... .......... .......... .......... 69% 11.4M 5s
-##  31800K .......... .......... .......... .......... .......... 69% 8.89M 4s
-##  31850K .......... .......... .......... .......... .......... 69% 10.1M 4s
-##  31900K .......... .......... .......... .......... .......... 69% 1.89M 4s
-##  31950K .......... .......... .......... .......... .......... 70% 17.6M 4s
-##  32000K .......... .......... .......... .......... .......... 70% 1.14M 4s
-##  32050K .......... .......... .......... .......... .......... 70% 9.08M 4s
-##  32100K .......... .......... .......... .......... .......... 70% 11.9M 4s
-##  32150K .......... .......... .......... .......... .......... 70% 1.83M 4s
-##  32200K .......... .......... .......... .......... .......... 70% 15.9M 4s
-##  32250K .......... .......... .......... .......... .......... 70% 1.17M 4s
-##  32300K .......... .......... .......... .......... .......... 70% 11.5M 4s
-##  32350K .......... .......... .......... .......... .......... 70% 10.4M 4s
-##  32400K .......... .......... .......... .......... .......... 71% 1.72M 4s
-##  32450K .......... .......... .......... .......... .......... 71% 19.0M 4s
-##  32500K .......... .......... .......... .......... .......... 71% 1.17M 4s
-##  32550K .......... .......... .......... .......... .......... 71% 15.9M 4s
-##  32600K .......... .......... .......... .......... .......... 71% 7.87M 4s
-##  32650K .......... .......... .......... .......... .......... 71% 1.90M 4s
-##  32700K .......... .......... .......... .......... .......... 71% 9.52M 4s
-##  32750K .......... .......... .......... .......... .......... 71% 1.18M 4s
-##  32800K .......... .......... .......... .......... .......... 71% 9.89M 4s
-##  32850K .......... .......... .......... .......... .......... 72% 10.1M 4s
-##  32900K .......... .......... .......... .......... .......... 72% 2.04M 4s
-##  32950K .......... .......... .......... .......... .......... 72% 7.98M 4s
-##  33000K .......... .......... .......... .......... .......... 72% 1.16M 4s
-##  33050K .......... .......... .......... .......... .......... 72% 17.7M 4s
-##  33100K .......... .......... .......... .......... .......... 72% 7.32M 4s
-##  33150K .......... .......... .......... .......... .......... 72% 13.8M 4s
-##  33200K .......... .......... .......... .......... .......... 72% 1.81M 4s
-##  33250K .......... .......... .......... .......... .......... 72% 1.20M 4s
-##  33300K .......... .......... .......... .......... .......... 73% 12.8M 4s
-##  33350K .......... .......... .......... .......... .......... 73% 9.50M 4s
-##  33400K .......... .......... .......... .......... .......... 73% 9.51M 4s
-##  33450K .......... .......... .......... .......... .......... 73% 1.84M 4s
-##  33500K .......... .......... .......... .......... .......... 73% 1.21M 4s
-##  33550K .......... .......... .......... .......... .......... 73% 13.2M 4s
-##  33600K .......... .......... .......... .......... .......... 73% 6.01M 4s
-##  33650K .......... .......... .......... .......... .......... 73% 17.2M 4s
-##  33700K .......... .......... .......... .......... .......... 73% 1.84M 4s
-##  33750K .......... .......... .......... .......... .......... 74% 1.21M 4s
-##  33800K .......... .......... .......... .......... .......... 74% 11.2M 4s
-##  33850K .......... .......... .......... .......... .......... 74% 9.64M 4s
-##  33900K .......... .......... .......... .......... .......... 74% 10.2M 4s
-##  33950K .......... .......... .......... .......... .......... 74% 1.82M 4s
-##  34000K .......... .......... .......... .......... .......... 74% 1.19M 4s
-##  34050K .......... .......... .......... .......... .......... 74% 11.5M 4s
-##  34100K .......... .......... .......... .......... .......... 74% 9.65M 4s
-##  34150K .......... .......... .......... .......... .......... 74% 9.16M 4s
-##  34200K .......... .......... .......... .......... .......... 75% 1.85M 4s
-##  34250K .......... .......... .......... .......... .......... 75% 1.21M 4s
-##  34300K .......... .......... .......... .......... .......... 75% 11.5M 4s
-##  34350K .......... .......... .......... .......... .......... 75% 12.9M 4s
-##  34400K .......... .......... .......... .......... .......... 75% 6.54M 4s
-##  34450K .......... .......... .......... .......... .......... 75% 1.90M 4s
-##  34500K .......... .......... .......... .......... .......... 75% 12.9M 4s
-##  34550K .......... .......... .......... .......... .......... 75% 1.22M 4s
-##  34600K .......... .......... .......... .......... .......... 75% 9.41M 4s
-##  34650K .......... .......... .......... .......... .......... 75% 7.68M 4s
-##  34700K .......... .......... .......... .......... .......... 76% 2.04M 4s
-##  34750K .......... .......... .......... .......... .......... 76% 8.43M 4s
-##  34800K .......... .......... .......... .......... .......... 76% 1.20M 4s
-##  34850K .......... .......... .......... .......... .......... 76% 9.11M 3s
-##  34900K .......... .......... .......... .......... .......... 76% 8.81M 3s
-##  34950K .......... .......... .......... .......... .......... 76% 2.00M 3s
-##  35000K .......... .......... .......... .......... .......... 76% 8.24M 3s
-##  35050K .......... .......... .......... .......... .......... 76% 1.23M 3s
-##  35100K .......... .......... .......... .......... .......... 76% 9.27M 3s
-##  35150K .......... .......... .......... .......... .......... 77% 8.09M 3s
-##  35200K .......... .......... .......... .......... .......... 77% 1.96M 3s
-##  35250K .......... .......... .......... .......... .......... 77% 9.21M 3s
-##  35300K .......... .......... .......... .......... .......... 77% 1.21M 3s
-##  35350K .......... .......... .......... .......... .......... 77% 12.0M 3s
-##  35400K .......... .......... .......... .......... .......... 77% 6.57M 3s
-##  35450K .......... .......... .......... .......... .......... 77% 13.6M 3s
-##  35500K .......... .......... .......... .......... .......... 77% 1.88M 3s
-##  35550K .......... .......... .......... .......... .......... 77% 1.22M 3s
-##  35600K .......... .......... .......... .......... .......... 78% 9.99M 3s
-##  35650K .......... .......... .......... .......... .......... 78% 6.74M 3s
-##  35700K .......... .......... .......... .......... .......... 78% 13.9M 3s
-##  35750K .......... .......... .......... .......... .......... 78% 1.88M 3s
-##  35800K .......... .......... .......... .......... .......... 78% 1.22M 3s
-##  35850K .......... .......... .......... .......... .......... 78% 9.97M 3s
-##  35900K .......... .......... .......... .......... .......... 78% 7.14M 3s
-##  35950K .......... .......... .......... .......... .......... 78% 14.6M 3s
-##  36000K .......... .......... .......... .......... .......... 78% 1.84M 3s
-##  36050K .......... .......... .......... .......... .......... 79% 1.22M 3s
-##  36100K .......... .......... .......... .......... .......... 79% 12.5M 3s
-##  36150K .......... .......... .......... .......... .......... 79% 6.28M 3s
-##  36200K .......... .......... .......... .......... .......... 79% 13.2M 3s
-##  36250K .......... .......... .......... .......... .......... 79% 1.91M 3s
-##  36300K .......... .......... .......... .......... .......... 79% 1.21M 3s
-##  36350K .......... .......... .......... .......... .......... 79% 12.8M 3s
-##  36400K .......... .......... .......... .......... .......... 79% 5.86M 3s
-##  36450K .......... .......... .......... .......... .......... 79% 13.2M 3s
-##  36500K .......... .......... .......... .......... .......... 80% 1.95M 3s
-##  36550K .......... .......... .......... .......... .......... 80% 1.20M 3s
-##  36600K .......... .......... .......... .......... .......... 80% 10.7M 3s
-##  36650K .......... .......... .......... .......... .......... 80% 10.3M 3s
-##  36700K .......... .......... .......... .......... .......... 80% 7.59M 3s
-##  36750K .......... .......... .......... .......... .......... 80% 1.92M 3s
-##  36800K .......... .......... .......... .......... .......... 80% 1.20M 3s
-##  36850K .......... .......... .......... .......... .......... 80% 10.4M 3s
-##  36900K .......... .......... .......... .......... .......... 80% 11.2M 3s
-##  36950K .......... .......... .......... .......... .......... 81% 9.54M 3s
-##  37000K .......... .......... .......... .......... .......... 81% 1.82M 3s
-##  37050K .......... .......... .......... .......... .......... 81% 10.1M 3s
-##  37100K .......... .......... .......... .......... .......... 81% 1.23M 3s
-##  37150K .......... .......... .......... .......... .......... 81% 10.3M 3s
-##  37200K .......... .......... .......... .......... .......... 81% 8.16M 3s
-##  37250K .......... .......... .......... .......... .......... 81% 2.02M 3s
-##  37300K .......... .......... .......... .......... .......... 81% 6.39M 3s
-##  37350K .......... .......... .......... .......... .......... 81% 1.24M 3s
-##  37400K .......... .......... .......... .......... .......... 82% 9.40M 3s
-##  37450K .......... .......... .......... .......... .......... 82% 10.6M 3s
-##  37500K .......... .......... .......... .......... .......... 82% 1.98M 3s
-##  37550K .......... .......... .......... .......... .......... 82% 6.54M 3s
-##  37600K .......... .......... .......... .......... .......... 82% 1.22M 3s
-##  37650K .......... .......... .......... .......... .......... 82% 10.7M 3s
-##  37700K .......... .......... .......... .......... .......... 82% 10.4M 3s
-##  37750K .......... .......... .......... .......... .......... 82% 11.8M 3s
-##  37800K .......... .......... .......... .......... .......... 82% 1.71M 3s
-##  37850K .......... .......... .......... .......... .......... 83% 1.28M 3s
-##  37900K .......... .......... .......... .......... .......... 83% 7.73M 3s
-##  37950K .......... .......... .......... .......... .......... 83% 11.7M 2s
-##  38000K .......... .......... .......... .......... .......... 83% 10.4M 2s
-##  38050K .......... .......... .......... .......... .......... 83% 1.71M 2s
-##  38100K .......... .......... .......... .......... .......... 83% 1.28M 2s
-##  38150K .......... .......... .......... .......... .......... 83% 11.8M 2s
-##  38200K .......... .......... .......... .......... .......... 83% 7.51M 2s
-##  38250K .......... .......... .......... .......... .......... 83% 11.7M 2s
-##  38300K .......... .......... .......... .......... .......... 83% 1.71M 2s
-##  38350K .......... .......... .......... .......... .......... 84% 1.30M 2s
-##  38400K .......... .......... .......... .......... .......... 84% 9.47M 2s
-##  38450K .......... .......... .......... .......... .......... 84% 7.84M 2s
-##  38500K .......... .......... .......... .......... .......... 84% 12.7M 2s
-##  38550K .......... .......... .......... .......... .......... 84% 1.68M 2s
-##  38600K .......... .......... .......... .......... .......... 84% 1.30M 2s
-##  38650K .......... .......... .......... .......... .......... 84% 10.6M 2s
-##  38700K .......... .......... .......... .......... .......... 84% 10.2M 2s
-##  38750K .......... .......... .......... .......... .......... 84% 9.09M 2s
-##  38800K .......... .......... .......... .......... .......... 85% 1.65M 2s
-##  38850K .......... .......... .......... .......... .......... 85% 1.32M 2s
-##  38900K .......... .......... .......... .......... .......... 85% 10.1M 2s
-##  38950K .......... .......... .......... .......... .......... 85% 10.4M 2s
-##  39000K .......... .......... .......... .......... .......... 85% 7.73M 2s
-##  39050K .......... .......... .......... .......... .......... 85% 1.94M 2s
-##  39100K .......... .......... .......... .......... .......... 85% 1.21M 2s
-##  39150K .......... .......... .......... .......... .......... 85% 10.2M 2s
-##  39200K .......... .......... .......... .......... .......... 85% 8.68M 2s
-##  39250K .......... .......... .......... .......... .......... 86% 8.58M 2s
-##  39300K .......... .......... .......... .......... .......... 86% 1.94M 2s
-##  39350K .......... .......... .......... .......... .......... 86% 7.92M 2s
-##  39400K .......... .......... .......... .......... .......... 86% 1.24M 2s
-##  39450K .......... .......... .......... .......... .......... 86% 9.79M 2s
-##  39500K .......... .......... .......... .......... .......... 86% 7.76M 2s
-##  39550K .......... .......... .......... .......... .......... 86% 2.21M 2s
-##  39600K .......... .......... .......... .......... .......... 86% 5.34M 2s
-##  39650K .......... .......... .......... .......... .......... 86% 1.25M 2s
-##  39700K .......... .......... .......... .......... .......... 87% 9.29M 2s
-##  39750K .......... .......... .......... .......... .......... 87% 9.91M 2s
-##  39800K .......... .......... .......... .......... .......... 87% 1.85M 2s
-##  39850K .......... .......... .......... .......... .......... 87% 8.45M 2s
-##  39900K .......... .......... .......... .......... .......... 87% 1.31M 2s
-##  39950K .......... .......... .......... .......... .......... 87% 7.34M 2s
-##  40000K .......... .......... .......... .......... .......... 87% 8.53M 2s
-##  40050K .......... .......... .......... .......... .......... 87% 14.0M 2s
-##  40100K .......... .......... .......... .......... .......... 87% 1.68M 2s
-##  40150K .......... .......... .......... .......... .......... 88% 1.33M 2s
-##  40200K .......... .......... .......... .......... .......... 88% 7.18M 2s
-##  40250K .......... .......... .......... .......... .......... 88% 8.51M 2s
-##  40300K .......... .......... .......... .......... .......... 88% 15.4M 2s
-##  40350K .......... .......... .......... .......... .......... 88% 1.71M 2s
-##  40400K .......... .......... .......... .......... .......... 88% 1.30M 2s
-##  40450K .......... .......... .......... .......... .......... 88% 7.40M 2s
-##  40500K .......... .......... .......... .......... .......... 88% 14.0M 2s
-##  40550K .......... .......... .......... .......... .......... 88% 8.97M 2s
-##  40600K .......... .......... .......... .......... .......... 89% 1.71M 2s
-##  40650K .......... .......... .......... .......... .......... 89% 1.35M 2s
-##  40700K .......... .......... .......... .......... .......... 89% 8.00M 2s
-##  40750K .......... .......... .......... .......... .......... 89% 11.3M 2s
-##  40800K .......... .......... .......... .......... .......... 89% 7.16M 2s
-##  40850K .......... .......... .......... .......... .......... 89% 1.75M 2s
-##  40900K .......... .......... .......... .......... .......... 89% 1.34M 2s
-##  40950K .......... .......... .......... .......... .......... 89% 7.89M 2s
-##  41000K .......... .......... .......... .......... .......... 89% 10.9M 1s
-##  41050K .......... .......... .......... .......... .......... 90% 7.22M 1s
-##  41100K .......... .......... .......... .......... .......... 90% 1.78M 1s
-##  41150K .......... .......... .......... .......... .......... 90% 1.35M 1s
-##  41200K .......... .......... .......... .......... .......... 90% 7.15M 1s
-##  41250K .......... .......... .......... .......... .......... 90% 10.2M 1s
-##  41300K .......... .......... .......... .......... .......... 90% 7.68M 1s
-##  41350K .......... .......... .......... .......... .......... 90% 2.03M 1s
-##  41400K .......... .......... .......... .......... .......... 90% 1.22M 1s
-##  41450K .......... .......... .......... .......... .......... 90% 7.82M 1s
-##  41500K .......... .......... .......... .......... .......... 91% 10.5M 1s
-##  41550K .......... .......... .......... .......... .......... 91% 7.83M 1s
-##  41600K .......... .......... .......... .......... .......... 91% 1.96M 1s
-##  41650K .......... .......... .......... .......... .......... 91% 7.62M 1s
-##  41700K .......... .......... .......... .......... .......... 91% 1.24M 1s
-##  41750K .......... .......... .......... .......... .......... 91% 10.9M 1s
-##  41800K .......... .......... .......... .......... .......... 91% 7.42M 1s
-##  41850K .......... .......... .......... .......... .......... 91% 2.02M 1s
-##  41900K .......... .......... .......... .......... .......... 91% 7.30M 1s
-##  41950K .......... .......... .......... .......... .......... 91% 1.25M 1s
-##  42000K .......... .......... .......... .......... .......... 92% 8.61M 1s
-##  42050K .......... .......... .......... .......... .......... 92% 8.48M 1s
-##  42100K .......... .......... .......... .......... .......... 92% 13.1M 1s
-##  42150K .......... .......... .......... .......... .......... 92% 1.77M 1s
-##  42200K .......... .......... .......... .......... .......... 92% 1.25M 1s
-##  42250K .......... .......... .......... .......... .......... 92% 9.63M 1s
-##  42300K .......... .......... .......... .......... .......... 92% 7.80M 1s
-##  42350K .......... .......... .......... .......... .......... 92% 12.4M 1s
-##  42400K .......... .......... .......... .......... .......... 92% 1.78M 1s
-##  42450K .......... .......... .......... .......... .......... 93% 1.25M 1s
-##  42500K .......... .......... .......... .......... .......... 93% 9.64M 1s
-##  42550K .......... .......... .......... .......... .......... 93% 8.54M 1s
-##  42600K .......... .......... .......... .......... .......... 93% 10.7M 1s
-##  42650K .......... .......... .......... .......... .......... 93% 1.84M 1s
-##  42700K .......... .......... .......... .......... .......... 93% 1.28M 1s
-##  42750K .......... .......... .......... .......... .......... 93% 12.1M 1s
-##  42800K .......... .......... .......... .......... .......... 93% 5.29M 1s
-##  42850K .......... .......... .......... .......... .......... 93% 12.7M 1s
-##  42900K .......... .......... .......... .......... .......... 94% 1.84M 1s
-##  42950K .......... .......... .......... .......... .......... 94% 1.29M 1s
-##  43000K .......... .......... .......... .......... .......... 94% 11.4M 1s
-##  43050K .......... .......... .......... .......... .......... 94% 5.51M 1s
-##  43100K .......... .......... .......... .......... .......... 94% 14.0M 1s
-##  43150K .......... .......... .......... .......... .......... 94% 1.85M 1s
-##  43200K .......... .......... .......... .......... .......... 94% 1.26M 1s
-##  43250K .......... .......... .......... .......... .......... 94% 12.4M 1s
-##  43300K .......... .......... .......... .......... .......... 94% 5.52M 1s
-##  43350K .......... .......... .......... .......... .......... 95% 17.3M 1s
-##  43400K .......... .......... .......... .......... .......... 95% 1.78M 1s
-##  43450K .......... .......... .......... .......... .......... 95% 1.35M 1s
-##  43500K .......... .......... .......... .......... .......... 95% 7.96M 1s
-##  43550K .......... .......... .......... .......... .......... 95% 7.88M 1s
-##  43600K .......... .......... .......... .......... .......... 95% 7.45M 1s
-##  43650K .......... .......... .......... .......... .......... 95% 1.82M 1s
-##  43700K .......... .......... .......... .......... .......... 95% 13.0M 1s
-##  43750K .......... .......... .......... .......... .......... 95% 1.28M 1s
-##  43800K .......... .......... .......... .......... .......... 96% 7.47M 1s
-##  43850K .......... .......... .......... .......... .......... 96% 8.39M 1s
-##  43900K .......... .......... .......... .......... .......... 96% 2.09M 1s
-##  43950K .......... .......... .......... .......... .......... 96% 6.78M 1s
-##  44000K .......... .......... .......... .......... .......... 96% 1.25M 1s
-##  44050K .......... .......... .......... .......... .......... 96% 7.88M 1s
-##  44100K .......... .......... .......... .......... .......... 96% 8.40M 0s
-##  44150K .......... .......... .......... .......... .......... 96% 2.09M 0s
-##  44200K .......... .......... .......... .......... .......... 96% 6.49M 0s
-##  44250K .......... .......... .......... .......... .......... 97% 1.28M 0s
-##  44300K .......... .......... .......... .......... .......... 97% 8.08M 0s
-##  44350K .......... .......... .......... .......... .......... 97% 7.92M 0s
-##  44400K .......... .......... .......... .......... .......... 97% 1.98M 0s
-##  44450K .......... .......... .......... .......... .......... 97% 8.37M 0s
-##  44500K .......... .......... .......... .......... .......... 97% 1.25M 0s
-##  44550K .......... .......... .......... .......... .......... 97% 7.83M 0s
-##  44600K .......... .......... .......... .......... .......... 97% 7.94M 0s
-##  44650K .......... .......... .......... .......... .......... 97% 2.05M 0s
-##  44700K .......... .......... .......... .......... .......... 98% 8.32M 0s
-##  44750K .......... .......... .......... .......... .......... 98% 1.29M 0s
-##  44800K .......... .......... .......... .......... .......... 98% 6.15M 0s
-##  44850K .......... .......... .......... .......... .......... 98% 7.40M 0s
-##  44900K .......... .......... .......... .......... .......... 98% 2.06M 0s
-##  44950K .......... .......... .......... .......... .......... 98% 8.90M 0s
-##  45000K .......... .......... .......... .......... .......... 98% 1.28M 0s
-##  45050K .......... .......... .......... .......... .......... 98% 6.47M 0s
-##  45100K .......... .......... .......... .......... .......... 98% 7.50M 0s
-##  45150K .......... .......... .......... .......... .......... 98% 15.8M 0s
-##  45200K .......... .......... .......... .......... .......... 99% 1.84M 0s
-##  45250K .......... .......... .......... .......... .......... 99% 1.26M 0s
-##  45300K .......... .......... .......... .......... .......... 99% 12.5M 0s
-##  45350K .......... .......... .......... .......... .......... 99% 5.88M 0s
-##  45400K .......... .......... .......... .......... .......... 99% 9.42M 0s
-##  45450K .......... .......... .......... .......... .......... 99% 1.94M 0s
-##  45500K .......... .......... .......... .......... .......... 99% 1.35M 0s
-##  45550K .......... .......... .......... .......... .......... 99% 8.27M 0s
-##  45600K .......... .......... .......... .......... .......... 99% 5.19M 0s
-##  45650K .........                                             100% 4.46M=15s
-## 
-## 2019-12-09 15:05:55 (3.02 MB/s) - ‘/data/gwas.txt.gz’ saved [46754937/46754937]</code></pre>
-<p>Count the number of variants</p>
+wget -q -O /data/gwas.txt.gz https://portals.broadinstitute.org/collaboration/giant/images/c/c8/Meta-analysis_Locke_et_al%2BUKBiobank_2018_UPDATED.txt.gz</code></pre>
+<p>Count the total number of variants in GIANT BMI GWAS (Yengo et al, 2018)</p>
 <pre class="bash"><code>gzip -dc /data/gwas.txt.gz | awk &#39;NR&gt;1&#39; | wc -l</code></pre>
 <pre><code>## 2336269</code></pre>
-<p>Define file schema for mapping plain text to VCF format</p>
+<p>Determine file format</p>
 <pre class="bash"><code>gzip -dc /data/gwas.txt.gz | head -n1 | tr &#39;\t&#39; &#39;\n&#39; | awk &#39;{print NR&quot; &quot;$0}&#39;</code></pre>
 <pre><code>## 1 CHR
 ## 2 POS
@@ -1323,37 +400,38 @@ wget -O /data/gwas.txt.gz https://portals.broadinstitute.org/collaboration/giant
 ## 8 SE
 ## 9 P
 ## 10 N</code></pre>
+<p>Define file schema for mapping plain text to VCF format</p>
 <pre class="bash"><code>echo &quot;{\&quot;chr_col\&quot;: 0, \&quot;pos_col\&quot;: 1, \&quot;snp_col\&quot;: 2, \&quot;ea_col\&quot;: 3, \&quot;oa_col\&quot;: 4, \&quot;eaf_col\&quot;: 5, \&quot;beta_col\&quot;: 6, \&quot;se_col\&quot;: 7, \&quot;pval_col\&quot;: 8, \&quot;ncontrol_col\&quot;: 9, \&quot;header\&quot;: true, \&quot;build\&quot;: \&quot;GRCh37\&quot;, \&quot;delimiter\&quot;: \&quot;\t\&quot;}&quot; &gt; /data/schema.json</code></pre>
 <p>Convert GWAS to VCF. This will perform on-the-fly harmonisation of the effect allele to the VCF alternative allele ensuring data consistency. Source code available here: <a href="https://github.com/MRCIEU/gwas2vcf">gwas2vcf</a>.</p>
 <pre class="bash"><code>time python /app/gwas2vcf/main.py \
 --out /data/gwas.vcf.gz \
 --data /data/gwas.txt.gz \
 --ref /data/human_g1k_v37.fasta \
---id &quot;giant_bmi_01&quot; \
+--id &quot;giant-bmi-2018&quot; \
 --json /data/schema.json</code></pre>
-<pre><code>## 2019-12-09 15:05:57,026 INFO GWAS2VCF 1.1.1
-## 2019-12-09 15:05:57,026 INFO Arguments: {&#39;out&#39;: &#39;/data/gwas.vcf.gz&#39;, &#39;data&#39;: &#39;/data/gwas.txt.gz&#39;, &#39;ref&#39;: &#39;/data/human_g1k_v37.fasta&#39;, &#39;json&#39;: &#39;/data/schema.json&#39;, &#39;id&#39;: &#39;giant_bmi_01&#39;, &#39;cohort_controls&#39;: None, &#39;cohort_cases&#39;: None, &#39;rm_chr_prefix&#39;: False, &#39;csi&#39;: False, &#39;log&#39;: &#39;INFO&#39;}
-## 2019-12-09 15:05:57,026 INFO Reading JSON parameters
-## 2019-12-09 15:05:57,027 INFO Parameters: {&#39;delimiter&#39;: &#39;\t&#39;, &#39;se_col&#39;: 7, &#39;pos_col&#39;: 1, &#39;build&#39;: &#39;GRCh37&#39;, &#39;eaf_col&#39;: 5, &#39;beta_col&#39;: 6, &#39;oa_col&#39;: 4, &#39;header&#39;: True, &#39;ncontrol_col&#39;: 9, &#39;snp_col&#39;: 2, &#39;chr_col&#39;: 0, &#39;ea_col&#39;: 3, &#39;pval_col&#39;: 8}
-## 2019-12-09 15:05:57,027 INFO Checking input arguments
-## 2019-12-09 15:05:57,027 INFO Reading summary stats and mapping to FASTA: /data/gwas.txt.gz
-## 2019-12-09 15:05:57,027 INFO Reading gzip file
-## 2019-12-09 15:05:57,028 INFO Skipping header: CHR    POS SNP Tested_Allele   Other_Allele    Freq_Tested_Allele_in_HRS   BETA    SE  P   N
-## 2019-12-09 15:06:39,441 INFO Total variants: 2336269
-## 2019-12-09 15:06:39,441 INFO Variants could not be read: 0
-## 2019-12-09 15:07:09,743 INFO Variants harmonised: 2336269
-## 2019-12-09 15:07:09,744 INFO Variants discarded during harmonisation: 0
-## 2019-12-09 15:07:09,744 INFO Alleles switched: 1133579
-## 2019-12-09 15:07:09,744 INFO Skipped 0 of 2336269
-## 2019-12-09 15:07:09,744 INFO Writing headers to BCF/VCF: /data/gwas.vcf.gz
+<pre><code>## 2019-12-09 15:54:05,544 INFO GWAS2VCF 1.1.1
+## 2019-12-09 15:54:05,544 INFO Arguments: {&#39;out&#39;: &#39;/data/gwas.vcf.gz&#39;, &#39;data&#39;: &#39;/data/gwas.txt.gz&#39;, &#39;ref&#39;: &#39;/data/human_g1k_v37.fasta&#39;, &#39;json&#39;: &#39;/data/schema.json&#39;, &#39;id&#39;: &#39;giant-bmi-2018&#39;, &#39;cohort_controls&#39;: None, &#39;cohort_cases&#39;: None, &#39;rm_chr_prefix&#39;: False, &#39;csi&#39;: False, &#39;log&#39;: &#39;INFO&#39;}
+## 2019-12-09 15:54:05,544 INFO Reading JSON parameters
+## 2019-12-09 15:54:05,545 INFO Parameters: {&#39;header&#39;: True, &#39;build&#39;: &#39;GRCh37&#39;, &#39;delimiter&#39;: &#39;\t&#39;, &#39;ea_col&#39;: 3, &#39;oa_col&#39;: 4, &#39;chr_col&#39;: 0, &#39;pval_col&#39;: 8, &#39;eaf_col&#39;: 5, &#39;pos_col&#39;: 1, &#39;beta_col&#39;: 6, &#39;snp_col&#39;: 2, &#39;ncontrol_col&#39;: 9, &#39;se_col&#39;: 7}
+## 2019-12-09 15:54:05,545 INFO Checking input arguments
+## 2019-12-09 15:54:05,545 INFO Reading summary stats and mapping to FASTA: /data/gwas.txt.gz
+## 2019-12-09 15:54:05,546 INFO Reading gzip file
+## 2019-12-09 15:54:05,546 INFO Skipping header: CHR    POS SNP Tested_Allele   Other_Allele    Freq_Tested_Allele_in_HRS   BETA    SE  P   N
+## 2019-12-09 15:54:48,130 INFO Total variants: 2336269
+## 2019-12-09 15:54:48,130 INFO Variants could not be read: 0
+## 2019-12-09 15:55:54,398 INFO Variants harmonised: 2336269
+## 2019-12-09 15:55:54,399 INFO Variants discarded during harmonisation: 0
+## 2019-12-09 15:55:54,399 INFO Alleles switched: 1133579
+## 2019-12-09 15:55:54,399 INFO Skipped 0 of 2336269
+## 2019-12-09 15:55:54,399 INFO Writing headers to BCF/VCF: /data/gwas.vcf.gz
 ## /app/gwas2vcf/vcf.py:104: RuntimeWarning: divide by zero encountered in log10
 ##   lpval = -np.log10(result.pval)
-## 2019-12-09 15:08:54,329 INFO Sorting records by chromosome and position
-## 2019-12-09 15:09:10,754 INFO Indexing output file
+## 2019-12-09 15:57:34,992 INFO Sorting records by chromosome and position
+## 2019-12-09 15:57:51,623 INFO Indexing output file
 ## 
-## real 3m19.706s
-## user 2m55.072s
-## sys  0m31.213s</code></pre>
+## real 3m52.027s
+## user 2m53.689s
+## sys  0m30.231s</code></pre>
 <p>Compare file size</p>
 <pre class="bash"><code># text
 ls -lh /data/gwas.txt.gz
@@ -1361,93 +439,87 @@ ls -lh /data/gwas.txt.gz
 # VCF
 ls -lh /data/gwas.vcf.gz</code></pre>
 <pre><code>## -rw-r--r-- 1 root root 45M Jun 25  2018 /data/gwas.txt.gz
-## -rw-r--r-- 1 root root 62M Dec  9 15:09 /data/gwas.vcf.gz</code></pre>
+## -rw-r--r-- 1 root root 62M Dec  9 15:57 /data/gwas.vcf.gz</code></pre>
 <p>Extract single variant by rsid. Compare execution time between VCF and text.</p>
 <pre class="bash"><code>snp=&quot;rs10518554&quot;
 
 # compressed text
-time gzip -dc /data/gwas.txt.gz | awk -v snp=&quot;$snp&quot; -F&quot;\t&quot; &#39;$3==snp&#39;
+time gzip -dc /data/gwas.txt.gz | awk -v snp=&quot;$snp&quot; -F&quot;\t&quot; &#39;$3==snp&#39; &gt; /dev/null
 
 # plain text
 gzip -dc /data/gwas.txt.gz &gt; /data/gwas.txt
-time awk -v snp=&quot;$snp&quot; -F&quot;\t&quot; &#39;$3==snp&#39; /data/gwas.txt
+time awk -v snp=&quot;$snp&quot; -F&quot;\t&quot; &#39;$3==snp&#39; /data/gwas.txt &gt; /dev/null
 
 # compressed VCF
-time bcftools query -i &#39;%ID == &quot;$snp&quot;&#39; -f &#39;%LINE\n&#39; /data/gwas.vcf.gz
-time bcftools query -e &#39;%ID != &quot;$snp&quot;&#39; -f &#39;%LINE\n&#39; /data/gwas.vcf.gz</code></pre>
-<pre><code>## 4    130766891   rs10518554  A   G   0.05519  0.0047 0.0037   2.0e-01    691985
+time bcftools query -i &#39;%ID == &quot;$snp&quot;&#39; -f &#39;%LINE\n&#39; /data/gwas.vcf.gz &gt; /dev/null
+time bcftools query -e &#39;%ID != &quot;$snp&quot;&#39; -f &#39;%LINE\n&#39; /data/gwas.vcf.gz &gt; /dev/null</code></pre>
+<pre><code>## 
+## real 0m1.997s
+## user 0m1.805s
+## sys  0m0.090s
 ## 
-## real 0m2.059s
-## user 0m1.761s
-## sys  0m0.094s
-## 4    130766891   rs10518554  A   G   0.05519  0.0047 0.0037   2.0e-01    691985
+## real 0m0.608s
+## user 0m0.564s
+## sys  0m0.045s
 ## 
-## real 0m0.619s
-## user 0m0.579s
-## sys  0m0.041s
+## real 0m4.838s
+## user 0m4.781s
+## sys  0m0.049s
 ## 
-## real 0m4.944s
-## user 0m4.908s
-## sys  0m0.013s
-## 
-## real 0m4.794s
-## user 0m4.765s
-## sys  0m0.029s</code></pre>
+## real 0m5.017s
+## user 0m5.000s
+## sys  0m0.016s</code></pre>
 <p>Extract single variant by chromosome &amp; position. Compare execution time between VCF and text.</p>
 <pre class="bash"><code>chr=&quot;4&quot;
 pos=&quot;130766891&quot;
 
 # compressed text
-time gzip -dc /data/gwas.txt.gz | awk -v chr=&quot;$chr&quot; -v pos=&quot;$pos&quot; -F&quot;\t&quot; &#39;$1 == chr &amp;&amp; $2 == pos&#39;
+time gzip -dc /data/gwas.txt.gz | awk -v chr=&quot;$chr&quot; -v pos=&quot;$pos&quot; -F&quot;\t&quot; &#39;$1 == chr &amp;&amp; $2 == pos&#39; &gt; /dev/null
 
 # plain text
 gzip -dc /data/gwas.txt.gz &gt; /data/gwas.txt
-time awk -v chr=&quot;$chr&quot; -v pos=&quot;$pos&quot; -F&quot;\t&quot; &#39;$1 == chr &amp;&amp; $2 == pos&#39; /data/gwas.txt
+time awk -v chr=&quot;$chr&quot; -v pos=&quot;$pos&quot; -F&quot;\t&quot; &#39;$1 == chr &amp;&amp; $2 == pos&#39; /data/gwas.txt &gt; /dev/null
 
 # compressed VCF
-time bcftools query -r &quot;$chr:$pos-$pos&quot; -f &#39;%LINE\n&#39; /data/gwas.vcf.gz</code></pre>
-<pre><code>## 4    130766891   rs10518554  A   G   0.05519  0.0047 0.0037   2.0e-01    691985
+time bcftools query -r &quot;$chr:$pos-$pos&quot; -f &#39;%LINE\n&#39; /data/gwas.vcf.gz &gt; /dev/null</code></pre>
+<pre><code>## 
+## real 0m0.915s
+## user 0m1.616s
+## sys  0m0.086s
 ## 
-## real 0m0.932s
-## user 0m1.642s
-## sys  0m0.083s
-## 4    130766891   rs10518554  A   G   0.05519  0.0047 0.0037   2.0e-01    691985
+## real 0m0.762s
+## user 0m0.742s
+## sys  0m0.021s
 ## 
-## real 0m0.788s
-## user 0m0.723s
-## sys  0m0.065s
-## 4    130766891   rs10518554  G   A   .   PASS    AF=0.05519  ES:SE:LP:AF:SS:ID   0.0047:0.0037:0.69897:0.05519:691985:rs10518554
-## 
-## 
-## real 0m0.084s
-## user 0m0.055s
-## sys  0m0.029s</code></pre>
+## real 0m0.082s
+## user 0m0.061s
+## sys  0m0.021s</code></pre>
 <p>Extract interval with chromosome &amp; position range. Compare execution time between VCF and text.</p>
 <pre class="bash"><code>chr=&quot;4&quot;
 start=&quot;130766891&quot;
 end=&quot;130717819&quot;
 
 # compressed text
-time gzip -dc /data/gwas.txt.gz | awk -v chr=&quot;$chr&quot; -v start=&quot;$start&quot; -v end=&quot;$end&quot; -F&quot;\t&quot; &#39;$1 == chr &amp;&amp; $2 &gt;= start &amp;&amp; $3 &lt;= end&#39;
+time gzip -dc /data/gwas.txt.gz | awk -v chr=&quot;$chr&quot; -v start=&quot;$start&quot; -v end=&quot;$end&quot; -F&quot;\t&quot; &#39;$1 == chr &amp;&amp; $2 &gt;= start &amp;&amp; $3 &lt;= end&#39; &gt; /dev/null
 
 # plain text
 gzip -dc /data/gwas.txt.gz &gt; /data/gwas.txt
-time awk -v chr=&quot;$chr&quot; -v pos=&quot;$pos&quot; -F&quot;\t&quot; &#39;$1 == chr &amp;&amp; $2 == pos&#39; /data/gwas.txt
+time awk -v chr=&quot;$chr&quot; -v pos=&quot;$pos&quot; -F&quot;\t&quot; &#39;$1 == chr &amp;&amp; $2 == pos&#39; /data/gwas.txt &gt; /dev/null
 
 # compressed VCF
-time bcftools query -r &quot;$chr:$start-$end&quot; -f &#39;%LINE\n&#39; /data/gwas.vcf.gz</code></pre>
+time bcftools query -r &quot;$chr:$start-$end&quot; -f &#39;%LINE\n&#39; /data/gwas.vcf.gz &gt; /dev/null</code></pre>
 <pre><code>## 
-## real 0m0.966s
-## user 0m1.724s
-## sys  0m0.063s
+## real 0m0.928s
+## user 0m1.606s
+## sys  0m0.122s
 ## 
-## real 0m0.777s
-## user 0m0.749s
-## sys  0m0.028s
+## real 0m0.784s
+## user 0m0.732s
+## sys  0m0.052s
 ## 
-## real 0m0.078s
-## user 0m0.075s
-## sys  0m0.004s</code></pre>
+## real 0m0.076s
+## user 0m0.056s
+## sys  0m0.020s</code></pre>
 <p>File size and performance of storing multiple traits per VCF file</p>
 <p>Make multisample VCF to approximate storing multiple traits in a single file</p>
 <pre class="bash"><code>bcftools merge --force-samples -O z -o /data/merged.vcf.gz /data/gwas.vcf.gz /data/gwas.vcf.gz /data/gwas.vcf.gz
@@ -1458,55 +530,51 @@ ls -lh /data/gwas.vcf.gz
 
 # three trait VCF
 ls -lh /data/merged.vcf.gz</code></pre>
-<pre><code>## -rw-r--r-- 1 root root 62M Dec  9 15:09 /data/gwas.vcf.gz
-## -rw-r--r-- 1 root root 70M Dec  9 15:10 /data/merged.vcf.gz</code></pre>
+<pre><code>## -rw-r--r-- 1 root root 62M Dec  9 15:57 /data/gwas.vcf.gz
+## -rw-r--r-- 1 root root 70M Dec  9 15:58 /data/merged.vcf.gz</code></pre>
 <p>Compare query performance between single and multi-trait VCF files</p>
 <pre class="bash"><code># ID lookup
 snp=&quot;rs10518554&quot;
-time bcftools query -i &#39;%ID == &quot;$snp&quot;&#39; -f &#39;%LINE\n&#39; /data/gwas.vcf.gz
-time bcftools query -i &#39;%ID == &quot;$snp&quot;&#39; -f &#39;%LINE\n&#39; /data/merged.vcf.gz
+time bcftools query -i &#39;%ID == &quot;$snp&quot;&#39; -f &#39;%LINE\n&#39; /data/gwas.vcf.gz &gt; /dev/null
+time bcftools query -i &#39;%ID == &quot;$snp&quot;&#39; -f &#39;%LINE\n&#39; /data/merged.vcf.gz &gt; /dev/null
 
 # position
 chr=&quot;4&quot;
 pos=&quot;130766891&quot;
-time bcftools query -r &quot;$chr:$pos-$pos&quot; -f &#39;%LINE\n&#39; /data/gwas.vcf.gz
-time bcftools query -r &quot;$chr:$pos-$pos&quot; -f &#39;%LINE\n&#39; /data/merged.vcf.gz
+time bcftools query -r &quot;$chr:$pos-$pos&quot; -f &#39;%LINE\n&#39; /data/gwas.vcf.gz &gt; /dev/null
+time bcftools query -r &quot;$chr:$pos-$pos&quot; -f &#39;%LINE\n&#39; /data/merged.vcf.gz &gt; /dev/null
 
 # interval
 chr=&quot;4&quot;
 start=&quot;130766891&quot;
 end=&quot;130717819&quot;
 
-time bcftools query -r &quot;$chr:$start-$end&quot; -f &#39;%LINE\n&#39; /data/gwas.vcf.gz
-time bcftools query -r &quot;$chr:$start-$end&quot; -f &#39;%LINE\n&#39; /data/merged.vcf.gz</code></pre>
+time bcftools query -r &quot;$chr:$start-$end&quot; -f &#39;%LINE\n&#39; /data/gwas.vcf.gz &gt; /dev/null
+time bcftools query -r &quot;$chr:$start-$end&quot; -f &#39;%LINE\n&#39; /data/merged.vcf.gz &gt; /dev/null</code></pre>
 <pre><code>## 
-## real 0m5.067s
-## user 0m5.043s
-## sys  0m0.024s
+## real 0m4.832s
+## user 0m4.799s
+## sys  0m0.032s
 ## 
-## real 0m8.211s
-## user 0m8.150s
-## sys  0m0.056s
-## 4    130766891   rs10518554  G   A   .   PASS    AF=0.05519  ES:SE:LP:AF:SS:ID   0.0047:0.0037:0.69897:0.05519:691985:rs10518554
+## real 0m8.074s
+## user 0m8.058s
+## sys  0m0.016s
 ## 
+## real 0m0.077s
+## user 0m0.065s
+## sys  0m0.012s
 ## 
-## real 0m0.080s
-## user 0m0.058s
-## sys  0m0.021s
-## 4    130766891   rs10518554  G   A   .   PASS    AF=0.05519  ES:SE:LP:AF:SS:ID   0.0047:0.0037:0.69897:0.05519:691985:rs10518554 0.0047:0.0037:0.69897:0.05519:691985:rs10518554 0.0047:0.0037:0.69897:0.05519:691985:rs10518554
+## real 0m0.077s
+## user 0m0.065s
+## sys  0m0.012s
 ## 
+## real 0m0.064s
+## user 0m0.044s
+## sys  0m0.020s
 ## 
-## real 0m0.068s
-## user 0m0.046s
-## sys  0m0.022s
-## 
-## real 0m0.068s
-## user 0m0.063s
-## sys  0m0.005s
-## 
-## real 0m0.079s
-## user 0m0.059s
-## sys  0m0.020s</code></pre>
+## real 0m0.077s
+## user 0m0.069s
+## sys  0m0.008s</code></pre>
 
 
 
