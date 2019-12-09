@@ -4,20 +4,22 @@ author: "Matt Lyon"
 date: "2019-12-09"
 ---
 
-Download a typical GWAS in plain text
+## Prepare files
+
+Download GIANT BMI GWAS summary statistics (Yengo et al, 2018)
 
 ```{bash}
 # Yengo L, Sidorenko J, Kemper KE, Zheng Z, Wood AR, Weedon MN, Frayling TM, Hirschhorn J, Yang J, Visscher PM, GIANT Consortium. (2018). Meta-analysis of genome-wide association studies for height and body mass index in ~700,000 individuals of European ancestry. Biorxiv.
 wget -q -O /data/gwas.txt.gz https://portals.broadinstitute.org/collaboration/giant/images/c/c8/Meta-analysis_Locke_et_al%2BUKBiobank_2018_UPDATED.txt.gz
 ```
 
-Count the total number of variants in GIANT BMI GWAS (Yengo et al, 2018)
+Count the total number of variants
 
 ```{bash}
 gzip -dc /data/gwas.txt.gz | awk 'NR>1' | wc -l
 ```
 
-Determine file format
+Determine file format, column order and naming
 
 ```{bash}
 gzip -dc /data/gwas.txt.gz | head -n1 | tr '\t' '\n' | awk '{print NR" "$0}'
@@ -40,7 +42,7 @@ time python /app/gwas2vcf/main.py \
 --json /data/schema.json
 ```
 
-Compare file size
+## Compare file sizes
 
 ```{bash}
 # text
@@ -50,7 +52,9 @@ ls -lh /data/gwas.txt.gz
 ls -lh /data/gwas.vcf.gz
 ```
 
-Extract single variant by rsid. Compare execution time between VCF and text.
+## Compare query execution time between VCF and unstructured text
+
+Extract single variant by rsid
 
 ```{bash}
 snp="rs10518554"
@@ -71,10 +75,10 @@ time gzip -dc /data/gwas.vcf.gz | awk -v snp="$snp" -F"\t" '!/^#/ && $3==snp' > 
 
 # uncompressed VCF using awk
 gzip -dc /data/gwas.vcf.gz > /data/gwas.vcf
-awk -v snp="$snp" -F"\t" '!/^#/ && $3==snp' /data/gwas.vcf > /dev/null
+time awk -v snp="$snp" -F"\t" '!/^#/ && $3==snp' /data/gwas.vcf > /dev/null
 ```
 
-Extract single variant by chromosome & position. Compare execution time between VCF and text.
+Extract single variant by chromosome & position
 
 ```{bash}
 chr="4"
@@ -91,7 +95,7 @@ time awk -v chr="$chr" -v pos="$pos" -F"\t" '$1 == chr && $2 == pos' /data/gwas.
 time bcftools query -r "$chr:$pos-$pos" -f '%LINE\n' /data/gwas.vcf.gz > /dev/null
 ```
 
-Extract interval with chromosome & position range. Compare execution time between VCF and text.
+Extract interval with chromosome & position range
 
 ```{bash}
 chr="4"
@@ -109,7 +113,9 @@ time awk -v chr="$chr" -v pos="$pos" -F"\t" '$1 == chr && $2 == pos' /data/gwas.
 time bcftools query -r "$chr:$start-$end" -f '%LINE\n' /data/gwas.vcf.gz > /dev/null
 ```
 
-File size and performance of storing multiple traits per VCF file
+## multitrait VCF file
+
+File size and performance from storing multiple traits per VCF file
 
 Make multisample VCF to approximate storing multiple traits in a single file
 
