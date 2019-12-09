@@ -411,29 +411,29 @@ wget -q -O /data/gwas.txt.gz https://portals.broadinstitute.org/collaboration/gi
 --ref /data/human_g1k_v37.fasta \
 --id &quot;giant-bmi-2018&quot; \
 --json /data/schema.json</code></pre>
-<pre><code>## 2019-12-09 16:40:40,440 INFO GWAS2VCF 1.1.1
-## 2019-12-09 16:40:40,440 INFO Arguments: {&#39;out&#39;: &#39;/data/gwas.vcf.gz&#39;, &#39;data&#39;: &#39;/data/gwas.txt.gz&#39;, &#39;ref&#39;: &#39;/data/human_g1k_v37.fasta&#39;, &#39;json&#39;: &#39;/data/schema.json&#39;, &#39;id&#39;: &#39;giant-bmi-2018&#39;, &#39;cohort_controls&#39;: None, &#39;cohort_cases&#39;: None, &#39;rm_chr_prefix&#39;: False, &#39;csi&#39;: False, &#39;log&#39;: &#39;INFO&#39;}
-## 2019-12-09 16:40:40,440 INFO Reading JSON parameters
-## 2019-12-09 16:40:40,441 INFO Parameters: {&#39;se_col&#39;: 7, &#39;delimiter&#39;: &#39;\t&#39;, &#39;beta_col&#39;: 6, &#39;build&#39;: &#39;GRCh37&#39;, &#39;pos_col&#39;: 1, &#39;pval_col&#39;: 8, &#39;ncontrol_col&#39;: 9, &#39;header&#39;: True, &#39;oa_col&#39;: 4, &#39;chr_col&#39;: 0, &#39;ea_col&#39;: 3, &#39;eaf_col&#39;: 5, &#39;snp_col&#39;: 2}
-## 2019-12-09 16:40:40,441 INFO Checking input arguments
-## 2019-12-09 16:40:40,441 INFO Reading summary stats and mapping to FASTA: /data/gwas.txt.gz
-## 2019-12-09 16:40:40,441 INFO Reading gzip file
-## 2019-12-09 16:40:40,441 INFO Skipping header: CHR    POS SNP Tested_Allele   Other_Allele    Freq_Tested_Allele_in_HRS   BETA    SE  P   N
-## 2019-12-09 16:41:22,530 INFO Total variants: 2336269
-## 2019-12-09 16:41:22,530 INFO Variants could not be read: 0
-## 2019-12-09 16:41:57,924 INFO Variants harmonised: 2336269
-## 2019-12-09 16:41:57,924 INFO Variants discarded during harmonisation: 0
-## 2019-12-09 16:41:57,924 INFO Alleles switched: 1133579
-## 2019-12-09 16:41:57,924 INFO Skipped 0 of 2336269
-## 2019-12-09 16:41:57,924 INFO Writing headers to BCF/VCF: /data/gwas.vcf.gz
+<pre><code>## 2019-12-09 16:58:42,124 INFO GWAS2VCF 1.1.1
+## 2019-12-09 16:58:42,124 INFO Arguments: {&#39;out&#39;: &#39;/data/gwas.vcf.gz&#39;, &#39;data&#39;: &#39;/data/gwas.txt.gz&#39;, &#39;ref&#39;: &#39;/data/human_g1k_v37.fasta&#39;, &#39;json&#39;: &#39;/data/schema.json&#39;, &#39;id&#39;: &#39;giant-bmi-2018&#39;, &#39;cohort_controls&#39;: None, &#39;cohort_cases&#39;: None, &#39;rm_chr_prefix&#39;: False, &#39;csi&#39;: False, &#39;log&#39;: &#39;INFO&#39;}
+## 2019-12-09 16:58:42,124 INFO Reading JSON parameters
+## 2019-12-09 16:58:42,125 INFO Parameters: {&#39;chr_col&#39;: 0, &#39;snp_col&#39;: 2, &#39;ea_col&#39;: 3, &#39;header&#39;: True, &#39;eaf_col&#39;: 5, &#39;pval_col&#39;: 8, &#39;oa_col&#39;: 4, &#39;pos_col&#39;: 1, &#39;ncontrol_col&#39;: 9, &#39;beta_col&#39;: 6, &#39;build&#39;: &#39;GRCh37&#39;, &#39;se_col&#39;: 7, &#39;delimiter&#39;: &#39;\t&#39;}
+## 2019-12-09 16:58:42,125 INFO Checking input arguments
+## 2019-12-09 16:58:42,125 INFO Reading summary stats and mapping to FASTA: /data/gwas.txt.gz
+## 2019-12-09 16:58:42,125 INFO Reading gzip file
+## 2019-12-09 16:58:42,125 INFO Skipping header: CHR    POS SNP Tested_Allele   Other_Allele    Freq_Tested_Allele_in_HRS   BETA    SE  P   N
+## 2019-12-09 16:59:23,820 INFO Total variants: 2336269
+## 2019-12-09 16:59:23,821 INFO Variants could not be read: 0
+## 2019-12-09 17:00:02,433 INFO Variants harmonised: 2336269
+## 2019-12-09 17:00:02,437 INFO Variants discarded during harmonisation: 0
+## 2019-12-09 17:00:02,437 INFO Alleles switched: 1133579
+## 2019-12-09 17:00:02,437 INFO Skipped 0 of 2336269
+## 2019-12-09 17:00:02,438 INFO Writing headers to BCF/VCF: /data/gwas.vcf.gz
 ## /app/gwas2vcf/vcf.py:104: RuntimeWarning: divide by zero encountered in log10
 ##   lpval = -np.log10(result.pval)
-## 2019-12-09 16:43:41,984 INFO Sorting records by chromosome and position
-## 2019-12-09 16:43:58,630 INFO Indexing output file
+## 2019-12-09 17:01:48,292 INFO Sorting records by chromosome and position
+## 2019-12-09 17:02:04,703 INFO Indexing output file
 ## 
-## real 3m24.257s
-## user 2m56.030s
-## sys  0m30.033s</code></pre>
+## real 3m28.582s
+## user 2m57.719s
+## sys  0m28.638s</code></pre>
 </div>
 <div id="compare-file-sizes" class="section level2">
 <h2>Compare file sizes</h2>
@@ -443,7 +443,7 @@ ls -lh /data/gwas.txt.gz
 # VCF
 ls -lh /data/gwas.vcf.gz</code></pre>
 <pre><code>## -rw-r--r-- 1 root root 45M Jun 25  2018 /data/gwas.txt.gz
-## -rw-r--r-- 1 root root 62M Dec  9 16:43 /data/gwas.vcf.gz</code></pre>
+## -rw-r--r-- 1 root root 62M Dec  9 17:02 /data/gwas.vcf.gz</code></pre>
 </div>
 <div id="compare-query-execution-time-between-vcf-and-unstructured-text" class="section level2">
 <h2>Compare query execution time between VCF and unstructured text</h2>
@@ -462,35 +462,35 @@ time bcftools query -i &#39;%ID == &quot;$snp&quot;&#39; -f &#39;%LINE\n&#39; /d
 time bcftools query -e &#39;%ID != &quot;$snp&quot;&#39; -f &#39;%LINE\n&#39; /data/gwas.vcf.gz &gt; /dev/null
 
 # compressed VCF using awk
-time gzip -dc /data/gwas.vcf.gz | awk -v snp=&quot;$snp&quot; -F&quot;\t&quot; &#39;!/^#/ &amp;&amp; $3==snp&#39; &gt; /dev/null
+time gzip -dc /data/gwas.vcf.gz | awk -v snp=&quot;$snp&quot; -F&quot;\t&quot; &#39;$3==snp&#39; &gt; /dev/null
 
 # uncompressed VCF using awk
 gzip -dc /data/gwas.vcf.gz &gt; /data/gwas.vcf
-time awk -v snp=&quot;$snp&quot; -F&quot;\t&quot; &#39;!/^#/ &amp;&amp; $3==snp&#39; /data/gwas.vcf &gt; /dev/null</code></pre>
+time awk -v snp=&quot;$snp&quot; -F&quot;\t&quot; &#39;$3==snp&#39; /data/gwas.vcf &gt; /dev/null</code></pre>
 <pre><code>## 
-## real 0m0.959s
-## user 0m1.526s
-## sys  0m0.077s
+## real 0m0.955s
+## user 0m1.518s
+## sys  0m0.093s
 ## 
-## real 0m0.632s
-## user 0m0.580s
-## sys  0m0.052s
-## 
-## real 0m4.844s
-## user 0m4.819s
+## real 0m0.628s
+## user 0m0.611s
 ## sys  0m0.017s
 ## 
-## real 0m4.878s
-## user 0m4.845s
+## real 0m4.844s
+## user 0m4.807s
+## sys  0m0.029s
+## 
+## real 0m4.934s
+## user 0m4.901s
 ## sys  0m0.032s
 ## 
-## real 0m1.485s
-## user 0m2.168s
-## sys  0m0.133s
+## real 0m1.484s
+## user 0m2.081s
+## sys  0m0.158s
 ## 
-## real 0m0.782s
-## user 0m0.709s
-## sys  0m0.073s</code></pre>
+## real 0m0.699s
+## user 0m0.642s
+## sys  0m0.056s</code></pre>
 <p>Extract single variant by chromosome &amp; position</p>
 <pre class="bash"><code>chr=&quot;4&quot;
 pos=&quot;130766891&quot;
@@ -505,17 +505,17 @@ time awk -v chr=&quot;$chr&quot; -v pos=&quot;$pos&quot; -F&quot;\t&quot; &#39;$
 # compressed VCF
 time bcftools query -r &quot;$chr:$pos-$pos&quot; -f &#39;%LINE\n&#39; /data/gwas.vcf.gz &gt; /dev/null</code></pre>
 <pre><code>## 
-## real 0m0.974s
-## user 0m1.694s
-## sys  0m0.100s
+## real 0m0.925s
+## user 0m1.645s
+## sys  0m0.073s
 ## 
-## real 0m0.790s
-## user 0m0.750s
-## sys  0m0.041s
+## real 0m0.768s
+## user 0m0.707s
+## sys  0m0.060s
 ## 
-## real 0m0.077s
-## user 0m0.050s
-## sys  0m0.027s</code></pre>
+## real 0m0.076s
+## user 0m0.048s
+## sys  0m0.028s</code></pre>
 <p>Extract interval with chromosome &amp; position range</p>
 <pre class="bash"><code>chr=&quot;4&quot;
 start=&quot;130766891&quot;
@@ -531,17 +531,17 @@ time awk -v chr=&quot;$chr&quot; -v pos=&quot;$pos&quot; -F&quot;\t&quot; &#39;$
 # compressed VCF
 time bcftools query -r &quot;$chr:$start-$end&quot; -f &#39;%LINE\n&#39; /data/gwas.vcf.gz &gt; /dev/null</code></pre>
 <pre><code>## 
-## real 0m0.990s
-## user 0m1.808s
-## sys  0m0.073s
+## real 0m0.930s
+## user 0m1.708s
+## sys  0m0.077s
 ## 
-## real 0m0.772s
-## user 0m0.748s
-## sys  0m0.024s
+## real 0m0.779s
+## user 0m0.722s
+## sys  0m0.056s
 ## 
-## real 0m0.078s
-## user 0m0.051s
-## sys  0m0.028s</code></pre>
+## real 0m0.079s
+## user 0m0.059s
+## sys  0m0.020s</code></pre>
 </div>
 <div id="multitrait-vcf-file" class="section level2">
 <h2>multitrait VCF file</h2>
@@ -555,8 +555,8 @@ ls -lh /data/gwas.vcf.gz
 
 # three trait VCF
 ls -lh /data/merged.vcf.gz</code></pre>
-<pre><code>## -rw-r--r-- 1 root root 62M Dec  9 16:43 /data/gwas.vcf.gz
-## -rw-r--r-- 1 root root 70M Dec  9 16:45 /data/merged.vcf.gz</code></pre>
+<pre><code>## -rw-r--r-- 1 root root 62M Dec  9 17:02 /data/gwas.vcf.gz
+## -rw-r--r-- 1 root root 70M Dec  9 17:03 /data/merged.vcf.gz</code></pre>
 <p>Compare query performance between single and multi-trait VCF files</p>
 <pre class="bash"><code># ID lookup
 snp=&quot;rs10518554&quot;
@@ -577,29 +577,29 @@ end=&quot;130717819&quot;
 time bcftools query -r &quot;$chr:$start-$end&quot; -f &#39;%LINE\n&#39; /data/gwas.vcf.gz &gt; /dev/null
 time bcftools query -r &quot;$chr:$start-$end&quot; -f &#39;%LINE\n&#39; /data/merged.vcf.gz &gt; /dev/null</code></pre>
 <pre><code>## 
-## real 0m5.007s
-## user 0m4.987s
+## real 0m4.847s
+## user 0m4.826s
 ## sys  0m0.020s
 ## 
-## real 0m8.227s
-## user 0m8.206s
+## real 0m8.177s
+## user 0m8.132s
+## sys  0m0.044s
+## 
+## real 0m0.075s
+## user 0m0.054s
+## sys  0m0.021s
+## 
+## real 0m0.076s
+## user 0m0.056s
 ## sys  0m0.020s
 ## 
-## real 0m0.079s
-## user 0m0.071s
-## sys  0m0.008s
-## 
-## real 0m0.080s
-## user 0m0.072s
-## sys  0m0.008s
-## 
-## real 0m0.080s
-## user 0m0.068s
+## real 0m0.075s
+## user 0m0.063s
 ## sys  0m0.012s
 ## 
-## real 0m0.079s
-## user 0m0.075s
-## sys  0m0.004s</code></pre>
+## real 0m0.080s
+## user 0m0.060s
+## sys  0m0.020s</code></pre>
 </div>
 
 
