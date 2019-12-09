@@ -1,0 +1,5 @@
+gwas.txt.gz
+gwas.vcf.gz
+gwas.vcf.gz.tbi
+merged.vcf.gz
+merged.vcf.gz.tbi
