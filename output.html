@@ -382,16 +382,17 @@ $(document).ready(function () {
 </div>
 
 
-<div id="prepare-files" class="section level2">
-<h2>Prepare files</h2>
+<div id="prepare-files" class="section level3">
+<h3>Prepare files</h3>
 <p>Download GIANT BMI GWAS summary statistics (Yengo et al, 2018)</p>
-<pre class="bash"><code># Yengo L, Sidorenko J, Kemper KE, Zheng Z, Wood AR, Weedon MN, Frayling TM, Hirschhorn J, Yang J, Visscher PM, GIANT Consortium. (2018). Meta-analysis of genome-wide association studies for height and body mass index in ~700,000 individuals of European ancestry. Biorxiv.
-wget -q -O /data/gwas.txt.gz https://portals.broadinstitute.org/collaboration/giant/images/c/c8/Meta-analysis_Locke_et_al%2BUKBiobank_2018_UPDATED.txt.gz</code></pre>
+<p>#<code>{bash} #set -euo pipefail ## Yengo L, Sidorenko J, Kemper KE, Zheng Z, Wood AR, Weedon MN, Frayling TM, Hirschhorn J, Yang J, Visscher PM, GIANT Consortium. (2018). Meta-analysis of genome-wide association studies for height and body mass index in ~700,000 individuals of European ancestry. Biorxiv. #wget -q -O /data/gwas.txt.gz https://portals.broadinstitute.org/collaboration/giant/images/c/c8/Meta-analysis_Locke_et_al%2BUKBiobank_2018_UPDATED.txt.gz #</code></p>
 <p>Count the total number of variants</p>
-<pre class="bash"><code>gzip -dc /data/gwas.txt.gz | awk &#39;NR&gt;1&#39; | wc -l</code></pre>
+<pre class="bash"><code>set -euo pipefail
+gzip -dc /data/gwas.txt.gz | awk &#39;NR&gt;1&#39; | wc -l</code></pre>
 <pre><code>## 2336269</code></pre>
 <p>Determine file format, column order and naming</p>
-<pre class="bash"><code>gzip -dc /data/gwas.txt.gz | head -n1 | tr &#39;\t&#39; &#39;\n&#39; | awk &#39;{print NR&quot; &quot;$0}&#39;</code></pre>
+<pre class="bash"><code>set -eu
+gzip -dc /data/gwas.txt.gz | head -n1 | tr &#39;\t&#39; &#39;\n&#39; | awk &#39;{print NR&quot; &quot;$0}&#39;</code></pre>
 <pre><code>## 1 CHR
 ## 2 POS
 ## 3 SNP
@@ -403,203 +404,265 @@ wget -q -O /data/gwas.txt.gz https://portals.broadinstitute.org/collaboration/gi
 ## 9 P
 ## 10 N</code></pre>
 <p>Define file schema for mapping plain text to VCF format</p>
-<pre class="bash"><code>echo &quot;{\&quot;chr_col\&quot;: 0, \&quot;pos_col\&quot;: 1, \&quot;snp_col\&quot;: 2, \&quot;ea_col\&quot;: 3, \&quot;oa_col\&quot;: 4, \&quot;eaf_col\&quot;: 5, \&quot;beta_col\&quot;: 6, \&quot;se_col\&quot;: 7, \&quot;pval_col\&quot;: 8, \&quot;ncontrol_col\&quot;: 9, \&quot;header\&quot;: true, \&quot;build\&quot;: \&quot;GRCh37\&quot;, \&quot;delimiter\&quot;: \&quot;\t\&quot;}&quot; &gt; /data/schema.json</code></pre>
+<pre class="bash"><code>set -euo pipefail
+echo &quot;{\&quot;chr_col\&quot;: 0, \&quot;pos_col\&quot;: 1, \&quot;snp_col\&quot;: 2, \&quot;ea_col\&quot;: 3, \&quot;oa_col\&quot;: 4, \&quot;eaf_col\&quot;: 5, \&quot;beta_col\&quot;: 6, \&quot;se_col\&quot;: 7, \&quot;pval_col\&quot;: 8, \&quot;ncontrol_col\&quot;: 9, \&quot;header\&quot;: true, \&quot;build\&quot;: \&quot;GRCh37\&quot;, \&quot;delimiter\&quot;: \&quot;\t\&quot;}&quot; &gt; /data/schema.json</code></pre>
 <p>Convert GWAS to VCF. This will perform on-the-fly harmonisation of the effect allele to the VCF alternative allele ensuring data consistency. Source code available here: <a href="https://github.com/MRCIEU/gwas2vcf">gwas2vcf</a>.</p>
-<pre class="bash"><code>time python /app/gwas2vcf/main.py \
+<pre class="bash"><code>set -euo pipefail
+python /app/gwas2vcf/main.py \
 --out /data/gwas.vcf.gz \
 --data /data/gwas.txt.gz \
 --ref /data/human_g1k_v37.fasta \
 --id &quot;giant-bmi-2018&quot; \
 --json /data/schema.json</code></pre>
-<pre><code>## 2019-12-09 16:58:42,124 INFO GWAS2VCF 1.1.1
-## 2019-12-09 16:58:42,124 INFO Arguments: {&#39;out&#39;: &#39;/data/gwas.vcf.gz&#39;, &#39;data&#39;: &#39;/data/gwas.txt.gz&#39;, &#39;ref&#39;: &#39;/data/human_g1k_v37.fasta&#39;, &#39;json&#39;: &#39;/data/schema.json&#39;, &#39;id&#39;: &#39;giant-bmi-2018&#39;, &#39;cohort_controls&#39;: None, &#39;cohort_cases&#39;: None, &#39;rm_chr_prefix&#39;: False, &#39;csi&#39;: False, &#39;log&#39;: &#39;INFO&#39;}
-## 2019-12-09 16:58:42,124 INFO Reading JSON parameters
-## 2019-12-09 16:58:42,125 INFO Parameters: {&#39;chr_col&#39;: 0, &#39;snp_col&#39;: 2, &#39;ea_col&#39;: 3, &#39;header&#39;: True, &#39;eaf_col&#39;: 5, &#39;pval_col&#39;: 8, &#39;oa_col&#39;: 4, &#39;pos_col&#39;: 1, &#39;ncontrol_col&#39;: 9, &#39;beta_col&#39;: 6, &#39;build&#39;: &#39;GRCh37&#39;, &#39;se_col&#39;: 7, &#39;delimiter&#39;: &#39;\t&#39;}
-## 2019-12-09 16:58:42,125 INFO Checking input arguments
-## 2019-12-09 16:58:42,125 INFO Reading summary stats and mapping to FASTA: /data/gwas.txt.gz
-## 2019-12-09 16:58:42,125 INFO Reading gzip file
-## 2019-12-09 16:58:42,125 INFO Skipping header: CHR    POS SNP Tested_Allele   Other_Allele    Freq_Tested_Allele_in_HRS   BETA    SE  P   N
-## 2019-12-09 16:59:23,820 INFO Total variants: 2336269
-## 2019-12-09 16:59:23,821 INFO Variants could not be read: 0
-## 2019-12-09 17:00:02,433 INFO Variants harmonised: 2336269
-## 2019-12-09 17:00:02,437 INFO Variants discarded during harmonisation: 0
-## 2019-12-09 17:00:02,437 INFO Alleles switched: 1133579
-## 2019-12-09 17:00:02,437 INFO Skipped 0 of 2336269
-## 2019-12-09 17:00:02,438 INFO Writing headers to BCF/VCF: /data/gwas.vcf.gz
+<pre><code>## 2019-12-10 12:26:22,056 INFO GWAS2VCF 1.1.1
+## 2019-12-10 12:26:22,056 INFO Arguments: {&#39;out&#39;: &#39;/data/gwas.vcf.gz&#39;, &#39;data&#39;: &#39;/data/gwas.txt.gz&#39;, &#39;ref&#39;: &#39;/data/human_g1k_v37.fasta&#39;, &#39;json&#39;: &#39;/data/schema.json&#39;, &#39;id&#39;: &#39;giant-bmi-2018&#39;, &#39;cohort_controls&#39;: None, &#39;cohort_cases&#39;: None, &#39;rm_chr_prefix&#39;: False, &#39;csi&#39;: False, &#39;log&#39;: &#39;INFO&#39;}
+## 2019-12-10 12:26:22,056 INFO Reading JSON parameters
+## 2019-12-10 12:26:22,057 INFO Parameters: {&#39;snp_col&#39;: 2, &#39;delimiter&#39;: &#39;\t&#39;, &#39;build&#39;: &#39;GRCh37&#39;, &#39;ncontrol_col&#39;: 9, &#39;pos_col&#39;: 1, &#39;header&#39;: True, &#39;ea_col&#39;: 3, &#39;chr_col&#39;: 0, &#39;beta_col&#39;: 6, &#39;pval_col&#39;: 8, &#39;se_col&#39;: 7, &#39;oa_col&#39;: 4, &#39;eaf_col&#39;: 5}
+## 2019-12-10 12:26:22,057 INFO Checking input arguments
+## 2019-12-10 12:26:22,057 INFO Reading summary stats and mapping to FASTA: /data/gwas.txt.gz
+## 2019-12-10 12:26:22,057 INFO Reading gzip file
+## 2019-12-10 12:26:22,058 INFO Skipping header: CHR    POS SNP Tested_Allele   Other_Allele    Freq_Tested_Allele_in_HRS   BETA    SE  P   N
+## 2019-12-10 12:27:03,795 INFO Total variants: 2336269
+## 2019-12-10 12:27:03,795 INFO Variants could not be read: 0
+## 2019-12-10 12:27:31,452 INFO Variants harmonised: 2336269
+## 2019-12-10 12:27:31,452 INFO Variants discarded during harmonisation: 0
+## 2019-12-10 12:27:31,452 INFO Alleles switched: 1133579
+## 2019-12-10 12:27:31,452 INFO Skipped 0 of 2336269
+## 2019-12-10 12:27:31,452 INFO Writing headers to BCF/VCF: /data/gwas.vcf.gz
 ## /app/gwas2vcf/vcf.py:104: RuntimeWarning: divide by zero encountered in log10
 ##   lpval = -np.log10(result.pval)
-## 2019-12-09 17:01:48,292 INFO Sorting records by chromosome and position
-## 2019-12-09 17:02:04,703 INFO Indexing output file
-## 
-## real 3m28.582s
-## user 2m57.719s
-## sys  0m28.638s</code></pre>
+## 2019-12-10 12:29:28,108 INFO Sorting records by chromosome and position
+## 2019-12-10 12:29:45,790 INFO Indexing output file</code></pre>
+<p>Extract files for later comparison</p>
+<pre class="bash"><code>gzip -dc /data/gwas.txt.gz &gt; /data/gwas.txt
+gzip -dc /data/gwas.vcf.gz &gt; /data/gwas.vcf</code></pre>
 </div>
-<div id="compare-file-sizes" class="section level2">
-<h2>Compare file sizes</h2>
-<pre class="bash"><code># text
-ls -lh /data/gwas.txt.gz
-
-# VCF
+<div id="compare-file-sizes" class="section level3">
+<h3>Compare file sizes</h3>
+<p>Gzipped unstructured (original) text</p>
+<pre class="bash"><code>set -euo pipefail
+ls -lh /data/gwas.txt.gz</code></pre>
+<pre><code>## -rw-r--r-- 1 1003 1003 45M Dec 10 12:26 /data/gwas.txt.gz</code></pre>
+<p>Gzipped VCF</p>
+<pre class="bash"><code>set -euo pipefail
 ls -lh /data/gwas.vcf.gz</code></pre>
-<pre><code>## -rw-r--r-- 1 root root 45M Jun 25  2018 /data/gwas.txt.gz
-## -rw-r--r-- 1 root root 62M Dec  9 17:02 /data/gwas.vcf.gz</code></pre>
+<pre><code>## -rw-r--r-- 1 root root 62M Dec 10 12:29 /data/gwas.vcf.gz</code></pre>
 </div>
-<div id="compare-query-execution-time-between-vcf-and-unstructured-text" class="section level2">
-<h2>Compare query execution time between VCF and unstructured text</h2>
-<p>Extract single variant by rsid</p>
-<pre class="bash"><code>snp=&quot;rs10518554&quot;
+<div id="compare-query-execution-time-between-vcf-and-unstructured-text" class="section level3">
+<h3>Compare query execution time between VCF and unstructured text</h3>
+<p>Obtain random set of SNPs for measuring query performance</p>
+<pre class="bash"><code># TODO increase n
+set -eu
+gzip -dc /data/gwas.txt.gz | awk &#39;NR&gt;1 {print $3&quot;\t&quot;$1&quot;:&quot;$2&quot;-&quot;$2}&#39; | shuf | head -n 5 &gt; /data/queries.txt</code></pre>
+<p>Record time for random lookups by rsid</p>
+<pre class="bash"><code>set -euo pipefail
 
-# compressed text
-time gzip -dc /data/gwas.txt.gz | awk -v snp=&quot;$snp&quot; -F&quot;\t&quot; &#39;$3==snp&#39; &gt; /dev/null
+echo -e &quot;query\treal\tuser\tsys&quot; &gt; /data/rsid.query.uncompressed.text.awk.time.txt
+echo -e &quot;query\treal\tuser\tsys&quot; &gt; /data/rsid.query.compressed.text.awk.time.txt
+echo -e &quot;query\treal\tuser\tsys&quot; &gt; /data/rsid.query.compressed.vcf.bcftools.time.txt
+echo -e &quot;query\treal\tuser\tsys&quot; &gt; /data/rsid.query.compressed.vcf.awk.time.txt
+echo -e &quot;query\treal\tuser\tsys&quot; &gt; /data/rsid.query.uncompressed.vcf.awk.time.txt
 
-# plain text
-gzip -dc /data/gwas.txt.gz &gt; /data/gwas.txt
-time awk -v snp=&quot;$snp&quot; -F&quot;\t&quot; &#39;$3==snp&#39; /data/gwas.txt &gt; /dev/null
+while read line; do
 
-# compressed VCF using bcftools
-time bcftools query -i &#39;%ID == &quot;$snp&quot;&#39; -f &#39;%LINE\n&#39; /data/gwas.vcf.gz &gt; /dev/null
-time bcftools query -e &#39;%ID != &quot;$snp&quot;&#39; -f &#39;%LINE\n&#39; /data/gwas.vcf.gz &gt; /dev/null
+    # define query
+    snp=$(echo &quot;$line&quot; | cut -s -f1)
 
-# compressed VCF using awk
-time gzip -dc /data/gwas.vcf.gz | awk -v snp=&quot;$snp&quot; -F&quot;\t&quot; &#39;$3==snp&#39; &gt; /dev/null
+    # log SNP
+    echo -ne &quot;$snp\t&quot; &gt;&gt; /data/rsid.query.uncompressed.text.awk.time.txt
+    echo -ne &quot;$snp\t&quot; &gt;&gt; /data/rsid.query.compressed.text.awk.time.txt
+    echo -ne &quot;$snp\t&quot; &gt;&gt; /data/rsid.query.compressed.vcf.bcftools.time.txt
+    echo -ne &quot;$snp\t&quot; &gt;&gt; /data/rsid.query.compressed.vcf.awk.time.txt
+    echo -ne &quot;$snp\t&quot; &gt;&gt; /data/rsid.query.uncompressed.vcf.awk.time.txt
 
-# uncompressed VCF using awk
-gzip -dc /data/gwas.vcf.gz &gt; /data/gwas.vcf
-time awk -v snp=&quot;$snp&quot; -F&quot;\t&quot; &#39;$3==snp&#39; /data/gwas.vcf &gt; /dev/null</code></pre>
-<pre><code>## 
-## real 0m0.955s
-## user 0m1.518s
-## sys  0m0.093s
+    # compressed text
+    /usr/bin/time -f &quot;%e\t%U\t%S&quot; -ao /data/rsid.query.compressed.text.awk.time.txt \
+    gzip -dc /data/gwas.txt.gz | \
+    awk -v snp=&quot;$snp&quot; -F&quot;\t&quot; &#39;$3==snp&#39;
+
+    # uncompressed text
+    /usr/bin/time -f &quot;%e\t%U\t%S&quot; -ao /data/rsid.query.uncompressed.text.awk.time.txt \
+    awk -v snp=&quot;$snp&quot; -F&quot;\t&quot; &#39;$3==snp&#39; /data/gwas.txt
+
+    # compressed VCF using bcftools
+    /usr/bin/time -f &quot;%e\t%U\t%S&quot; -ao /data/rsid.query.compressed.vcf.bcftools.time.txt \
+    bcftools query -i &quot;%ID == \&quot;$snp\&quot;&quot; -f &#39;%LINE\n&#39; /data/gwas.vcf.gz
+
+    # compressed VCF using awk
+    /usr/bin/time -f &quot;%e\t%U\t%S&quot; -ao /data/rsid.query.compressed.vcf.awk.time.txt \
+    gzip -dc /data/gwas.vcf.gz | \
+    awk -v snp=&quot;$snp&quot; -F&quot;\t&quot; &#39;$3==snp&#39;
+
+    # uncompressed VCF using awk
+    /usr/bin/time -f &quot;%e\t%U\t%S&quot; -ao /data/rsid.query.uncompressed.vcf.awk.time.txt \
+    awk -v snp=&quot;$snp&quot; -F&quot;\t&quot; &#39;$3==snp&#39; /data/gwas.vcf
+
+done &lt; /data/queries.txt</code></pre>
+<pre><code>## 1    39882001    rs653064    C   G   0.97077  0.0148 0.0051   4.1e-03    684941
+## 1    39882001    rs653064    C   G   0.97077  0.0148 0.0051   4.1e-03    684941
+## 1    39882001    rs653064    C   G   .   PASS    AF=0.02923  ES:SE:LP:AF:SS:ID   -0.0148:0.0051:2.38722:0.02923:684941:rs653064
 ## 
-## real 0m0.628s
-## user 0m0.611s
-## sys  0m0.017s
+## 1    39882001    rs653064    C   G   .   PASS    AF=0.02923  ES:SE:LP:AF:SS:ID   -0.0148:0.0051:2.38722:0.02923:684941:rs653064
+## 1    39882001    rs653064    C   G   .   PASS    AF=0.02923  ES:SE:LP:AF:SS:ID   -0.0148:0.0051:2.38722:0.02923:684941:rs653064
+## 14   77711077    rs436221    T   C   0.8381  -0.0009 0.0026   7.2e-01    690946
+## 14   77711077    rs436221    T   C   0.8381  -0.0009 0.0026   7.2e-01    690946
+## 14   77711077    rs436221    C   T   .   PASS    AF=0.8381   ES:SE:LP:AF:SS:ID   -0.0009:0.0026:0.142668:0.8381:690946:rs436221
 ## 
-## real 0m4.844s
-## user 0m4.807s
-## sys  0m0.029s
+## 14   77711077    rs436221    C   T   .   PASS    AF=0.8381   ES:SE:LP:AF:SS:ID   -0.0009:0.0026:0.142668:0.8381:690946:rs436221
+## 14   77711077    rs436221    C   T   .   PASS    AF=0.8381   ES:SE:LP:AF:SS:ID   -0.0009:0.0026:0.142668:0.8381:690946:rs436221
+## 20   24802508    rs6083632   T   C   0.375   -0.0117 0.0018   5.7e-11    683748
+## 20   24802508    rs6083632   T   C   0.375   -0.0117 0.0018   5.7e-11    683748
+## 20   24802508    rs6083632   C   T   .   PASS    AF=0.375    ES:SE:LP:AF:SS:ID   -0.0117:0.0018:10.2441:0.375:683748:rs6083632
 ## 
-## real 0m4.934s
-## user 0m4.901s
-## sys  0m0.032s
+## 20   24802508    rs6083632   C   T   .   PASS    AF=0.375    ES:SE:LP:AF:SS:ID   -0.0117:0.0018:10.2441:0.375:683748:rs6083632
+## 20   24802508    rs6083632   C   T   .   PASS    AF=0.375    ES:SE:LP:AF:SS:ID   -0.0117:0.0018:10.2441:0.375:683748:rs6083632
+## 12   55926695    rs6581066   A   G   0.2498   0.0000 0.0020   9.9e-01    686495
+## 12   55926695    rs6581066   A   G   0.2498   0.0000 0.0020   9.9e-01    686495
+## 12   55926695    rs6581066   G   A   .   PASS    AF=0.2498   ES:SE:LP:AF:SS:ID   0:0.002:0.00436481:0.2498:686495:rs6581066
 ## 
-## real 0m1.484s
-## user 0m2.081s
-## sys  0m0.158s
+## 12   55926695    rs6581066   G   A   .   PASS    AF=0.2498   ES:SE:LP:AF:SS:ID   0:0.002:0.00436481:0.2498:686495:rs6581066
+## 12   55926695    rs6581066   G   A   .   PASS    AF=0.2498   ES:SE:LP:AF:SS:ID   0:0.002:0.00436481:0.2498:686495:rs6581066
+## 1    220031804   rs1776044   A   T   0.93873  0.0006 0.0040   8.9e-01    529157
+## 1    220031804   rs1776044   A   T   0.93873  0.0006 0.0040   8.9e-01    529157
+## 1    220031804   rs1776044   A   T   .   PASS    AF=0.06127  ES:SE:LP:AF:SS:ID   -0.0006:0.004:0.05061:0.06127:529157:rs1776044
 ## 
-## real 0m0.699s
-## user 0m0.642s
-## sys  0m0.056s</code></pre>
-<p>Extract single variant by chromosome &amp; position</p>
-<pre class="bash"><code>chr=&quot;4&quot;
-pos=&quot;130766891&quot;
+## 1    220031804   rs1776044   A   T   .   PASS    AF=0.06127  ES:SE:LP:AF:SS:ID   -0.0006:0.004:0.05061:0.06127:529157:rs1776044
+## 1    220031804   rs1776044   A   T   .   PASS    AF=0.06127  ES:SE:LP:AF:SS:ID   -0.0006:0.004:0.05061:0.06127:529157:rs1776044</code></pre>
+<p>Record time for random lookups by chromosome and position</p>
+<pre class="bash"><code>set -euo pipefail
 
-# compressed text
-time gzip -dc /data/gwas.txt.gz | awk -v chr=&quot;$chr&quot; -v pos=&quot;$pos&quot; -F&quot;\t&quot; &#39;$1 == chr &amp;&amp; $2 == pos&#39; &gt; /dev/null
+echo -e &quot;query\treal\tuser\tsys&quot; &gt; /data/chrpos.query.uncompressed.text.awk.time.txt
+echo -e &quot;query\treal\tuser\tsys&quot; &gt; /data/chrpos.query.compressed.text.awk.time.txt
+echo -e &quot;query\treal\tuser\tsys&quot; &gt; /data/chrpos.query.compressed.vcf.bcftools.time.txt
+echo -e &quot;query\treal\tuser\tsys&quot; &gt; /data/chrpos.query.compressed.vcf.awk.time.txt
+echo -e &quot;query\treal\tuser\tsys&quot; &gt; /data/chrpos.query.uncompressed.vcf.awk.time.txt
 
-# plain text
-gzip -dc /data/gwas.txt.gz &gt; /data/gwas.txt
-time awk -v chr=&quot;$chr&quot; -v pos=&quot;$pos&quot; -F&quot;\t&quot; &#39;$1 == chr &amp;&amp; $2 == pos&#39; /data/gwas.txt &gt; /dev/null
+while read line; do
 
-# compressed VCF
-time bcftools query -r &quot;$chr:$pos-$pos&quot; -f &#39;%LINE\n&#39; /data/gwas.vcf.gz &gt; /dev/null</code></pre>
-<pre><code>## 
-## real 0m0.925s
-## user 0m1.645s
-## sys  0m0.073s
+    # define query
+    query=$(echo &quot;$line&quot; | cut -s -f2)
+    chr=$(echo &quot;$query&quot; | cut -d&#39;:&#39; -f1)
+    pos=$(echo &quot;$query&quot; | cut -d&#39;:&#39; -f2 | cut -d- -f1)
+
+    # log query
+    echo -ne &quot;$query\t&quot; &gt;&gt; /data/chrpos.query.uncompressed.text.awk.time.txt
+    echo -ne &quot;$query\t&quot; &gt;&gt; /data/chrpos.query.compressed.text.awk.time.txt
+    echo -ne &quot;$query\t&quot; &gt;&gt; /data/chrpos.query.compressed.vcf.bcftools.time.txt
+    echo -ne &quot;$query\t&quot; &gt;&gt; /data/chrpos.query.compressed.vcf.awk.time.txt
+    echo -ne &quot;$query\t&quot; &gt;&gt; /data/chrpos.query.uncompressed.vcf.awk.time.txt
+
+    # compressed text
+    /usr/bin/time -f &quot;%e\t%U\t%S&quot; -ao /data/chrpos.query.compressed.text.awk.time.txt \
+    gzip -dc /data/gwas.txt.gz | \
+    awk -v chr=&quot;$chr&quot; -v pos=&quot;$pos&quot; -F&quot;\t&quot; &#39;$1 == chr &amp;&amp; $2 == pos&#39;
+
+    # uncompressed text
+    /usr/bin/time -f &quot;%e\t%U\t%S&quot; -ao /data/chrpos.query.uncompressed.text.awk.time.txt \
+    awk -v chr=&quot;$chr&quot; -v pos=&quot;$pos&quot; -F&quot;\t&quot; &#39;$1 == chr &amp;&amp; $2 == pos&#39; /data/gwas.txt
+
+    # compressed VCF using bcftools
+    /usr/bin/time -f &quot;%e\t%U\t%S&quot; -ao /data/chrpos.query.compressed.vcf.bcftools.time.txt \
+    bcftools query -r &quot;$query&quot; -f &#39;%LINE\n&#39; /data/gwas.vcf.gz
+
+    # compressed VCF using awk
+    /usr/bin/time -f &quot;%e\t%U\t%S&quot; -ao /data/chrpos.query.compressed.vcf.awk.time.txt \
+    gzip -dc /data/gwas.vcf.gz | \
+    awk -v chr=&quot;$chr&quot; -v pos=&quot;$pos&quot; -F&quot;\t&quot; &#39;$1 == chr &amp;&amp; $2 == pos&#39;
+
+    # uncompressed VCF using awk
+    /usr/bin/time -f &quot;%e\t%U\t%S&quot; -ao /data/chrpos.query.uncompressed.vcf.awk.time.txt \
+    awk -v chr=&quot;$chr&quot; -v pos=&quot;$pos&quot; -F&quot;\t&quot; &#39;$1 == chr &amp;&amp; $2 == pos&#39; /data/gwas.vcf
+
+done &lt; /data/queries.txt</code></pre>
+<pre><code>## 1    39882001    rs653064    C   G   0.97077  0.0148 0.0051   4.1e-03    684941
+## 1    39882001    rs653064    C   G   0.97077  0.0148 0.0051   4.1e-03    684941
+## 1    39882001    rs653064    C   G   .   PASS    AF=0.02923  ES:SE:LP:AF:SS:ID   -0.0148:0.0051:2.38722:0.02923:684941:rs653064
 ## 
-## real 0m0.768s
-## user 0m0.707s
-## sys  0m0.060s
+## 1    39882001    rs653064    C   G   .   PASS    AF=0.02923  ES:SE:LP:AF:SS:ID   -0.0148:0.0051:2.38722:0.02923:684941:rs653064
+## 1    39882001    rs653064    C   G   .   PASS    AF=0.02923  ES:SE:LP:AF:SS:ID   -0.0148:0.0051:2.38722:0.02923:684941:rs653064
+## 14   77711077    rs436221    T   C   0.8381  -0.0009 0.0026   7.2e-01    690946
+## 14   77711077    rs436221    T   C   0.8381  -0.0009 0.0026   7.2e-01    690946
+## 14   77711077    rs436221    C   T   .   PASS    AF=0.8381   ES:SE:LP:AF:SS:ID   -0.0009:0.0026:0.142668:0.8381:690946:rs436221
 ## 
-## real 0m0.076s
-## user 0m0.048s
-## sys  0m0.028s</code></pre>
-<p>Extract interval with chromosome &amp; position range</p>
-<pre class="bash"><code>chr=&quot;4&quot;
-start=&quot;130766891&quot;
-end=&quot;130717819&quot;
-
-# compressed text
-time gzip -dc /data/gwas.txt.gz | awk -v chr=&quot;$chr&quot; -v start=&quot;$start&quot; -v end=&quot;$end&quot; -F&quot;\t&quot; &#39;$1 == chr &amp;&amp; $2 &gt;= start &amp;&amp; $3 &lt;= end&#39; &gt; /dev/null
-
-# plain text
-gzip -dc /data/gwas.txt.gz &gt; /data/gwas.txt
-time awk -v chr=&quot;$chr&quot; -v pos=&quot;$pos&quot; -F&quot;\t&quot; &#39;$1 == chr &amp;&amp; $2 == pos&#39; /data/gwas.txt &gt; /dev/null
-
-# compressed VCF
-time bcftools query -r &quot;$chr:$start-$end&quot; -f &#39;%LINE\n&#39; /data/gwas.vcf.gz &gt; /dev/null</code></pre>
-<pre><code>## 
-## real 0m0.930s
-## user 0m1.708s
-## sys  0m0.077s
+## 14   77711077    rs436221    C   T   .   PASS    AF=0.8381   ES:SE:LP:AF:SS:ID   -0.0009:0.0026:0.142668:0.8381:690946:rs436221
+## 14   77711077    rs436221    C   T   .   PASS    AF=0.8381   ES:SE:LP:AF:SS:ID   -0.0009:0.0026:0.142668:0.8381:690946:rs436221
+## 20   24802508    rs6083632   T   C   0.375   -0.0117 0.0018   5.7e-11    683748
+## 20   24802508    rs6083632   T   C   0.375   -0.0117 0.0018   5.7e-11    683748
+## 20   24802508    rs6083632   C   T   .   PASS    AF=0.375    ES:SE:LP:AF:SS:ID   -0.0117:0.0018:10.2441:0.375:683748:rs6083632
 ## 
-## real 0m0.779s
-## user 0m0.722s
-## sys  0m0.056s
+## 20   24802508    rs6083632   C   T   .   PASS    AF=0.375    ES:SE:LP:AF:SS:ID   -0.0117:0.0018:10.2441:0.375:683748:rs6083632
+## 20   24802508    rs6083632   C   T   .   PASS    AF=0.375    ES:SE:LP:AF:SS:ID   -0.0117:0.0018:10.2441:0.375:683748:rs6083632
+## 12   55926695    rs6581066   A   G   0.2498   0.0000 0.0020   9.9e-01    686495
+## 12   55926695    rs6581066   A   G   0.2498   0.0000 0.0020   9.9e-01    686495
+## 12   55926695    rs6581066   G   A   .   PASS    AF=0.2498   ES:SE:LP:AF:SS:ID   0:0.002:0.00436481:0.2498:686495:rs6581066
 ## 
-## real 0m0.079s
-## user 0m0.059s
-## sys  0m0.020s</code></pre>
+## 12   55926695    rs6581066   G   A   .   PASS    AF=0.2498   ES:SE:LP:AF:SS:ID   0:0.002:0.00436481:0.2498:686495:rs6581066
+## 12   55926695    rs6581066   G   A   .   PASS    AF=0.2498   ES:SE:LP:AF:SS:ID   0:0.002:0.00436481:0.2498:686495:rs6581066
+## 1    220031804   rs1776044   A   T   0.93873  0.0006 0.0040   8.9e-01    529157
+## 1    220031804   rs1776044   A   T   0.93873  0.0006 0.0040   8.9e-01    529157
+## 1    220031804   rs1776044   A   T   .   PASS    AF=0.06127  ES:SE:LP:AF:SS:ID   -0.0006:0.004:0.05061:0.06127:529157:rs1776044
+## 
+## 1    220031804   rs1776044   A   T   .   PASS    AF=0.06127  ES:SE:LP:AF:SS:ID   -0.0006:0.004:0.05061:0.06127:529157:rs1776044
+## 1    220031804   rs1776044   A   T   .   PASS    AF=0.06127  ES:SE:LP:AF:SS:ID   -0.0006:0.004:0.05061:0.06127:529157:rs1776044</code></pre>
 </div>
-<div id="multitrait-vcf-file" class="section level2">
-<h2>multitrait VCF file</h2>
+<div id="multitrait-vcf-file" class="section level3">
+<h3>Multitrait VCF file</h3>
 <p>File size and performance from storing multiple traits per VCF file</p>
 <p>Make multisample VCF to approximate storing multiple traits in a single file</p>
-<pre class="bash"><code>bcftools merge --force-samples -O z -o /data/merged.vcf.gz /data/gwas.vcf.gz /data/gwas.vcf.gz /data/gwas.vcf.gz
+<pre class="bash"><code>set -euo pipefail
+bcftools merge --force-samples -O z -o /data/merged.vcf.gz /data/gwas.vcf.gz /data/gwas.vcf.gz /data/gwas.vcf.gz
 bcftools index -t /data/merged.vcf.gz</code></pre>
-<p>Compare file size for one trait vs three traits</p>
-<pre class="bash"><code># single trait
-ls -lh /data/gwas.vcf.gz
-
-# three trait VCF
+<p>One trait VCF file size</p>
+<pre class="bash"><code>set -euo pipefail
+ls -lh /data/gwas.vcf.gz</code></pre>
+<pre><code>## -rw-r--r-- 1 root root 62M Dec 10 12:29 /data/gwas.vcf.gz</code></pre>
+<p>Three trait file size VCF</p>
+<pre class="bash"><code>set -euo pipefail
 ls -lh /data/merged.vcf.gz</code></pre>
-<pre><code>## -rw-r--r-- 1 root root 62M Dec  9 17:02 /data/gwas.vcf.gz
-## -rw-r--r-- 1 root root 70M Dec  9 17:03 /data/merged.vcf.gz</code></pre>
-<p>Compare query performance between single and multi-trait VCF files</p>
-<pre class="bash"><code># ID lookup
-snp=&quot;rs10518554&quot;
-time bcftools query -i &#39;%ID == &quot;$snp&quot;&#39; -f &#39;%LINE\n&#39; /data/gwas.vcf.gz &gt; /dev/null
-time bcftools query -i &#39;%ID == &quot;$snp&quot;&#39; -f &#39;%LINE\n&#39; /data/merged.vcf.gz &gt; /dev/null
+<pre><code>## -rw-r--r-- 1 root root 70M Dec 10 12:31 /data/merged.vcf.gz</code></pre>
+<p>Record time for random lookups using single and multi-trait VCF files</p>
+<pre class="bash"><code>set -euo pipefail
 
-# position
-chr=&quot;4&quot;
-pos=&quot;130766891&quot;
-time bcftools query -r &quot;$chr:$pos-$pos&quot; -f &#39;%LINE\n&#39; /data/gwas.vcf.gz &gt; /dev/null
-time bcftools query -r &quot;$chr:$pos-$pos&quot; -f &#39;%LINE\n&#39; /data/merged.vcf.gz &gt; /dev/null
+echo -e &quot;query\treal\tuser\tsys&quot; &gt; /data/chrpos.query.compressed.single.vcf.bcftools.time.txt
+echo -e &quot;query\treal\tuser\tsys&quot; &gt; /data/chrpos.query.compressed.multi.vcf.bcftools.time.txt
 
-# interval
-chr=&quot;4&quot;
-start=&quot;130766891&quot;
-end=&quot;130717819&quot;
+while read line; do
 
-time bcftools query -r &quot;$chr:$start-$end&quot; -f &#39;%LINE\n&#39; /data/gwas.vcf.gz &gt; /dev/null
-time bcftools query -r &quot;$chr:$start-$end&quot; -f &#39;%LINE\n&#39; /data/merged.vcf.gz &gt; /dev/null</code></pre>
-<pre><code>## 
-## real 0m4.847s
-## user 0m4.826s
-## sys  0m0.020s
+    # define query
+    query=$(echo &quot;$line&quot; | cut -s -f2)
+
+    # log query
+    echo -ne &quot;$query\t&quot; &gt;&gt; /data/chrpos.query.compressed.single.vcf.bcftools.time.txt
+    echo -ne &quot;$query\t&quot; &gt;&gt; /data/chrpos.query.compressed.multi.vcf.bcftools.time.txt
+
+    # single trait
+    /usr/bin/time -f &quot;%e\t%U\t%S&quot; -ao /data/chrpos.query.compressed.single.vcf.bcftools.time.txt \
+    bcftools query -r &quot;$query&quot; -f &#39;%LINE\n&#39; /data/gwas.vcf.gz
+
+    # multi trait
+    /usr/bin/time -f &quot;%e\t%U\t%S&quot; -ao /data/chrpos.query.compressed.multi.vcf.bcftools.time.txt \
+    bcftools query -r &quot;$query&quot; -f &#39;%LINE\n&#39; /data/merged.vcf.gz
+
+done &lt; /data/queries.txt</code></pre>
+<pre><code>## 1    39882001    rs653064    C   G   .   PASS    AF=0.02923  ES:SE:LP:AF:SS:ID   -0.0148:0.0051:2.38722:0.02923:684941:rs653064
 ## 
-## real 0m8.177s
-## user 0m8.132s
-## sys  0m0.044s
+## 1    39882001    rs653064    C   G   .   PASS    AF=0.02923  ES:SE:LP:AF:SS:ID   -0.0148:0.0051:2.38722:0.02923:684941:rs653064  -0.0148:0.0051:2.38722:0.02923:684941:rs653064  -0.0148:0.0051:2.38722:0.02923:684941:rs653064
 ## 
-## real 0m0.075s
-## user 0m0.054s
-## sys  0m0.021s
+## 14   77711077    rs436221    C   T   .   PASS    AF=0.8381   ES:SE:LP:AF:SS:ID   -0.0009:0.0026:0.142668:0.8381:690946:rs436221
 ## 
-## real 0m0.076s
-## user 0m0.056s
-## sys  0m0.020s
+## 14   77711077    rs436221    C   T   .   PASS    AF=0.8381   ES:SE:LP:AF:SS:ID   -0.0009:0.0026:0.142668:0.8381:690946:rs436221  -0.0009:0.0026:0.142668:0.8381:690946:rs436221  -0.0009:0.0026:0.142668:0.8381:690946:rs436221
 ## 
-## real 0m0.075s
-## user 0m0.063s
-## sys  0m0.012s
+## 20   24802508    rs6083632   C   T   .   PASS    AF=0.375    ES:SE:LP:AF:SS:ID   -0.0117:0.0018:10.2441:0.375:683748:rs6083632
 ## 
-## real 0m0.080s
-## user 0m0.060s
-## sys  0m0.020s</code></pre>
+## 20   24802508    rs6083632   C   T   .   PASS    AF=0.375    ES:SE:LP:AF:SS:ID   -0.0117:0.0018:10.2441:0.375:683748:rs6083632   -0.0117:0.0018:10.2441:0.375:683748:rs6083632   -0.0117:0.0018:10.2441:0.375:683748:rs6083632
+## 
+## 12   55926695    rs6581066   G   A   .   PASS    AF=0.2498   ES:SE:LP:AF:SS:ID   0:0.002:0.00436481:0.2498:686495:rs6581066
+## 
+## 12   55926695    rs6581066   G   A   .   PASS    AF=0.2498   ES:SE:LP:AF:SS:ID   0:0.002:0.00436481:0.2498:686495:rs6581066  0:0.002:0.00436481:0.2498:686495:rs6581066  0:0.002:0.00436481:0.2498:686495:rs6581066
+## 
+## 1    220031804   rs1776044   A   T   .   PASS    AF=0.06127  ES:SE:LP:AF:SS:ID   -0.0006:0.004:0.05061:0.06127:529157:rs1776044
+## 
+## 1    220031804   rs1776044   A   T   .   PASS    AF=0.06127  ES:SE:LP:AF:SS:ID   -0.0006:0.004:0.05061:0.06127:529157:rs1776044  -0.0006:0.004:0.05061:0.06127:529157:rs1776044  -0.0006:0.004:0.05061:0.06127:529157:rs1776044</code></pre>
 </div>
 
 
