@@ -154,7 +154,11 @@ all$method <- as.factor(all$method)
 t.test(rsid.query.uncompressed.text.awk.time$real, rsid.query.uncompressed.vcf.awk.time$real, paired = TRUE, alternative = "two.sided")
 
 # plot
-ggplot(all, aes(color = method, y = real)) + geom_boxplot() + labs(x = "Method", y = "Execution time (sec)") + theme(axis.text.x=element_blank()) + theme(legend.title=element_blank()) + ggtitle("Query time using dbsnp identifier") + ylim(0, 6)
+plot <- ggplot(all, aes(color = method, y = real)) + geom_boxplot() + labs(x = "Method", y = "Execution time (sec)") + theme(axis.text.x=element_blank()) + theme(legend.title=element_blank()) + ggtitle("Query time using dbsnp identifier") + ylim(0, 6)
+```
+
+```{r show_figure, fig.width = 5, fig.height = 5}
+plot
 ```
 
 Record time for random lookups by chromosome and position
@@ -234,7 +238,11 @@ all$method <- as.factor(all$method)
 t.test(chrpos.query.uncompressed.text.awk.time$real, chrpos.query.uncompressed.vcf.awk.time$real, paired = TRUE, alternative = "two.sided")
 
 # plot
-ggplot(all, aes(color = method, y = real)) + geom_boxplot() + labs(x = "Method", y = "Execution time (sec)") + theme(axis.text.x=element_blank()) + theme(legend.title=element_blank()) + ggtitle("Query time using chromosome position") + ylim(0, 6)
+plot <- ggplot(all, aes(color = method, y = real)) + geom_boxplot() + labs(x = "Method", y = "Execution time (sec)") + theme(axis.text.x=element_blank()) + theme(legend.title=element_blank()) + ggtitle("Query time using chromosome position") + ylim(0, 6)
+```
+
+```{r show_figure, fig.width = 5, fig.height = 5}
+plot
 ```
 
 ### Multitrait VCF file
@@ -312,5 +320,9 @@ all$method <- as.factor(all$method)
 t.test(chrpos.query.compressed.single.vcf.bcftools.time$real, chrpos.query.compressed.multi.vcf.bcftools.time$real, paired = TRUE, alternative = "two.sided")
 
 # plot
-ggplot(all, aes(color = method, y = real)) + geom_boxplot() + labs(x = "Method", y = "Execution time (sec)") + theme(axis.text.x=element_blank()) + theme(legend.title=element_blank()) + ggtitle("Query time using coordinate for single vs multi-trait VCF") + ylim(0, 6)
+plot <- ggplot(all, aes(color = method, y = real)) + geom_boxplot() + labs(x = "Method", y = "Execution time (sec)") + theme(axis.text.x=element_blank()) + theme(legend.title=element_blank()) + ggtitle("Query time using coordinate for single vs multi-trait VCF") + ylim(0, 6)
+```
+
+```{r show_figure, fig.width = 5, fig.height = 5}
+plot
 ```
