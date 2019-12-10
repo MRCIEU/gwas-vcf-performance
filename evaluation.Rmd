@@ -8,11 +8,11 @@ date: "2019-12-09"
 
 Download GIANT BMI GWAS summary statistics (Yengo et al, 2018)
 
-```{bash}
-set -euo pipefail
-# Yengo L, Sidorenko J, Kemper KE, Zheng Z, Wood AR, Weedon MN, Frayling TM, Hirschhorn J, Yang J, Visscher PM, GIANT Consortium. (2018). Meta-analysis of genome-wide association studies for height and body mass index in ~700,000 individuals of European ancestry. Biorxiv.
-wget -q -O /data/gwas.txt.gz https://portals.broadinstitute.org/collaboration/giant/images/c/c8/Meta-analysis_Locke_et_al%2BUKBiobank_2018_UPDATED.txt.gz
-```
+#```{bash}
+#set -euo pipefail
+## Yengo L, Sidorenko J, Kemper KE, Zheng Z, Wood AR, Weedon MN, Frayling TM, Hirschhorn J, Yang J, Visscher PM, GIANT Consortium. (2018). Meta-analysis of genome-wide association studies for height and body mass index in ~700,000 individuals of European ancestry. Biorxiv.
+#wget -q -O /data/gwas.txt.gz https://portals.broadinstitute.org/collaboration/giant/images/c/c8/Meta-analysis_Locke_et_al%2BUKBiobank_2018_UPDATED.txt.gz
+#```
 
 Count the total number of variants
 
