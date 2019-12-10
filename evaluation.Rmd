@@ -75,7 +75,6 @@ Obtain random set of SNPs for measuring query performance
 
 ```{bash}
 # TODO increase n
-set -euo pipefail
 gzip -dc /data/gwas.txt.gz | awk 'NR>1 {print $3"\t"$1":"$2"-"$2}' | shuf | head -n 5 > /data/queries.txt
 ```
 
