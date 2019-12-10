@@ -1,7 +1,7 @@
 FROM continuumio/miniconda3:4.7.12
 
 # install build tools & libraries
-RUN apt-get update && apt-get -y install build-essential zlib1g-dev libbz2-dev liblzma-dev
+RUN apt-get update && apt-get -y install build-essential zlib1g-dev libbz2-dev liblzma-dev time
 
 # install R and markdown
 RUN /opt/conda/bin/conda install r-base

@@ -4,11 +4,12 @@ author: "Matt Lyon"
 date: "2019-12-09"
 ---
 
-## Prepare files
+### Prepare files
 
 Download GIANT BMI GWAS summary statistics (Yengo et al, 2018)
 
 ```{bash}
+set -euo pipefail
 # Yengo L, Sidorenko J, Kemper KE, Zheng Z, Wood AR, Weedon MN, Frayling TM, Hirschhorn J, Yang J, Visscher PM, GIANT Consortium. (2018). Meta-analysis of genome-wide association studies for height and body mass index in ~700,000 individuals of European ancestry. Biorxiv.
 wget -q -O /data/gwas.txt.gz https://portals.broadinstitute.org/collaboration/giant/images/c/c8/Meta-analysis_Locke_et_al%2BUKBiobank_2018_UPDATED.txt.gz
 ```
@@ -16,25 +17,29 @@ wget -q -O /data/gwas.txt.gz https://portals.broadinstitute.org/collaboration/gi
 Count the total number of variants
 
 ```{bash}
+set -euo pipefail
 gzip -dc /data/gwas.txt.gz | awk 'NR>1' | wc -l
 ```
 
 Determine file format, column order and naming
 
 ```{bash}
+set -euo pipefail
 gzip -dc /data/gwas.txt.gz | head -n1 | tr '\t' '\n' | awk '{print NR" "$0}'
 ```
 
 Define file schema for mapping plain text to VCF format
 
 ```{bash}
+set -euo pipefail
 echo "{\"chr_col\": 0, \"pos_col\": 1, \"snp_col\": 2, \"ea_col\": 3, \"oa_col\": 4, \"eaf_col\": 5, \"beta_col\": 6, \"se_col\": 7, \"pval_col\": 8, \"ncontrol_col\": 9, \"header\": true, \"build\": \"GRCh37\", \"delimiter\": \"\t\"}" > /data/schema.json
 ```
 
 Convert GWAS to VCF. This will perform on-the-fly harmonisation of the effect allele to the VCF alternative allele ensuring data consistency. Source code available here: [gwas2vcf](https://github.com/MRCIEU/gwas2vcf).
 
 ```{bash}
-time python /app/gwas2vcf/main.py \
+set -euo pipefail
+python /app/gwas2vcf/main.py \
 --out /data/gwas.vcf.gz \
 --data /data/gwas.txt.gz \
 --ref /data/human_g1k_v37.fasta \
@@ -42,117 +47,187 @@ time python /app/gwas2vcf/main.py \
 --json /data/schema.json
 ```
 
-## Compare file sizes
+Extract files for later comparison
 
 ```{bash}
-# text
-ls -lh /data/gwas.txt.gz
+gzip -dc /data/gwas.txt.gz > /data/gwas.txt
+gzip -dc /data/gwas.vcf.gz > /data/gwas.vcf
+```
 
-# VCF
+### Compare file sizes
+
+Gzipped unstructured (original) text
+
+```{bash}
+set -euo pipefail
+ls -lh /data/gwas.txt.gz
+```
+
+Gzipped VCF
+
+```{bash}
+set -euo pipefail
 ls -lh /data/gwas.vcf.gz
 ```
 
-## Compare query execution time between VCF and unstructured text
+### Compare query execution time between VCF and unstructured text
 
-Extract single variant by rsid
-
-```{bash}
-snp="rs10518554"
-
-# compressed text
-time gzip -dc /data/gwas.txt.gz | awk -v snp="$snp" -F"\t" '$3==snp' > /dev/null
-
-# plain text
-gzip -dc /data/gwas.txt.gz > /data/gwas.txt
-time awk -v snp="$snp" -F"\t" '$3==snp' /data/gwas.txt > /dev/null
-
-# compressed VCF using bcftools
-time bcftools query -i '%ID == "$snp"' -f '%LINE\n' /data/gwas.vcf.gz > /dev/null
-time bcftools query -e '%ID != "$snp"' -f '%LINE\n' /data/gwas.vcf.gz > /dev/null
-
-# compressed VCF using awk
-time gzip -dc /data/gwas.vcf.gz | awk -v snp="$snp" -F"\t" '$3==snp' > /dev/null
-
-# uncompressed VCF using awk
-gzip -dc /data/gwas.vcf.gz > /data/gwas.vcf
-time awk -v snp="$snp" -F"\t" '$3==snp' /data/gwas.vcf > /dev/null
-```
-
-Extract single variant by chromosome & position
+Obtain random set of SNPs for measuring query performance
 
 ```{bash}
-chr="4"
-pos="130766891"
-
-# compressed text
-time gzip -dc /data/gwas.txt.gz | awk -v chr="$chr" -v pos="$pos" -F"\t" '$1 == chr && $2 == pos' > /dev/null
-
-# plain text
-gzip -dc /data/gwas.txt.gz > /data/gwas.txt
-time awk -v chr="$chr" -v pos="$pos" -F"\t" '$1 == chr && $2 == pos' /data/gwas.txt > /dev/null
-
-# compressed VCF
-time bcftools query -r "$chr:$pos-$pos" -f '%LINE\n' /data/gwas.vcf.gz > /dev/null
+# TODO increase n
+set -euo pipefail
+gzip -dc /data/gwas.txt.gz | awk 'NR>1 {print $3"\t"$1":"$2"-"$2}' | shuf | head -n 5 > /data/queries.txt
 ```
 
-Extract interval with chromosome & position range
+Record time for random lookups by rsid
 
 ```{bash}
-chr="4"
-start="130766891"
-end="130717819"
+set -euo pipefail
 
-# compressed text
-time gzip -dc /data/gwas.txt.gz | awk -v chr="$chr" -v start="$start" -v end="$end" -F"\t" '$1 == chr && $2 >= start && $3 <= end' > /dev/null
+echo -e "query\treal\tuser\tsys" > /data/rsid.query.uncompressed.text.awk.time.txt
+echo -e "query\treal\tuser\tsys" > /data/rsid.query.compressed.text.awk.time.txt
+echo -e "query\treal\tuser\tsys" > /data/rsid.query.compressed.vcf.bcftools.time.txt
+echo -e "query\treal\tuser\tsys" > /data/rsid.query.compressed.vcf.awk.time.txt
+echo -e "query\treal\tuser\tsys" > /data/rsid.query.uncompressed.vcf.awk.time.txt
 
-# plain text
-gzip -dc /data/gwas.txt.gz > /data/gwas.txt
-time awk -v chr="$chr" -v pos="$pos" -F"\t" '$1 == chr && $2 == pos' /data/gwas.txt > /dev/null
+while read line; do
 
-# compressed VCF
-time bcftools query -r "$chr:$start-$end" -f '%LINE\n' /data/gwas.vcf.gz > /dev/null
+    # define query
+    snp=$(echo "$line" | cut -s -f1)
+
+    # log SNP
+    echo -ne "$snp\t" >> /data/rsid.query.uncompressed.text.awk.time.txt
+    echo -ne "$snp\t" >> /data/rsid.query.compressed.text.awk.time.txt
+    echo -ne "$snp\t" >> /data/rsid.query.compressed.vcf.bcftools.time.txt
+    echo -ne "$snp\t" >> /data/rsid.query.compressed.vcf.awk.time.txt
+    echo -ne "$snp\t" >> /data/rsid.query.uncompressed.vcf.awk.time.txt
+
+    # compressed text
+    /usr/bin/time -f "%e\t%U\t%S" -ao /data/rsid.query.compressed.text.awk.time.txt \
+    gzip -dc /data/gwas.txt.gz | \
+    awk -v snp="$snp" -F"\t" '$3==snp'
+
+    # uncompressed text
+    /usr/bin/time -f "%e\t%U\t%S" -ao /data/rsid.query.uncompressed.text.awk.time.txt \
+    awk -v snp="$snp" -F"\t" '$3==snp' /data/gwas.txt
+
+    # compressed VCF using bcftools
+    /usr/bin/time -f "%e\t%U\t%S" -ao /data/rsid.query.compressed.vcf.bcftools.time.txt \
+    bcftools query -i "%ID == \"$snp\"" -f '%LINE\n' /data/gwas.vcf.gz
+
+    # compressed VCF using awk
+    /usr/bin/time -f "%e\t%U\t%S" -ao /data/rsid.query.compressed.vcf.awk.time.txt \
+    gzip -dc /data/gwas.vcf.gz | \
+    awk -v snp="$snp" -F"\t" '$3==snp'
+
+    # uncompressed VCF using awk
+    /usr/bin/time -f "%e\t%U\t%S" -ao /data/rsid.query.uncompressed.vcf.awk.time.txt \
+    awk -v snp="$snp" -F"\t" '$3==snp' /data/gwas.vcf
+
+done < /data/queries.txt
 ```
 
-## multitrait VCF file
+Record time for random lookups by chromosome and position
+
+```{bash}
+set -euo pipefail
+
+echo -e "query\treal\tuser\tsys" > /data/chrpos.query.uncompressed.text.awk.time.txt
+echo -e "query\treal\tuser\tsys" > /data/chrpos.query.compressed.text.awk.time.txt
+echo -e "query\treal\tuser\tsys" > /data/chrpos.query.compressed.vcf.bcftools.time.txt
+echo -e "query\treal\tuser\tsys" > /data/chrpos.query.compressed.vcf.awk.time.txt
+echo -e "query\treal\tuser\tsys" > /data/chrpos.query.uncompressed.vcf.awk.time.txt
+
+while read line; do
+
+    # define query
+    query=$(echo "$line" | cut -s -f2)
+    chr=$(echo "$query" | cut -d':' -f1)
+    pos=$(echo "$query" | cut -d':' -f2 | cut -d- -f1)
+
+    # log query
+    echo -ne "$query\t" >> /data/chrpos.query.uncompressed.text.awk.time.txt
+    echo -ne "$query\t" >> /data/chrpos.query.compressed.text.awk.time.txt
+    echo -ne "$query\t" >> /data/chrpos.query.compressed.vcf.bcftools.time.txt
+    echo -ne "$query\t" >> /data/chrpos.query.compressed.vcf.awk.time.txt
+    echo -ne "$query\t" >> /data/chrpos.query.uncompressed.vcf.awk.time.txt
+
+    # compressed text
+    /usr/bin/time -f "%e\t%U\t%S" -ao /data/chrpos.query.compressed.text.awk.time.txt \
+    gzip -dc /data/gwas.txt.gz | \
+    awk -v chr="$chr" -v pos="$pos" -F"\t" '$1 == chr && $2 == pos'
+
+    # uncompressed text
+    /usr/bin/time -f "%e\t%U\t%S" -ao /data/chrpos.query.uncompressed.text.awk.time.txt \
+    awk -v chr="$chr" -v pos="$pos" -F"\t" '$1 == chr && $2 == pos' /data/gwas.txt
+
+    # compressed VCF using bcftools
+    /usr/bin/time -f "%e\t%U\t%S" -ao /data/chrpos.query.compressed.vcf.bcftools.time.txt \
+    bcftools query -r "$query" -f '%LINE\n' /data/gwas.vcf.gz
+
+    # compressed VCF using awk
+    /usr/bin/time -f "%e\t%U\t%S" -ao /data/chrpos.query.compressed.vcf.awk.time.txt \
+    gzip -dc /data/gwas.vcf.gz | \
+    awk -v chr="$chr" -v pos="$pos" -F"\t" '$1 == chr && $2 == pos'
+
+    # uncompressed VCF using awk
+    /usr/bin/time -f "%e\t%U\t%S" -ao /data/chrpos.query.uncompressed.vcf.awk.time.txt \
+    awk -v chr="$chr" -v pos="$pos" -F"\t" '$1 == chr && $2 == pos' /data/gwas.vcf
+
+done < /data/queries.txt
+```
+
+### Multitrait VCF file
 
 File size and performance from storing multiple traits per VCF file
 
 Make multisample VCF to approximate storing multiple traits in a single file
 
 ```{bash}
+set -euo pipefail
 bcftools merge --force-samples -O z -o /data/merged.vcf.gz /data/gwas.vcf.gz /data/gwas.vcf.gz /data/gwas.vcf.gz
 bcftools index -t /data/merged.vcf.gz
 ```
 
-Compare file size for one trait vs three traits
+One trait VCF file size
 
 ```{bash}
-# single trait
+set -euo pipefail
 ls -lh /data/gwas.vcf.gz
+```
 
-# three trait VCF
+Three trait file size VCF
+
+```{bash}
+set -euo pipefail
 ls -lh /data/merged.vcf.gz
 ```
 
-Compare query performance between single and multi-trait VCF files
+Record time for random lookups using single and multi-trait VCF files
 
 ```{bash}
-# ID lookup
-snp="rs10518554"
-time bcftools query -i '%ID == "$snp"' -f '%LINE\n' /data/gwas.vcf.gz > /dev/null
-time bcftools query -i '%ID == "$snp"' -f '%LINE\n' /data/merged.vcf.gz > /dev/null
+set -euo pipefail
 
-# position
-chr="4"
-pos="130766891"
-time bcftools query -r "$chr:$pos-$pos" -f '%LINE\n' /data/gwas.vcf.gz > /dev/null
-time bcftools query -r "$chr:$pos-$pos" -f '%LINE\n' /data/merged.vcf.gz > /dev/null
+echo -e "query\treal\tuser\tsys" > /data/chrpos.query.compressed.single.vcf.bcftools.time.txt
+echo -e "query\treal\tuser\tsys" > /data/chrpos.query.compressed.multi.vcf.bcftools.time.txt
 
-# interval
-chr="4"
-start="130766891"
-end="130717819"
+while read line; do
 
-time bcftools query -r "$chr:$start-$end" -f '%LINE\n' /data/gwas.vcf.gz > /dev/null
-time bcftools query -r "$chr:$start-$end" -f '%LINE\n' /data/merged.vcf.gz > /dev/null
+    # define query
+    query=$(echo "$line" | cut -s -f2)
+
+    # log query
+    echo -ne "$query\t" >> /data/chrpos.query.compressed.single.vcf.bcftools.time.txt
+    echo -ne "$query\t" >> /data/chrpos.query.compressed.multi.vcf.bcftools.time.txt
+
+    # single trait
+    /usr/bin/time -f "%e\t%U\t%S" -ao /data/chrpos.query.compressed.single.vcf.bcftools.time.txt \
+    bcftools query -r "$query" -f '%LINE\n' /data/gwas.vcf.gz
+
+    # multi trait
+    /usr/bin/time -f "%e\t%U\t%S" -ao /data/chrpos.query.compressed.multi.vcf.bcftools.time.txt \
+    bcftools query -r "$query" -f '%LINE\n' /data/merged.vcf.gz
+
+done < /data/queries.txt
 ```
