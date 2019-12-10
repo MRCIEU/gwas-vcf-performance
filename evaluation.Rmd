@@ -8,11 +8,11 @@ date: "2019-12-09"
 
 Download GIANT BMI GWAS summary statistics (Yengo et al, 2018)
 
-#```{bash}
-#set -euo pipefail
-## Yengo L, Sidorenko J, Kemper KE, Zheng Z, Wood AR, Weedon MN, Frayling TM, Hirschhorn J, Yang J, Visscher PM, GIANT Consortium. (2018). Meta-analysis of genome-wide association studies for height and body mass index in ~700,000 individuals of European ancestry. Biorxiv.
-#wget -q -O /data/gwas.txt.gz https://portals.broadinstitute.org/collaboration/giant/images/c/c8/Meta-analysis_Locke_et_al%2BUKBiobank_2018_UPDATED.txt.gz
-#```
+```{bash}
+set -euo pipefail
+# Yengo L, Sidorenko J, Kemper KE, Zheng Z, Wood AR, Weedon MN, Frayling TM, Hirschhorn J, Yang J, Visscher PM, GIANT Consortium. (2018). Meta-analysis of genome-wide association studies for height and body mass index in ~700,000 individuals of European ancestry. Biorxiv.
+wget -q -O /data/gwas.txt.gz https://portals.broadinstitute.org/collaboration/giant/images/c/c8/Meta-analysis_Locke_et_al%2BUKBiobank_2018_UPDATED.txt.gz
+```
 
 Count the total number of variants
 
@@ -127,6 +127,36 @@ while read line; do
 done < /data/queries.txt
 ```
 
+Plot results
+
+```{r}
+library('ggplot2')
+library('data.table')
+
+# read in data
+rsid.query.uncompressed.text.awk.time <- fread("/data/rsid.query.uncompressed.text.awk.time.txt")
+rsid.query.compressed.text.awk.time <- fread("/data/rsid.query.compressed.text.awk.time.txt")
+rsid.query.compressed.vcf.bcftools.time <- fread("/data/rsid.query.compressed.vcf.bcftools.time.txt")
+rsid.query.compressed.vcf.awk.time <- fread("/data/rsid.query.compressed.vcf.awk.time.txt")
+rsid.query.uncompressed.vcf.awk.time <- fread("/data/rsid.query.uncompressed.vcf.awk.time.txt")
+
+rsid.query.uncompressed.text.awk.time$method <- "uncompressed.text.awk"
+rsid.query.compressed.text.awk.time$method <- "compressed.text.awk"
+rsid.query.compressed.vcf.bcftools.time$method <- "compressed.vcf.bcftools"
+rsid.query.compressed.vcf.awk.time$method <- "compressed.vcf.awk"
+rsid.query.uncompressed.vcf.awk.time$method <- "uncompressed.vcf.awk"
+
+# merge
+all <- rbind(rsid.query.uncompressed.text.awk.time[, c("real", "method")], rsid.query.compressed.text.awk.time[, c("real", "method")], rsid.query.compressed.vcf.bcftools.time[, c("real", "method")], rsid.query.compressed.vcf.awk.time[, c("real", "method")], rsid.query.uncompressed.vcf.awk.time[ ,c("real", "method")])
+all$method <- as.factor(all$method)
+
+# t test -- is there a query time difference uncompressed text and uncompressed VCF using awk?
+t.test(rsid.query.uncompressed.text.awk.time$real, rsid.query.uncompressed.vcf.awk.time$real, paired = TRUE, alternative = "two.sided")
+
+# plot
+ggplot(all, aes(color = method, y = real)) + geom_boxplot() + labs(x = "Method", y = "Execution time (sec)") + theme(axis.text.x=element_blank()) + theme(legend.title=element_blank()) + ggtitle("Query time using dbsnp identifier") + ylim(0, 6)
+```
+
 Record time for random lookups by chromosome and position
 
 ```{bash}
@@ -175,6 +205,36 @@ while read line; do
     awk -v chr="$chr" -v pos="$pos" -F"\t" '$1 == chr && $2 == pos' /data/gwas.vcf
 
 done < /data/queries.txt
+```
+
+Plot results
+
+```{r}
+library('ggplot2')
+library('data.table')
+
+# read in data
+chrpos.query.uncompressed.text.awk.time <- fread("/data/chrpos.query.uncompressed.text.awk.time.txt")
+chrpos.query.compressed.text.awk.time <- fread("/data/chrpos.query.compressed.text.awk.time.txt")
+chrpos.query.compressed.vcf.bcftools.time <- fread("/data/chrpos.query.compressed.vcf.bcftools.time.txt")
+chrpos.query.compressed.vcf.awk.time <- fread("/data/chrpos.query.compressed.vcf.awk.time.txt")
+chrpos.query.uncompressed.vcf.awk.time <- fread("/data/chrpos.query.uncompressed.vcf.awk.time.txt")
+
+chrpos.query.uncompressed.text.awk.time$method <- "uncompressed.text.awk"
+chrpos.query.compressed.text.awk.time$method <- "compressed.text.awk"
+chrpos.query.compressed.vcf.bcftools.time$method <- "compressed.vcf.bcftools"
+chrpos.query.compressed.vcf.awk.time$method <- "compressed.vcf.awk"
+chrpos.query.uncompressed.vcf.awk.time$method <- "uncompressed.vcf.awk"
+
+# merge
+all <- rbind(chrpos.query.uncompressed.text.awk.time[, c("real", "method")], chrpos.query.compressed.text.awk.time[, c("real", "method")], chrpos.query.compressed.vcf.bcftools.time[, c("real", "method")], chrpos.query.compressed.vcf.awk.time[, c("real", "method")], chrpos.query.uncompressed.vcf.awk.time[ ,c("real", "method")])
+all$method <- as.factor(all$method)
+
+# t test -- is there a query time difference uncompressed text and uncompressed VCF using awk?
+t.test(chrpos.query.uncompressed.text.awk.time$real, chrpos.query.uncompressed.vcf.awk.time$real, paired = TRUE, alternative = "two.sided")
+
+# plot
+ggplot(all, aes(color = method, y = real)) + geom_boxplot() + labs(x = "Method", y = "Execution time (sec)") + theme(axis.text.x=element_blank()) + theme(legend.title=element_blank()) + ggtitle("Query time using chromosome position") + ylim(0, 6)
 ```
 
 ### Multitrait VCF file
@@ -229,4 +289,28 @@ while read line; do
     bcftools query -r "$query" -f '%LINE\n' /data/merged.vcf.gz
 
 done < /data/queries.txt
+```
+
+Plot results
+
+```{r}
+library('ggplot2')
+library('data.table')
+
+# read in data
+chrpos.query.compressed.single.vcf.bcftools.time <- fread("/data/chrpos.query.compressed.single.vcf.bcftools.time.txt")
+chrpos.query.compressed.multi.vcf.bcftools.time <- fread("/data/chrpos.query.compressed.multi.vcf.bcftools.time.txt")
+
+chrpos.query.compressed.single.vcf.bcftools.time$method <- "compressed.single.vcf.bcftools"
+chrpos.query.compressed.multi.vcf.bcftools.time$method <- "compressed.multi.vcf.bcftools"
+
+# merge
+all <- rbind(chrpos.query.compressed.single.vcf.bcftools.time[, c("real", "method")], chrpos.query.compressed.multi.vcf.bcftools.time[, c("real", "method")])
+all$method <- as.factor(all$method)
+
+# t test -- is there a query time difference between single & multisample VCF queries?
+t.test(chrpos.query.compressed.single.vcf.bcftools.time$real, chrpos.query.compressed.multi.vcf.bcftools.time$real, paired = TRUE, alternative = "two.sided")
+
+# plot
+ggplot(all, aes(color = method, y = real)) + geom_boxplot() + labs(x = "Method", y = "Execution time (sec)") + theme(axis.text.x=element_blank()) + theme(legend.title=element_blank()) + ggtitle("Query time using coordinate for single vs multi-trait VCF") + ylim(0, 6)
 ```
