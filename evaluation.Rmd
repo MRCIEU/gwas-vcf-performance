@@ -75,9 +75,8 @@ ls -lh /data/gwas.vcf.gz
 Obtain random set of SNPs for measuring query performance
 
 ```{bash}
-# TODO increase n
 set -eu
-gzip -dc /data/gwas.txt.gz | awk 'NR>1 {print $3"\t"$1":"$2"-"$2}' | shuf | head -n 5 > /data/queries.txt
+gzip -dc /data/gwas.txt.gz | awk 'NR>1 {print $3"\t"$1":"$2"-"$2}' | shuf | head -n 10000 > /data/queries.txt
 ```
 
 Record time for random lookups by rsid
