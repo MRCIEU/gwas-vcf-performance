@@ -6,6 +6,8 @@ RUN apt-get update && apt-get -y install build-essential zlib1g-dev libbz2-dev l
 # install R and markdown
 RUN /opt/conda/bin/conda install r-base
 RUN /opt/conda/bin/conda install -c r r-rmarkdown
+RUN /opt/conda/bin/conda install -c r r-ggplot2
+RUN /opt/conda/bin/conda install -c r r-data.table
 RUN /opt/conda/bin/conda install -c conda-forge pandoc
 
 # install bcftools
