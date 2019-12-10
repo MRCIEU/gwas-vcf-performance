@@ -35,7 +35,8 @@ Output will be a single html file ```output.html```
 ```sh
 docker run \
 -v `pwd`:/data \
+--rm \
 -it -d \
 gwas-vcf-performance \
-R -e "rmarkdown::render('evaluation.Rmd',output_file='/data/output.html')"
+R -e "rmarkdown::render('evaluation.Rmd',output_file='/data/output.pdf')"
 ```
