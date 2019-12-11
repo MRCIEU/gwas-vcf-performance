@@ -38,5 +38,5 @@ docker run \
 --name gwas-vcf-performance \
 -it -d \
 gwas-vcf-performance \
-R -e "rmarkdown::render('evaluation.Rmd',output_file='/data/output.pdf')"
+R -e "rmarkdown::render('evaluation.Rmd', output_file='/data/output.html')"
 ```
