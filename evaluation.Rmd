@@ -1,38 +1,37 @@
 ---
 title: "Compare VCF and text for storing GWAS summary statistics"
 author: "Matt Lyon"
-date: "2019-12-09"
+date: "2020-02-25"
 ---
 
 ### Prepare files
 
-Download GIANT BMI GWAS summary statistics (Yengo et al, 2018)
+Download BMI GWAS summary statistics and annotation data (Neale et al)
 
-```{bash}
-set -euo pipefail
-# Yengo L, Sidorenko J, Kemper KE, Zheng Z, Wood AR, Weedon MN, Frayling TM, Hirschhorn J, Yang J, Visscher PM, GIANT Consortium. (2018). Meta-analysis of genome-wide association studies for height and body mass index in ~700,000 individuals of European ancestry. Biorxiv.
-wget -q -O /data/gwas.txt.gz https://portals.broadinstitute.org/collaboration/giant/images/c/c8/Meta-analysis_Locke_et_al%2BUKBiobank_2018_UPDATED.txt.gz
-```
+```{r}
+library('data.table')
+library('stringr')
 
-Count the total number of variants
+# UK Biobank — Neale lab. (n.d.). Retrieved February 25, 2020, from http://www.nealelab.is/uk-biobank/
+download.file("https://www.dropbox.com/s/tx8iw9lk53z3vj9/21001_raw.gwas.imputed_v3.both_sexes.tsv.bgz?raw=1", destfile="/data/gwas.raw.txt.gz")
+download.file("https://www.dropbox.com/s/puxks683vb0omeg/variants.tsv.bgz?raw=1", destfile="/data/lookup.txt.gz")
+gwas <- fread("/data/gwas.raw.txt.gz")
+lookup <- fread("/data/lookup.txt.gz")
+gwas <- merge(gwas, lookup, "variant")
+rm(lookup)
 
-```{bash}
-set -euo pipefail
-gzip -dc /data/gwas.txt.gz | awk 'NR>1' | wc -l
-```
+# save output to tab file
+write.table(gwas[,c("chrom", "pos", "alt", "ref", "beta", "se", "pval", "rsid", "AF", "info", "n_complete_samples")], file="/data/gwas.txt", sep="\t", row.names=F, quote=F)
 
-Determine file format, column order and naming
-
-```{bash}
-set -eu
-gzip -dc /data/gwas.txt.gz | head -n1 | tr '\t' '\n' | awk '{print NR" "$0}'
+message(paste("Total number of variants in GWAS:", nrow(gwas)))
 ```
 
 Define file schema for mapping plain text to VCF format
 
 ```{bash}
 set -euo pipefail
-echo "{\"chr_col\": 0, \"pos_col\": 1, \"snp_col\": 2, \"ea_col\": 3, \"oa_col\": 4, \"eaf_col\": 5, \"beta_col\": 6, \"se_col\": 7, \"pval_col\": 8, \"ncontrol_col\": 9, \"header\": true, \"build\": \"GRCh37\", \"delimiter\": \"\t\"}" > /data/schema.json
+gzip /data/gwas.txt
+echo "{\"chr_col\": 0, \"pos_col\": 1, \"ea_col\": 2, \"oa_col\": 3, \"beta_col\": 4, \"se_col\": 5, \"pval_col\": 6, \"delimiter\": \"\t\", \"header\": true, \"snp_col\": 7, \"eaf_col\": 8, \"imp_info_col\": 9, \"ncontrol_col\": 10,  \"build\": \"GRCh37\"}" > /data/schema.json
 ```
 
 Convert GWAS to VCF. This will perform on-the-fly harmonisation of the effect allele to the VCF alternative allele ensuring data consistency. Source code available here: [gwas2vcf](https://github.com/MRCIEU/gwas2vcf).
@@ -43,7 +42,7 @@ python /app/gwas2vcf/main.py \
 --out /data/gwas.vcf.gz \
 --data /data/gwas.txt.gz \
 --ref /data/human_g1k_v37.fasta \
---id "giant-bmi-2018" \
+--id "neale-bmi-2018" \
 --json /data/schema.json
 ```
 
