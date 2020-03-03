@@ -9,8 +9,18 @@ date: "2020-02-25"
 Download BMI GWAS summary statistics and annotation data (Neale et al)
 
 ```{r}
-library('data.table')
-library('stringr')
+if(!require('data.table')){
+    install.packages('data.table')
+    library('data.table')
+}
+if(!require('stringr')){
+    install.packages('stringr')
+    library('stringr')
+}
+if(!require('jsonlite')){
+    install.packages('jsonlite')
+    library('jsonlite')
+}
 
 # UK Biobank — Neale lab. (n.d.). Retrieved February 25, 2020, from http://www.nealelab.is/uk-biobank/
 download.file("https://www.dropbox.com/s/tx8iw9lk53z3vj9/21001_raw.gwas.imputed_v3.both_sexes.tsv.bgz?raw=1", destfile="/data/gwas.raw.txt.gz")
@@ -20,17 +30,23 @@ lookup <- fread("/data/lookup.txt.gz")
 gwas <- merge(gwas, lookup, "variant")
 rm(lookup)
 
-# save output to tab file
-write.table(gwas[,c("chrom", "pos", "alt", "ref", "beta", "se", "pval", "rsid", "AF", "info", "n_complete_samples")], file="/data/gwas.txt", sep="\t", row.names=F, quote=F)
+# save output to gzip tab file
+df1 <- gwas[,c("chrom", "pos", "alt", "ref", "beta", "se", "pval", "rsid", "AF", "info", "n_complete_samples")]
+gz1 <- gzfile("/data/gwas.txt.gz", "w")
+write.table(df1, gz1, sep="\t", row.names=F, quote=F)
+close(gz1)
 
-message(paste("Total number of variants in GWAS:", nrow(gwas)))
+# write out params to json
+params <- list(chr_col = 0, pos_col = 1, ea_col = 2, oa_col = 3, beta_col = 4, se_col = 5, pval_col = 6, snp_col = 7, eaf_col = 8, imp_info_col = 9, ncontrol_col = 10, delimiter = "\t", header = TRUE, build = "GRCh37")
+write(toJSON(params), file = "/data/schema.json")
+
+message(paste("Total number of variants in GWAS:", nrow(df1)))
 ```
 
 Define file schema for mapping plain text to VCF format
 
 ```{bash}
 set -euo pipefail
-gzip /data/gwas.txt
 echo "{\"chr_col\": 0, \"pos_col\": 1, \"ea_col\": 2, \"oa_col\": 3, \"beta_col\": 4, \"se_col\": 5, \"pval_col\": 6, \"delimiter\": \"\t\", \"header\": true, \"snp_col\": 7, \"eaf_col\": 8, \"imp_info_col\": 9, \"ncontrol_col\": 10,  \"build\": \"GRCh37\"}" > /data/schema.json
 ```
 
