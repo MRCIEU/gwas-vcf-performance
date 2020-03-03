@@ -1,0 +1,141 @@
+---
+title: "Compare VCF and text for summary stats using rsid"
+author: "Matt Lyon"
+date: "2020-02-25"
+---
+
+### Compare query execution time between VCF and unindexed text
+
+#### Simulate queries
+
+All outputs should return n_sim otherwise the query is invalid
+
+```{bash}
+set -euo pipefail
+
+# uncompressed text awk
+echo -e "query\treal\tuser\tsys" > /data/rsid.query.uncompressed.text.awk.time.txt
+while read snp; do
+    echo -ne "$snp\t" >> /data/rsid.query.uncompressed.text.awk.time.txt
+    /usr/bin/time -f "%e\t%U\t%S" -ao /data/rsid.query.uncompressed.text.awk.time.txt \
+    awk -v snp="$snp" -F"\t" '$3==snp' /data/gwas.txt
+done < /data/rsid.txt | wc -l
+
+# uncompressed text grep
+echo -e "query\treal\tuser\tsys" > /data/rsid.query.uncompressed.text.grep.time.txt
+while read snp; do
+    echo -ne "$snp\t" >> /data/rsid.query.uncompressed.text.grep.time.txt
+    /usr/bin/time -f "%e\t%U\t%S" -ao /data/rsid.query.uncompressed.text.grep.time.txt \
+    grep -w "$snp" /data/gwas.txt
+done < /data/rsid.txt | wc -l
+
+# compressed text awk
+echo -e "query\treal\tuser\tsys" > /data/rsid.query.compressed.text.awk.time.txt
+while read snp; do
+    echo -ne "$snp\t" >> /data/rsid.query.compressed.text.awk.time.txt
+    /usr/bin/time -f "%e\t%U\t%S" -ao /data/rsid.query.compressed.text.awk.time.txt \
+    gzip -dc /data/gwas.txt.gz | \
+    awk -v snp="$snp" -F"\t" '$3==snp'
+done < /data/rsid.txt | wc -l
+
+# compressed text grep
+echo -e "query\treal\tuser\tsys" > /data/rsid.query.compressed.text.grep.time.txt
+while read snp; do
+    echo -ne "$snp\t" >> /data/rsid.query.compressed.text.grep.time.txt
+    /usr/bin/time -f "%e\t%U\t%S" -ao /data/rsid.query.compressed.text.grep.time.txt \
+    gzip -dc /data/gwas.txt.gz | \
+    grep -w "$snp"
+done < /data/rsid.txt | wc -l
+
+# uncompressed vcf awk
+echo -e "query\treal\tuser\tsys" > /data/rsid.query.uncompressed.vcf.awk.time.txt
+while read snp; do
+    echo -ne "$snp\t" >> /data/rsid.query.uncompressed.vcf.awk.time.txt
+    /usr/bin/time -f "%e\t%U\t%S" -ao /data/rsid.query.uncompressed.vcf.awk.time.txt \
+    awk -v snp="$snp" -F"\t" '$3==snp' /data/gwas.vcf
+done < /data/rsid.txt | wc -l
+
+# uncompressed vcf grep
+echo -e "query\treal\tuser\tsys" > /data/rsid.query.uncompressed.vcf.grep.time.txt
+while read snp; do
+    echo -ne "$snp\t" >> /data/rsid.query.uncompressed.vcf.grep.time.txt
+    /usr/bin/time -f "%e\t%U\t%S" -ao /data/rsid.query.uncompressed.vcf.grep.time.txt \
+    grep -w "$snp" /data/gwas.vcf
+done < /data/rsid.txt | wc -l
+
+# compressed vcf awk
+echo -e "query\treal\tuser\tsys" > /data/rsid.query.compressed.vcf.awk.time.txt
+while read snp; do
+    echo -ne "$snp\t" >> /data/rsid.query.compressed.vcf.awk.time.txt
+    /usr/bin/time -f "%e\t%U\t%S" -ao /data/rsid.query.compressed.vcf.awk.time.txt \
+    gzip -dc /data/gwas.vcf.gz | \
+    awk -v snp="$snp" -F"\t" '$3==snp'
+done < /data/rsid.txt | wc -l
+
+# compressed vcf grep
+echo -e "query\treal\tuser\tsys" > /data/rsid.query.compressed.vcf.grep.time.txt
+while read snp; do
+    echo -ne "$snp\t" >> /data/rsid.query.compressed.vcf.grep.time.txt
+    /usr/bin/time -f "%e\t%U\t%S" -ao /data/rsid.query.compressed.vcf.grep.time.txt \
+    gzip -dc /data/gwas.vcf.gz | \
+    grep -w "$snp"
+done < /data/rsid.txt | wc -l
+
+# compressed vcf bcftools
+echo -e "query\treal\tuser\tsys" > /data/rsid.query.compressed.vcf.bcftools.time.txt
+while read snp; do
+    echo -ne "$snp\t" >> /data/rsid.query.compressed.vcf.bcftools.time.txt
+    /usr/bin/time -f "%e\t%U\t%S" -ao /data/rsid.query.compressed.vcf.bcftools.time.txt \
+    bcftools query -i "%ID == \"$snp\"" -f '%LINE\n' /data/gwas.vcf.gz
+done < /data/rsid.txt | wc -l
+```
+
+#### Plot results
+
+```{r}
+library('ggplot2')
+library('data.table')
+
+# read in data
+
+## text
+rsid.query.uncompressed.text.awk.time <- fread("/data/rsid.query.uncompressed.text.awk.time.txt")
+rsid.query.uncompressed.text.grep.time <- fread("/data/rsid.query.uncompressed.text.grep.time.txt")
+rsid.query.compressed.text.awk.time <- fread("/data/rsid.query.compressed.text.awk.time.txt")
+rsid.query.compressed.text.grep.time <- fread("/data/rsid.query.compressed.text.grep.time.txt")
+## vcf
+rsid.query.uncompressed.vcf.awk.time <- fread("/data/rsid.query.uncompressed.vcf.awk.time.txt")
+rsid.query.uncompressed.vcf.grep.time <- fread("/data/rsid.query.uncompressed.vcf.grep.time.txt")
+rsid.query.compressed.vcf.awk.time <- fread("/data/rsid.query.compressed.vcf.awk.time.txt")
+rsid.query.compressed.vcf.grep.time <- fread("/data/rsid.query.compressed.vcf.grep.time.txt")
+rsid.query.compressed.vcf.bcftools.time <- fread("/data/rsid.query.compressed.vcf.bcftools.time.txt")
+
+# add methods
+rsid.query.uncompressed.text.awk.time$method <- "uncompressed.text.awk"
+rsid.query.uncompressed.text.grep.time$method <- "uncompressed.text.grep"
+rsid.query.compressed.text.awk.time$method <- "compressed.text.awk"
+rsid.query.compressed.text.grep.time$method <- "compressed.text.grep"
+
+rsid.query.uncompressed.vcf.awk.time$method <- "uncompressed.vcf.awk"
+rsid.query.uncompressed.vcf.grep.time$method <- "uncompressed.vcf.grep"
+rsid.query.compressed.vcf.awk.time$method <- "compressed.vcf.awk"
+rsid.query.compressed.vcf.grep.time$method <- "compressed.vcf.grep"
+rsid.query.compressed.vcf.bcftools.time$method <- "compressed.vcf.bcftools"
+
+# merge
+all <- rbind(
+    rsid.query.uncompressed.text.awk.time[, c("real", "method")],
+    rsid.query.uncompressed.text.grep.time[, c("real", "method")],
+    rsid.query.compressed.text.awk.time[, c("real", "method")],
+    rsid.query.compressed.text.grep.time[, c("real", "method")],
+    rsid.query.uncompressed.vcf.awk.time[, c("real", "method")],
+    rsid.query.uncompressed.vcf.grep.time[, c("real", "method")],
+    rsid.query.compressed.vcf.awk.time[, c("real", "method")],
+    rsid.query.compressed.vcf.grep.time[, c("real", "method")],
+    rsid.query.compressed.vcf.bcftools.time[, c("real", "method")]
+)
+all$method <- as.factor(all$method)
+
+# plot
+ggplot(all, aes(color = method, y = real)) + geom_boxplot() + labs(x = "Method", y = "Execution time (sec)") + theme(axis.text.x=element_blank()) + theme(legend.title=element_blank()) + ggtitle("Query time using dbsnp identifier")
+```

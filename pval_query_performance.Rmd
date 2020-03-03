@@ -1,0 +1,84 @@
+---
+title: "Compare VCF and text for summary stats using associaton P value"
+author: "Matt Lyon"
+date: "2020-02-25"
+---
+
+### Compare query execution time between VCF and unindexed text
+
+#### Simulate queries
+
+Counts should match provided value or the query is invalid
+
+```{bash}
+set -euo pipefail
+
+# uncompressed text awk
+echo -e "p\tn\treal\tuser\tsys\tcount" > /data/pval.query.uncompressed.text.awk.time.txt
+while read line; do
+    p=$(echo "$line" | cut -s -f1)
+    n=$(echo "$line" | cut -s -f2)
+    echo -ne "$p\t$n\t" >> /data/pval.query.uncompressed.text.awk.time.txt
+    c=$(/usr/bin/time -f "%e\t%U\t%S" -ao /data/pval.query.uncompressed.text.awk.time.txt \
+    awk threshold="$p" -F"\t" '$7 < threshold' /data/gwas.txt | wc -l)
+    head -c -1 /data/pval.query.uncompressed.text.awk.time.txt > tmp
+    mv tmp /data/pval.query.uncompressed.text.awk.time.txt
+    echo "$c" >> /data/pval.query.uncompressed.text.awk.time.txt
+done < /data/pval.txt
+
+# compressed text awk
+echo -e "p\tn\treal\tuser\tsys\tcount" > /data/pval.query.compressed.text.awk.time.txt
+while read line; do
+    p=$(echo "$line" | cut -s -f1)
+    n=$(echo "$line" | cut -s -f2)
+    echo -ne "$p\t$n\t" >> /data/pval.query.compressed.text.awk.time.txt
+    c=$(/usr/bin/time -f "%e\t%U\t%S" -ao /data/pval.query.compressed.text.awk.time.txt \
+    gzip -dc /data/gwas.txt.gz | \
+    awk threshold="$p" -F"\t" '$7 < threshold' | wc -l)
+    head -c -1 /data/pval.query.compressed.text.awk.time.txt > tmp
+    mv tmp /data/pval.query.compressed.text.awk.time.txt
+    echo "$c" >> /data/pval.query.compressed.text.awk.time.txt
+done < /data/pval.txt
+
+# compressed vcf bcftools
+echo -e "p\tn\treal\tuser\tsys\tcount" > /data/pval.query.compressed.vcf.bcftools.time.txt
+while read line; do
+    p=$(echo "$line" | cut -s -f1)
+    n=$(echo "$line" | cut -s -f2)
+    echo -ne "$p\t$n\t" >> /data/pval.query.compressed.vcf.bcftools.time.txt
+    c=$(/usr/bin/time -f "%e\t%U\t%S" -ao /data/pval.query.compressed.vcf.bcftools.time.txt \
+    bcftools query -i "%FORMAT/LP < \"$p\"" -f '%LINE\n' /data/gwas.vcf.gz | wc -l)
+    head -c -1 /data/pval.query.compressed.vcf.bcftools.time.txt > tmp
+    mv tmp /data/pval.query.compressed.vcf.bcftools.time.txt
+    echo "$c" >> /data/pval.query.compressed.vcf.bcftools.time.txt
+done < /data/lpval.txt
+```
+
+#### Plot results
+
+```{r}
+library('ggplot2')
+library('data.table')
+
+# read in data
+# TODO check counts against truth
+pval.query.uncompressed.text.awk.time <- fread("/data/pval.query.uncompressed.text.awk.time.txt")
+pval.query.compressed.text.awk.time <- fread("/data/pval.query.compressed.text.awk.time.txt")
+pval.query.compressed.vcf.bcftools.time <- fread("/data/pval.query.compressed.vcf.bcftools.time.txt")
+
+# add methods
+pval.query.uncompressed.text.awk.time$method <- "uncompressed.text.awk"
+pval.query.compressed.text.awk.time$method <- "compressed.text.awk"
+pval.query.compressed.vcf.bcftools.time$method <- "compressed.vcf.bcftools"
+
+# merge
+all <- rbind(
+    pval.query.uncompressed.text.awk.time[, c("real", "method")],
+    pval.query.compressed.text.awk.time[, c("real", "method")],
+    pval.query.compressed.vcf.bcftools.time[, c("real", "method")]
+)
+all$method <- as.factor(all$method)
+
+# plot
+ggplot(all, aes(color = method, y = real)) + geom_boxplot() + labs(x = "Method", y = "Execution time (sec)") + theme(axis.text.x=element_blank()) + theme(legend.title=element_blank()) + ggtitle("Query time using dbsnp identifier")
+```

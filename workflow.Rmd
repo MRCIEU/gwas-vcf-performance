@@ -1,0 +1,126 @@
+---
+title: "Map GWAS to VCF workflow"
+author: "Matt Lyon"
+date: "2020-02-25"
+---
+
+### Download and format GWAS
+
+Download BMI GWAS summary statistics and annotation data (Neale et al)
+
+```{r}
+library('data.table')
+library('stringr')
+library('jsonlite')
+set.seed(12345)
+options(scipen=999)
+
+# number of reps
+n_sim <- 100
+
+# UK Biobank — Neale lab. (n.d.). Retrieved February 25, 2020, from http://www.nealelab.is/uk-biobank/
+download.file("https://www.dropbox.com/s/tx8iw9lk53z3vj9/21001_raw.gwas.imputed_v3.both_sexes.tsv.bgz?raw=1", destfile="/data/gwas.raw.txt.gz")
+download.file("https://www.dropbox.com/s/puxks683vb0omeg/variants.tsv.bgz?raw=1", destfile="/data/lookup.txt.gz")
+gwas <- fread("/data/gwas.raw.txt.gz")
+lookup <- fread("/data/lookup.txt.gz")
+gwas <- merge(gwas, lookup, "variant")
+rm(lookup)
+
+# save output to gzip tab file
+df1 <- gwas[,c("chr", "pos", "alt", "ref", "beta", "se", "pval", "rsid", "AF", "info", "n_complete_samples")]
+gz1 <- gzfile("/data/gwas.txt.gz", "w")
+write.table(df1, gz1, sep="\t", row.names=F, quote=F)
+close(gz1)
+
+# write out params to json
+params <- list(chr_col = 0, pos_col = 1, ea_col = 2, oa_col = 3, beta_col = 4, se_col = 5, pval_col = 6, snp_col = 7, eaf_col = 8, imp_info_col = 9, ncontrol_col = 10, delimiter = "\t", header = TRUE, build = "GRCh37")
+write(toJSON(params, auto_unbox=T), file = "/data/schema.json")
+
+# subsample variants
+s <- df1[sample(nrow(df1), n_sim),]
+
+# write out list of rsid for querying later
+write.table(s$rsid, sep="\t", row.names=F, quote=F, col.names=F, file="/data/rsid.txt")
+
+# write out list of chrom pos for querying later
+write.table(s[,c("chr", "pos")], sep="\t", row.names=F, quote=F, col.names=F, file="/data/chrpos.txt")
+
+# write out list of 1Mb intervals and count number of variants for querying later
+s$start <- s$pos - 500000
+s$end <- s$pos + 500000
+s$interval_count <- apply(s, 1, function(row){ length(which(df1$chr == row[['chr']] & df1$pos > as.numeric(row[['start']]) & df1$pos < as.numeric(row[['end']]))) })
+write.table(s[,c("chr", "start", "end", "interval_count")], sep="\t", row.names=F, quote=F, col.names=F, file="/data/intervals.txt")
+
+# write out pval thresholds & counts for querying later
+thresholds <- seq(0.00000005, 1, 1/n_sim)
+counts <- sapply(thresholds, function (threshold) {sum(df1$pval < threshold, na.rm = T)})
+write.table(data.frame(thresholds=thresholds, counts=counts), row.names=F, quote=F, col.names=F, file="/data/pval.txt")
+write.table(data.frame(thresholds=-log10(thresholds), counts=counts), row.names=F, quote=F, col.names=F, file="/data/lpval.txt")
+
+message(paste("Total number of variants in GWAS:", nrow(df1)))
+```
+
+### Map GWAS to VCF
+
+Map plain text to VCF format
+
+Convert GWAS to VCF. This will perform on-the-fly harmonisation of the effect allele to the VCF alternative allele ensuring data consistency. Source code available here: [gwas2vcf](https://github.com/MRCIEU/gwas2vcf).
+
+```{bash}
+set -euo pipefail
+
+# convert to VCF.gz
+python /app/gwas2vcf/main.py \
+--out /data/gwas.vcf.gz \
+--data /data/gwas.txt.gz \
+--ref /data/human_g1k_v37.fasta \
+--id "neale-bmi-2018" \
+--json /data/schema.json
+
+# make uncompressed version available & index
+zcat /data/gwas.vcf.gz > /data/gwas.vcf
+/usr/bin/gatk-4.1.5.0/gatk \
+IndexFeatureFile \
+-I /data/gwas.vcf
+
+# validate output
+# skip allele check -- we have no genotypes
+/usr/bin/gatk-4.1.5.0/gatk \
+ValidateVariants \
+-R /data/human_g1k_v37.fasta \
+-V /data/gwas.vcf \
+--validation-type-to-exclude ALLELES
+```
+
+### Compare file sizes
+
+VCF files are slightly larger than original text files but contain valuable metadata
+
+Gzipped unstructured (original) text
+
+```{bash}
+set -euo pipefail
+ls -lh /data/gwas.txt.gz
+```
+
+Uncompressed unstructured (original) text
+
+```{bash}
+set -euo pipefail
+zcat /data/gwas.txt.gz > /data/gwas.txt
+ls -lh /data/gwas.txt
+```
+
+Gzipped VCF
+
+```{bash}
+set -euo pipefail
+ls -lh /data/gwas.vcf.gz
+```
+
+Uncompressed VCF
+
+```{bash}
+set -euo pipefail
+ls -lh /data/gwas.vcf
+```
