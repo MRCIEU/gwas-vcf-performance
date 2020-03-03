@@ -2,6 +2,8 @@
 title: "Map GWAS to VCF workflow"
 author: "Matt Lyon"
 date: "2020-02-25"
+params:
+    n_sim: 100
 ---
 
 ### Download and format GWAS
@@ -14,9 +16,6 @@ library('stringr')
 library('jsonlite')
 set.seed(12345)
 options(scipen=999)
-
-# number of reps
-n_sim <- 100
 
 # UK Biobank — Neale lab. (n.d.). Retrieved February 25, 2020, from http://www.nealelab.is/uk-biobank/
 download.file("https://www.dropbox.com/s/tx8iw9lk53z3vj9/21001_raw.gwas.imputed_v3.both_sexes.tsv.bgz?raw=1", destfile="/data/gwas.raw.txt.gz")
@@ -37,7 +36,7 @@ params <- list(chr_col = 0, pos_col = 1, ea_col = 2, oa_col = 3, beta_col = 4, s
 write(toJSON(params, auto_unbox=T), file = "/data/schema.json")
 
 # subsample variants
-s <- df1[sample(nrow(df1), n_sim),]
+s <- df1[sample(nrow(df1), params$n_sim),]
 
 # write out list of rsid for querying later
 write.table(s$rsid, sep="\t", row.names=F, quote=F, col.names=F, file="/data/rsid.txt")
@@ -52,7 +51,7 @@ s$interval_count <- apply(s, 1, function(row){ length(which(df1$chr == row[['chr
 write.table(s[,c("chr", "start", "end", "interval_count")], sep="\t", row.names=F, quote=F, col.names=F, file="/data/intervals.txt")
 
 # write out pval thresholds & counts for querying later
-thresholds <- seq(0.00000005, 1, 1/n_sim)
+thresholds <- seq(0.00000005, 1, 1/params$n_sim)
 counts <- sapply(thresholds, function (threshold) {sum(df1$pval < threshold, na.rm = T)})
 write.table(data.frame(thresholds=thresholds, counts=counts), row.names=F, quote=F, col.names=F, file="/data/pval.txt")
 write.table(data.frame(thresholds=-log10(thresholds), counts=counts), row.names=F, quote=F, col.names=F, file="/data/lpval.txt")
