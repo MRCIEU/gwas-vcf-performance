@@ -57,7 +57,7 @@ python /app/gwas2vcf/main.py \
 Merge duplicate positions into a single row. This is required if using ID field to prevent duplicate identifiers.
 
 ```{bash}
-set -euo pipefails
+set -euo pipefail
 bcftools norm \
 -f /data/human_g1k_v37.fasta \
 -m +any \
