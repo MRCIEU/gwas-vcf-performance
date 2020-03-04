@@ -9,3 +9,6 @@ human_g1k_v37.fasta.fai.gz
 human_g1k_v37.fasta.fai
 schema.json
 data/
+dbsnp.v153.b37.vcf.gz
+dbsnp.v153.b37.vcf.gz.tbi
+dbsnp.v153.b37.vcf.gz.rsidx

@@ -2,6 +2,8 @@
 title: "Compare VCF and text for summary stats using chromosome & position"
 author: "Matt Lyon"
 date: "2020-02-25"
+params:
+    n_sim: 5
 ---
 
 ### Compare query execution time between VCF and unindexed text

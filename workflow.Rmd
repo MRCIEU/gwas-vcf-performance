@@ -3,7 +3,7 @@ title: "Map GWAS to VCF workflow"
 author: "Matt Lyon"
 date: "2020-02-25"
 params:
-    n_sim: 100
+    n_sim: 5
 ---
 
 ### Download and format GWAS
@@ -70,11 +70,19 @@ set -euo pipefail
 
 # convert to VCF.gz
 python /app/gwas2vcf/main.py \
---out /data/gwas.vcf.gz \
+--out /data/gwas.uncombined.vcf.gz \
 --data /data/gwas.txt.gz \
 --ref /data/human_g1k_v37.fasta \
 --id "neale-bmi-2018" \
 --json /data/schema.json
+
+# combine multialleleic variants
+bcftools norm \
+-f /data/human_g1k_v37.fasta \
+-m +any \
+-O z \
+-o /data/gwas.vcf.gz \
+/data/gwas.uncombined.vcf.gz
 
 # make uncompressed version available & index
 zcat /data/gwas.vcf.gz > /data/gwas.vcf
@@ -89,6 +97,9 @@ ValidateVariants \
 -R /data/human_g1k_v37.fasta \
 -V /data/gwas.vcf \
 --validation-type-to-exclude ALLELES
+
+# index on marker ID
+rsidx index /data/gwas.vcf.gz /data/gwas.vcf.gz.rsidx
 ```
 
 ### Compare file sizes

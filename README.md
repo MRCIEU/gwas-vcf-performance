@@ -30,6 +30,21 @@ gzip -d human_g1k_v37.fasta.fai.gz
 gzip -d human_g1k_v37.dict.gz
 ```
 
+## Download and index dbSNP file by rsid using [rsidx](https://github.com/bioforensics/rsidx)
+
+These files are needed index using dbsnp
+
+```sh
+# download
+wget ftp://ftp.ncbi.nih.gov/snp/latest_release/VCF/GCF_000001405.25.gz
+wget ftp://ftp.ncbi.nih.gov/snp/latest_release/VCF/GCF_000001405.25.gz.tbi
+mv GCF_000001405.25.gz dbsnp.v153.b37.vcf.gz
+mv GCF_000001405.25.gz.tbi dbsnp.v153.b37.vcf.gz.tbi
+
+# index VCF by ID
+rsidx index dbsnp.v153.b37.vcf.gz dbsnp.v153.b37.vcf.gz.rsidx
+```
+
 ## Run evaluation
 
 ```sh
@@ -47,6 +62,7 @@ docker run \
 -v `pwd`:/data \
 --name gwas-vcf-performance \
 -it -d \
+--rm \
 gwas-vcf-performance \
 R -e "rmarkdown::render('/data/rsid_query_performance.Rmd', output_file='/data/rsid_query_performance.html')"
 ```

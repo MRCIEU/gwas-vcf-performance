@@ -9,3 +9,6 @@ merged.vcf.gz
 merged.vcf.gz.tbi
 schema.json
 output.html
+dbsnp.v153.b37.vcf.gz
+dbsnp.v153.b37.vcf.gz.tbi
+dbsnp.v153.b37.vcf.gz.rsidx

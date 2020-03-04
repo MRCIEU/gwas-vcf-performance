@@ -6,9 +6,9 @@ params:
     n_sim: 5
 ---
 
-### Compare query execution time between VCF and unindexed text
+## Compare query execution time between VCF and unindexed text
 
-#### Simulate queries
+### Simulate queries
 
 ```{bash}
 set -euo pipefail
@@ -106,9 +106,19 @@ while read snp; do
     /usr/bin/time -f "%e\t%U\t%S" -ao /data/rsid.query.compressed.vcf.bcftools.time.txt \
     bcftools query -i "%ID == \"$snp\"" -f '%LINE' /data/gwas.vcf.gz | wc -l >> /data/rsid.query.compressed.vcf.bcftools.counts.txt
 done < /data/rsid.txt
+
+# compressed vcf rsidx
+echo -e "query\treal\tuser\tsys" > /data/rsid.query.compressed.vcf.rsidx.time.txt
+echo -e "query\tn" > /data/rsid.query.compressed.vcf.rsidx.counts.txt
+while read snp; do
+    echo -ne "$snp\t" >> /data/rsid.query.compressed.vcf.rsidx.time.txt
+    echo -ne "$snp\t" >> /data/rsid.query.compressed.vcf.rsidx.counts.txt
+    /usr/bin/time -f "%e\t%U\t%S" -ao /data/rsid.query.compressed.vcf.rsidx.time.txt \
+    rsidx search /data/gwas.vcf.gz dbsnp.v153.b37.vcf.gz.rsidx "$snp" | wc -l >> /data/rsid.query.compressed.vcf.rsidx.counts.txt
+done < /data/rsid.txt
 ```
 
-#### Plot results
+### Plot results
 
 ```{r}
 library('ggplot2')
@@ -117,16 +127,17 @@ library('data.table')
 # read in query return line counts
 
 ## text
-rsid.query.uncompressed.text.awk.counts <- fread("/data/rsid.query.uncompressed.text.awk.counts.txt")
-rsid.query.uncompressed.text.grep.counts <- fread("/data/rsid.query.uncompressed.text.grep.counts.txt")
-rsid.query.compressed.text.awk.counts <- fread("/data/rsid.query.compressed.text.awk.counts.txt")
-rsid.query.compressed.text.grep.counts <- fread("/data/rsid.query.compressed.text.grep.counts.txt")
+rsid.query.uncompressed.text.awk.counts <- fread("rsid.query.uncompressed.text.awk.counts.txt")
+rsid.query.uncompressed.text.grep.counts <- fread("rsid.query.uncompressed.text.grep.counts.txt")
+rsid.query.compressed.text.awk.counts <- fread("rsid.query.compressed.text.awk.counts.txt")
+rsid.query.compressed.text.grep.counts <- fread("rsid.query.compressed.text.grep.counts.txt")
 ## vcf
-rsid.query.uncompressed.vcf.awk.counts <- fread("/data/rsid.query.uncompressed.vcf.awk.counts.txt")
-rsid.query.uncompressed.vcf.grep.counts <- fread("/data/rsid.query.uncompressed.vcf.grep.counts.txt")
-rsid.query.compressed.vcf.awk.counts <- fread("/data/rsid.query.compressed.vcf.awk.counts.txt")
-rsid.query.compressed.vcf.grep.counts <- fread("/data/rsid.query.compressed.vcf.grep.counts.txt")
-rsid.query.compressed.vcf.bcftools.counts <- fread("/data/rsid.query.compressed.vcf.bcftools.counts.txt")
+rsid.query.uncompressed.vcf.awk.counts <- fread("rsid.query.uncompressed.vcf.awk.counts.txt")
+rsid.query.uncompressed.vcf.grep.counts <- fread("rsid.query.uncompressed.vcf.grep.counts.txt")
+rsid.query.compressed.vcf.awk.counts <- fread("rsid.query.compressed.vcf.awk.counts.txt")
+rsid.query.compressed.vcf.grep.counts <- fread("rsid.query.compressed.vcf.grep.counts.txt")
+rsid.query.compressed.vcf.bcftools.counts <- fread("rsid.query.compressed.vcf.bcftools.counts.txt")
+rsid.query.compressed.vcf.rsidx.counts <- fread("rsid.query.compressed.vcf.rsidx.counts.txt")
 
 # check line counts equal to n_sim
 stopifnot(sum(rsid.query.uncompressed.vcf.awk.counts$n == 1) == params$n_sim)
@@ -134,47 +145,56 @@ stopifnot(sum(rsid.query.uncompressed.vcf.grep.counts$n == 1) == params$n_sim)
 stopifnot(sum(rsid.query.compressed.vcf.awk.counts$n == 1) == params$n_sim)
 stopifnot(sum(rsid.query.compressed.vcf.grep.counts$n == 1) == params$n_sim)
 stopifnot(sum(rsid.query.compressed.vcf.bcftools.counts$n == 1) == params$n_sim)
+stopifnot(sum(rsid.query.compressed.vcf.rsidx.counts$n == 1) == params$n_sim)
 
 # read in query time
 
 ## text
-rsid.query.uncompressed.text.awk.time <- fread("/data/rsid.query.uncompressed.text.awk.time.txt")
-rsid.query.uncompressed.text.grep.time <- fread("/data/rsid.query.uncompressed.text.grep.time.txt")
-rsid.query.compressed.text.awk.time <- fread("/data/rsid.query.compressed.text.awk.time.txt")
-rsid.query.compressed.text.grep.time <- fread("/data/rsid.query.compressed.text.grep.time.txt")
+rsid.query.uncompressed.text.awk.time <- fread("rsid.query.uncompressed.text.awk.time.txt")
+rsid.query.uncompressed.text.grep.time <- fread("rsid.query.uncompressed.text.grep.time.txt")
+rsid.query.compressed.text.awk.time <- fread("rsid.query.compressed.text.awk.time.txt")
+rsid.query.compressed.text.grep.time <- fread("rsid.query.compressed.text.grep.time.txt")
 ## vcf
-rsid.query.uncompressed.vcf.awk.time <- fread("/data/rsid.query.uncompressed.vcf.awk.time.txt")
-rsid.query.uncompressed.vcf.grep.time <- fread("/data/rsid.query.uncompressed.vcf.grep.time.txt")
-rsid.query.compressed.vcf.awk.time <- fread("/data/rsid.query.compressed.vcf.awk.time.txt")
-rsid.query.compressed.vcf.grep.time <- fread("/data/rsid.query.compressed.vcf.grep.time.txt")
-rsid.query.compressed.vcf.bcftools.time <- fread("/data/rsid.query.compressed.vcf.bcftools.time.txt")
+rsid.query.uncompressed.vcf.awk.time <- fread("rsid.query.uncompressed.vcf.awk.time.txt")
+rsid.query.uncompressed.vcf.grep.time <- fread("rsid.query.uncompressed.vcf.grep.time.txt")
+rsid.query.compressed.vcf.awk.time <- fread("rsid.query.compressed.vcf.awk.time.txt")
+rsid.query.compressed.vcf.grep.time <- fread("rsid.query.compressed.vcf.grep.time.txt")
+rsid.query.compressed.vcf.bcftools.time <- fread("rsid.query.compressed.vcf.bcftools.time.txt")
+rsid.query.compressed.vcf.rsidx.time <- fread("rsid.query.compressed.vcf.rsidx.time.txt")
 
 # add methods
-rsid.query.uncompressed.text.awk.time$method <- "uncompressed.text.awk"
-rsid.query.uncompressed.text.grep.time$method <- "uncompressed.text.grep"
-rsid.query.compressed.text.awk.time$method <- "compressed.text.awk"
-rsid.query.compressed.text.grep.time$method <- "compressed.text.grep"
+rsid.query.uncompressed.text.awk.time$method <- "awk - uncompressed text"
+rsid.query.uncompressed.text.grep.time$method <- "grep - uncompressed text"
+rsid.query.compressed.text.awk.time$method <- "awk - compressed text"
+rsid.query.compressed.text.grep.time$method <- "grep - compressed text"
 
-rsid.query.uncompressed.vcf.awk.time$method <- "uncompressed.vcf.awk"
-rsid.query.uncompressed.vcf.grep.time$method <- "uncompressed.vcf.grep"
-rsid.query.compressed.vcf.awk.time$method <- "compressed.vcf.awk"
-rsid.query.compressed.vcf.grep.time$method <- "compressed.vcf.grep"
-rsid.query.compressed.vcf.bcftools.time$method <- "compressed.vcf.bcftools"
+rsid.query.uncompressed.vcf.awk.time$method <- "awk - uncompressed vcf"
+rsid.query.uncompressed.vcf.grep.time$method <- "grep - uncompressed vcf"
+rsid.query.compressed.vcf.awk.time$method <- "awk - compressed vcf"
+rsid.query.compressed.vcf.grep.time$method <- "grep - compressed vcf"
+rsid.query.compressed.vcf.bcftools.time$method <- "bcftools - compressed vcf"
+rsid.query.compressed.vcf.rsidx.time$method <- "rsidx - compressed vcf"
 
 # merge
 all <- rbind(
     rsid.query.uncompressed.text.awk.time[, c("real", "method")],
-    rsid.query.uncompressed.text.grep.time[, c("real", "method")],
     rsid.query.compressed.text.awk.time[, c("real", "method")],
+    rsid.query.uncompressed.text.grep.time[, c("real", "method")],
     rsid.query.compressed.text.grep.time[, c("real", "method")],
     rsid.query.uncompressed.vcf.awk.time[, c("real", "method")],
-    rsid.query.uncompressed.vcf.grep.time[, c("real", "method")],
     rsid.query.compressed.vcf.awk.time[, c("real", "method")],
+    rsid.query.uncompressed.vcf.grep.time[, c("real", "method")],
     rsid.query.compressed.vcf.grep.time[, c("real", "method")],
-    rsid.query.compressed.vcf.bcftools.time[, c("real", "method")]
+    rsid.query.compressed.vcf.bcftools.time[, c("real", "method")],
+    rsid.query.compressed.vcf.rsidx.time[, c("real", "method")]
 )
 all$method <- as.factor(all$method)
 
-# plot
-ggplot(all, aes(color = method, y = real)) + geom_boxplot() + labs(x = "Method", y = "Execution time (sec)") + theme(axis.text.x=element_blank()) + theme(legend.title=element_blank()) + ggtitle("Query time using dbsnp identifier")
+# plot runtime
+ggplot(all, aes(x = method, y = real)) +
+    geom_boxplot() +
+    labs(x = "Method", y = "Execution time (sec)") +
+    ggtitle("Query time using marker identifier") +
+    theme(axis.text.x=element_text(angle=90, hjust=1)) +
+    scale_y_continuous(breaks = scales::pretty_breaks(n = 10))
 ```

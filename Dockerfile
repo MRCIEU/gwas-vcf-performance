@@ -11,7 +11,13 @@ RUN /opt/conda/bin/conda install -c r r-data.table
 RUN /opt/conda/bin/conda install -c r r-stringr
 RUN /opt/conda/bin/conda install -c r r-jsonlite
 RUN /opt/conda/bin/conda install -c r r-r.utils
+RUN /opt/conda/bin/conda install -c bioconda rsidx
 RUN /opt/conda/bin/conda install -c conda-forge pandoc
+
+# install htslib
+RUN wget https://github.com/samtools/htslib/releases/download/1.10.2/htslib-1.10.2.tar.bz2
+RUN tar -xvf htslib-1.10.2.tar.bz2
+RUN cd htslib-1.10.2 && ./configure && make && make test && make install
 
 # install bcftools
 RUN wget https://github.com/samtools/bcftools/releases/download/1.10/bcftools-1.10.tar.bz2
