@@ -46,7 +46,7 @@ mv GCF_000001405.25.gz.tbi dbsnp.v153.b37.vcf.gz.tbi
 ```sh
 docker run \
 -v `pwd`:/data \
---name gwas-vcf-performance \
+--name gwas-vcf-performance-workflow \
 --rm \
 -it -d \
 gwas-vcf-performance \
@@ -58,7 +58,7 @@ R -e "rmarkdown::render('/data/workflow.Rmd', output_file='/data/workflow.html')
 ```sh
 docker run \
 -v `pwd`:/data \
---name gwas-vcf-performance \
+--name gwas-vcf-performance-rsid \
 -it -d \
 --rm \
 gwas-vcf-performance \
@@ -68,7 +68,7 @@ R -e "rmarkdown::render('/data/rsid_query_performance.Rmd', output_file='/data/r
 ```sh
 docker run \
 -v `pwd`:/data \
---name gwas-vcf-performance \
+--name gwas-vcf-performance-chrpos \
 --rm \
 -it -d \
 gwas-vcf-performance \
@@ -78,7 +78,7 @@ R -e "rmarkdown::render('/data/chrpos_query_performance.Rmd', output_file='/data
 ```sh
 docker run \
 -v `pwd`:/data \
---name gwas-vcf-performance \
+--name gwas-vcf-performance-interval \
 --rm \
 -it -d \
 gwas-vcf-performance \
@@ -88,7 +88,7 @@ R -e "rmarkdown::render('/data/interval_query_performance.Rmd', output_file='/da
 ```sh
 docker run \
 -v `pwd`:/data \
---name gwas-vcf-performance \
+--name gwas-vcf-performance-pval \
 --rm \
 -it -d \
 gwas-vcf-performance \
