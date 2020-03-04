@@ -41,7 +41,7 @@ mv GCF_000001405.25.gz dbsnp.v153.b37.vcf.gz
 mv GCF_000001405.25.gz.tbi dbsnp.v153.b37.vcf.gz.tbi
 ```
 
-## Run evaluation
+## Prepare GWAS
 
 ```sh
 docker run \
@@ -52,6 +52,8 @@ docker run \
 gwas-vcf-performance \
 R -e "rmarkdown::render('/data/workflow.Rmd', output_file='/data/workflow.html')"
 ```
+
+## Run evaluations
 
 ```sh
 docker run \

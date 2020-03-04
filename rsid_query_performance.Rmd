@@ -20,7 +20,7 @@ while read snp; do
     echo -ne "$snp\t" >> /data/rsid.query.uncompressed.text.awk.time.txt
     echo -ne "$snp\t" >> /data/rsid.query.uncompressed.text.awk.counts.txt
     /usr/bin/time -f "%e\t%U\t%S" -ao /data/rsid.query.uncompressed.text.awk.time.txt \
-    awk -v snp="$snp" -F"\t" '$8==snp' /data/gwas.txt | wc -l >> /data/rsid.query.uncompressed.text.awk.counts.txt
+    awk -v snp="$snp" -F"\t" '$5==snp' /data/gwas.txt | wc -l >> /data/rsid.query.uncompressed.text.awk.counts.txt
 done < /data/rsid.txt
 
 # uncompressed text grep
@@ -41,7 +41,7 @@ while read snp; do
     echo -ne "$snp\t" >> /data/rsid.query.compressed.text.awk.counts.txt
     /usr/bin/time -f "%e\t%U\t%S" -ao /data/rsid.query.compressed.text.awk.time.txt \
     gzip -dc /data/gwas.txt.gz | \
-    awk -v snp="$snp" -F"\t" '$8==snp' | wc -l >> /data/rsid.query.compressed.text.awk.counts.txt
+    awk -v snp="$snp" -F"\t" '$5==snp' | wc -l >> /data/rsid.query.compressed.text.awk.counts.txt
 done < /data/rsid.txt
 
 # compressed text grep
@@ -114,7 +114,7 @@ while read snp; do
     echo -ne "$snp\t" >> /data/rsid.query.compressed.vcf.rsidx.time.txt
     echo -ne "$snp\t" >> /data/rsid.query.compressed.vcf.rsidx.counts.txt
     /usr/bin/time -f "%e\t%U\t%S" -ao /data/rsid.query.compressed.vcf.rsidx.time.txt \
-    rsidx search /data/gwas.vcf.gz dbsnp.v153.b37.vcf.gz.rsidx "$snp" | wc -l >> /data/rsid.query.compressed.vcf.rsidx.counts.txt
+    rsidx search /data/gwas.vcf.gz /data/gwas.vcf.gz.rsidx "$snp" | wc -l >> /data/rsid.query.compressed.vcf.rsidx.counts.txt
 done < /data/rsid.txt
 ```
 

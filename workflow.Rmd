@@ -34,29 +34,6 @@ close(gz1)
 # write out params to json
 params <- list(chr_col = 0, pos_col = 1, ea_col = 2, oa_col = 3, beta_col = 4, se_col = 5, pval_col = 6, snp_col = 7, eaf_col = 8, imp_info_col = 9, ncontrol_col = 10, delimiter = "\t", header = TRUE, build = "GRCh37")
 write(toJSON(params, auto_unbox=T), file = "/data/schema.json")
-
-# subsample variants
-s <- df1[sample(nrow(df1), params$n_sim),]
-
-# write out list of rsid for querying later
-write.table(s$rsid, sep="\t", row.names=F, quote=F, col.names=F, file="/data/rsid.txt")
-
-# write out list of chrom pos for querying later
-write.table(s[,c("chr", "pos")], sep="\t", row.names=F, quote=F, col.names=F, file="/data/chrpos.txt")
-
-# write out list of 1Mb intervals and count number of variants for querying later
-s$start <- s$pos - 500000
-s$end <- s$pos + 500000
-s$interval_count <- apply(s, 1, function(row){ length(which(df1$chr == row[['chr']] & df1$pos > as.numeric(row[['start']]) & df1$pos < as.numeric(row[['end']]))) })
-write.table(s[,c("chr", "start", "end", "interval_count")], sep="\t", row.names=F, quote=F, col.names=F, file="/data/intervals.txt")
-
-# write out pval thresholds & counts for querying later
-thresholds <- seq(0.00000005, 1, 1/params$n_sim)
-counts <- sapply(thresholds, function (threshold) {sum(df1$pval < threshold, na.rm = T)})
-write.table(data.frame(thresholds=thresholds, counts=counts), row.names=F, quote=F, col.names=F, file="/data/pval.txt")
-write.table(data.frame(thresholds=-log10(thresholds), counts=counts), row.names=F, quote=F, col.names=F, file="/data/lpval.txt")
-
-message(paste("Total number of variants in GWAS:", nrow(df1)))
 ```
 
 ### Map GWAS to VCF
@@ -68,10 +45,10 @@ Convert GWAS to VCF. This will perform on-the-fly harmonisation of the effect al
 ```{bash}
 set -euo pipefail
 python /app/gwas2vcf/main.py \
---out /data/gwas.uncombined.vcf.gz \
+--out /data/gwas.raw.vcf.gz \
 --data /data/gwas.txt.gz \
 --ref /data/human_g1k_v37.fasta \
---id "neale-bmi-2018" \
+--id "neale-bmi-ukb" \
 --json /data/schema.json
 ```
 
@@ -85,22 +62,43 @@ bcftools norm \
 -f /data/human_g1k_v37.fasta \
 -m +any \
 -O z \
--o /data/gwas.unannotated.vcf.gz \
-/data/gwas.uncombined.vcf.gz
+-o /data/gwas.norm.vcf.gz \
+/data/gwas.raw.vcf.gz
 ```
 
 ### Update ID field
 
-Replace ID field with up-to-date set of dbSNP identifiers. IDs are frequently merged between builds. Also by combining multialleleics rsIDs for INDELs can reference the wrong position.
+Replace ID field with up-to-date set of dbSNP identifiers using versioned release. IDs are frequently merged between builds. Also by combining multialleleics rsIDs for INDELs can reference the wrong position.
+
+Strip out existing ID field
 
 ```{bash}
 set -euo pipefail
-/usr/bin/gatk-4.1.5.0/gatk \
-VariantAnnotator \
--R /data/human_g1k_v37.fasta \
--V /data/gwas.unannotated.vcf.gz \
--O /data/gwas.vcf.gz \
---dbsnp /data/dbsnp.v153.b37.vcf.gz
+bcftools annotate \
+-x ID \
+-O z \
+-o /data/gwas.noid.vcf.gz \
+/data/gwas.norm.vcf.gz
+
+bcftools index \
+-t \
+/data/gwas.noid.vcf.gz
+```
+
+Add versioned IDs (build 153)
+
+```{bash}
+set -euo pipefail
+bcftools annotate \
+-c ID \
+-a /data/dbsnp.v153.b37.vcf.gz \
+-O z \
+-o /data/gwas.vcf.gz \
+/data/gwas.noid.vcf.gz
+
+bcftools index \
+-t \
+/data/gwas.vcf.gz
 ```
 
 ### Validate output
@@ -118,10 +116,12 @@ ValidateVariants \
 
 ### Index on rsID
 
-[rsidx](https://github.com/bioforensics/rsidx) is an excellent tool for indexing on VCF ID. This is made possible by extracting a creating an SQLite database of rsIDs and chromosome position which is later queried to obtain the variant locus for extraction using tabix.
+[rsidx](https://github.com/bioforensics/rsidx) is an excellent tool for indexing on VCF ID. This is made possible by extracting rsID and chromosome position to an SQLite database which is later queried to obtain the variant locus for extraction using tabix.
 
 ```{bash}
-rsidx index /data/gwas.vcf.gz /data/gwas.vcf.gz.rsidx
+rsidx index \
+/data/gwas.vcf.gz \
+/data/gwas.vcf.gz.rsidx
 ```
 
 ### Create uncompressed VCF & index
@@ -135,35 +135,48 @@ IndexFeatureFile \
 -I /data/gwas.vcf
 ```
 
-### Compare file sizes
-
-VCF files are slightly larger than original text files but contain valuable metadata
-
-Gzipped unstructured (original) text
+### Prepare tabular extract for performance comparisons
 
 ```{bash}
-set -euo pipefail
-ls -lh /data/gwas.txt.gz
+echo -e "CHROM\tPOS\tREF\tALT\tID\tES\tSE\tLP\tAF\tSS" > /data/gwas.txt
+bcftools query \
+-e %ID == "." \
+-f '%CHROM\t%POS\t%REF\t%ALT\t%ID[\t%ES\t%SE\t%LP\t%AF\t%SS]\n' \
+/data/gwas.vcf.gz | \
+grep -v "," >> /data/gwas.txt
+gzip -c /data/gwas.txt > /data/gwas.txt.gz
 ```
 
-Uncompressed unstructured (original) text
+### Define queries
 
-```{bash}
-set -euo pipefail
-zcat /data/gwas.txt.gz > /data/gwas.txt
-ls -lh /data/gwas.txt
-```
+```{r}
+library('data.table')
+set.seed(12345)
+options(scipen=999)
 
-Gzipped VCF
+# read in tab GWAS
+gwas <- fread("/data/gwas.txt")
 
-```{bash}
-set -euo pipefail
-ls -lh /data/gwas.vcf.gz
-```
+# subsample variants
+s <- gwas[sample(nrow(gwas), params$n_sim),]
 
-Uncompressed VCF
+# write out list of rsid for querying later
+write.table(s$ID, sep="\t", row.names=F, quote=F, col.names=F, file="/data/rsid.txt")
 
-```{bash}
-set -euo pipefail
-ls -lh /data/gwas.vcf
+# write out list of chrom pos for querying later
+write.table(s[,c("CHROM", "POS")], sep="\t", row.names=F, quote=F, col.names=F, file="/data/chrpos.txt")
+
+# write out list of 1Mb intervals and count number of variants for querying later
+s$start <- s$POS - 500000
+s$end <- s$POS + 500000
+s$interval_count <- apply(s, 1, function(row){ length(which(gwas$CHROM == row[['CHROM']] & gwas$POS > as.numeric(row[['start']]) & gwas$POS < as.numeric(row[['end']]))) })
+write.table(s[,c("CHROM", "start", "end", "interval_count")], sep="\t", row.names=F, quote=F, col.names=F, file="/data/intervals.txt")
+
+# write out pval thresholds & counts for querying later
+thresholds <- seq(0.00000005, 1, 1/params$n_sim)
+thresholds <- -log10(thresholds)
+counts <- sapply(thresholds, function (threshold) {sum(gwas$LP < threshold, na.rm = T)})
+write.table(data.frame(thresholds=thresholds, counts=counts), row.names=F, quote=F, col.names=F, file="/data/pval.txt")
+
+message(paste("Total number of variants in GWAS:", nrow(gwas)))
 ```
