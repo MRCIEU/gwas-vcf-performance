@@ -140,7 +140,7 @@ IndexFeatureFile \
 ```{bash}
 echo -e "CHROM\tPOS\tREF\tALT\tID\tES\tSE\tLP\tAF\tSS" > /data/gwas.txt
 bcftools query \
--e %ID == "." \
+-e '%ID == "."' \
 -f '%CHROM\t%POS\t%REF\t%ALT\t%ID[\t%ES\t%SE\t%LP\t%AF\t%SS]\n' \
 /data/gwas.vcf.gz | \
 grep -v "," >> /data/gwas.txt
