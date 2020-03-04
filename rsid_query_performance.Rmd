@@ -3,7 +3,7 @@ title: "Compare VCF and text for summary stats using rsid"
 author: "Matt Lyon"
 date: "2020-02-25"
 params:
-    n_sim: 100
+    n_sim: 5
 ---
 
 ### Compare query execution time between VCF and unindexed text
@@ -104,7 +104,7 @@ while read snp; do
     echo -ne "$snp\t" >> /data/rsid.query.compressed.vcf.bcftools.time.txt
     echo -ne "$snp\t" >> /data/rsid.query.compressed.vcf.bcftools.counts.txt
     /usr/bin/time -f "%e\t%U\t%S" -ao /data/rsid.query.compressed.vcf.bcftools.time.txt \
-    bcftools query -i "%ID == \"$snp\"" -f '%LINE\n' /data/gwas.vcf.gz | wc -l >> /data/rsid.query.compressed.vcf.bcftools.counts.txt
+    bcftools query -i "%ID == \"$snp\"" -f '%LINE' /data/gwas.vcf.gz | wc -l >> /data/rsid.query.compressed.vcf.bcftools.counts.txt
 done < /data/rsid.txt
 ```
 

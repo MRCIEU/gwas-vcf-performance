@@ -4,20 +4,20 @@ To view comparison results open html files in a web browser.
 
 To reproduce the analysis follow the following instructions.
 
-### Obtain source code
+## Obtain source code
 
 ```sh
 git clone --recurse-submodules git@github.com:MRCIEU/gwas-vcf-performance.git
 ```
 
-### Build docker image
+## Build docker image
 
 ```sh
 cd gwas-vcf-performance
 docker build -t gwas-vcf-performance:latest .
 ```
 
-### Download FASTA file
+## Download FASTA file
 
 These files are needed to harmonise the data ensuring a consistent effect allele
 
@@ -30,7 +30,7 @@ gzip -d human_g1k_v37.fasta.fai.gz
 gzip -d human_g1k_v37.dict.gz
 ```
 
-### Run evaluation
+## Run evaluation
 
 ```sh
 docker run \
