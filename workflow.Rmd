@@ -27,13 +27,13 @@ rm(lookup)
 
 # save output to gzip tab file
 df1 <- gwas[,c("chr", "pos", "alt", "ref", "beta", "se", "pval", "rsid", "AF", "info", "n_complete_samples")]
-gz1 <- gzfile("/data/gwas.txt.gz", "w")
+gz1 <- gzfile("/data/gwas.raw.merged.txt.gz", "w")
 write.table(df1, gz1, sep="\t", row.names=F, quote=F)
 close(gz1)
 
 # write out params to json
-params <- list(chr_col = 0, pos_col = 1, ea_col = 2, oa_col = 3, beta_col = 4, se_col = 5, pval_col = 6, snp_col = 7, eaf_col = 8, imp_info_col = 9, ncontrol_col = 10, delimiter = "\t", header = TRUE, build = "GRCh37")
-write(toJSON(params, auto_unbox=T), file = "/data/schema.json")
+j <- list(chr_col = 0, pos_col = 1, ea_col = 2, oa_col = 3, beta_col = 4, se_col = 5, pval_col = 6, snp_col = 7, eaf_col = 8, imp_info_col = 9, ncontrol_col = 10, delimiter = "\t", header = TRUE, build = "GRCh37")
+write(toJSON(j, auto_unbox=T), file = "/data/schema.json")
 ```
 
 ### Map GWAS to VCF
@@ -46,7 +46,7 @@ Convert GWAS to VCF. This will perform on-the-fly harmonisation of the effect al
 set -euo pipefail
 python /app/gwas2vcf/main.py \
 --out /data/gwas.raw.vcf.gz \
---data /data/gwas.txt.gz \
+--data /data/gwas.raw.merged.txt.gz \
 --ref /data/human_g1k_v37.fasta \
 --id "neale-bmi-ukb" \
 --json /data/schema.json
