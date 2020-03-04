@@ -124,6 +124,11 @@ done < /data/rsid.txt
 library('ggplot2')
 library('data.table')
 
+ci <- function(mu, sigma, n){
+    error <- qt(0.975, df = n-1 ) * sigma / sqrt(n)
+    return(list(mean=mu, sd=sigma, lower=mu - error, upper=mu + error))
+}
+
 # read in query return line counts
 
 ## text
@@ -164,16 +169,26 @@ rsid.query.compressed.vcf.rsidx.time <- fread("rsid.query.compressed.vcf.rsidx.t
 
 # add methods
 rsid.query.uncompressed.text.awk.time$method <- "awk - uncompressed text"
+print(ci(mean(rsid.query.uncompressed.text.awk.time$real), sd(rsid.query.uncompressed.text.awk.time$real), nrow(rsid.query.uncompressed.text.awk.time)))
 rsid.query.uncompressed.text.grep.time$method <- "grep - uncompressed text"
+print(ci(mean(rsid.query.uncompressed.text.grep.time$real), sd(rsid.query.uncompressed.text.grep.time$real), nrow(rsid.query.uncompressed.text.grep.time)))
 rsid.query.compressed.text.awk.time$method <- "awk - compressed text"
+print(ci(mean(rsid.query.compressed.text.awk.time$real), sd(rsid.query.compressed.text.awk.time$real), nrow(rsid.query.compressed.text.awk.time)))
 rsid.query.compressed.text.grep.time$method <- "grep - compressed text"
+print(ci(mean(rsid.query.compressed.text.grep.time$real), sd(rsid.query.compressed.text.grep.time$real), nrow(rsid.query.compressed.text.grep.time)))
 
 rsid.query.uncompressed.vcf.awk.time$method <- "awk - uncompressed vcf"
+print(ci(mean(rsid.query.uncompressed.vcf.awk.time$real), sd(rsid.query.uncompressed.vcf.awk.time$real), nrow(rsid.query.uncompressed.vcf.awk.time)))
 rsid.query.uncompressed.vcf.grep.time$method <- "grep - uncompressed vcf"
+print(ci(mean(rsid.query.uncompressed.vcf.grep.time$real), sd(rsid.query.uncompressed.vcf.grep.time$real), nrow(rsid.query.uncompressed.vcf.grep.time)))
 rsid.query.compressed.vcf.awk.time$method <- "awk - compressed vcf"
+print(ci(mean(rsid.query.compressed.vcf.awk.time$real), sd(rsid.query.compressed.vcf.awk.time$real), nrow(rsid.query.compressed.vcf.awk.time)))
 rsid.query.compressed.vcf.grep.time$method <- "grep - compressed vcf"
+print(ci(mean(rsid.query.compressed.vcf.grep.time$real), sd(rsid.query.compressed.vcf.grep.time$real), nrow(rsid.query.compressed.vcf.grep.time)))
 rsid.query.compressed.vcf.bcftools.time$method <- "bcftools - compressed vcf"
+print(ci(mean(rsid.query.compressed.vcf.bcftools.time$real), sd(rsid.query.compressed.vcf.bcftools.time$real), nrow(rsid.query.compressed.vcf.bcftools.time)))
 rsid.query.compressed.vcf.rsidx.time$method <- "rsidx - compressed vcf"
+print(ci(mean(rsid.query.compressed.vcf.rsidx.time$real), sd(rsid.query.compressed.vcf.rsidx.time$real), nrow(rsid.query.compressed.vcf.rsidx.time)))
 
 # merge
 all <- rbind(
