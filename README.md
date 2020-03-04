@@ -39,7 +39,7 @@ docker run \
 --rm \
 -it -d \
 gwas-vcf-performance \
-R -e "rmarkdown::render('workflow.Rmd', output_file='/data/workflow.html')"
+R -e "rmarkdown::render('/data/workflow.Rmd', output_file='/data/workflow.html')"
 ```
 
 ```sh
@@ -49,7 +49,7 @@ docker run \
 --rm \
 -it -d \
 gwas-vcf-performance \
-R -e "rmarkdown::render('rsid_query_performance.Rmd', output_file='/data/rsid_query_performance.html')"
+R -e "rmarkdown::render('/data/rsid_query_performance.Rmd', output_file='/data/rsid_query_performance.html')"
 ```
 
 ```sh
@@ -59,7 +59,7 @@ docker run \
 --rm \
 -it -d \
 gwas-vcf-performance \
-R -e "rmarkdown::render('chrpos_query_performance.Rmd', output_file='/data/chrpos_query_performance.html')"
+R -e "rmarkdown::render('/data/chrpos_query_performance.Rmd', output_file='/data/chrpos_query_performance.html')"
 ```
 
 ```sh
@@ -69,7 +69,7 @@ docker run \
 --rm \
 -it -d \
 gwas-vcf-performance \
-R -e "rmarkdown::render('interval_query_performance.Rmd', output_file='/data/interval_query_performance.html')"
+R -e "rmarkdown::render('/data/interval_query_performance.Rmd', output_file='/data/interval_query_performance.html')"
 ```
 
 ```sh
@@ -79,5 +79,5 @@ docker run \
 --rm \
 -it -d \
 gwas-vcf-performance \
-R -e "rmarkdown::render('pval_query_performance.Rmd', output_file='/data/pval_query_performance.html')"
+R -e "rmarkdown::render('/data/pval_query_performance.Rmd', output_file='/data/pval_query_performance.html')"
 ```
