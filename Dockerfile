@@ -11,7 +11,6 @@ RUN /opt/conda/bin/conda install -c r r-data.table
 RUN /opt/conda/bin/conda install -c r r-stringr
 RUN /opt/conda/bin/conda install -c r r-jsonlite
 RUN /opt/conda/bin/conda install -c r r-r.utils
-RUN /opt/conda/bin/conda install -c bioconda rsidx
 RUN /opt/conda/bin/conda install -c conda-forge pandoc
 
 # install htslib
@@ -34,3 +33,6 @@ RUN mv gatk-4.1.5.0 /usr/bin
 COPY . /app
 WORKDIR /app
 RUN cd gwas2vcf && pip install -r requirements.txt && python -m unittest discover test
+
+# install patched version of rsidx
+RUN pip install git+https://github.com/bioforensics/rsidx
