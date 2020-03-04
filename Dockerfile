@@ -35,4 +35,4 @@ WORKDIR /app
 RUN cd gwas2vcf && pip install -r requirements.txt && python -m unittest discover test
 
 # install patched version of rsidx
-RUN pip install git+https://github.com/bioforensics/rsidx
+RUN pip install git+https://github.com/mcgml/rsidx
