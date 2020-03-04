@@ -10,7 +10,9 @@ params:
 
 #### Simulate queries
 
-```{sh}
+```{bash}
+set -euo pipefail
+
 # uncompressed text awk
 echo -e "query\treal\tuser\tsys" > /data/rsid.query.uncompressed.text.awk.time.txt
 echo -e "query\tn" > /data/rsid.query.uncompressed.text.awk.counts.txt
