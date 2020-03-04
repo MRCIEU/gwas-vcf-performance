@@ -10,7 +10,7 @@ params:
 
 #### Simulate queries
 
-```sh
+```{sh}
 set -euo pipefail
 
 # uncompressed text awk
@@ -110,7 +110,7 @@ done < /data/rsid.txt
 
 #### Plot results
 
-```r
+```{r}
 library('ggplot2')
 library('data.table')
 
