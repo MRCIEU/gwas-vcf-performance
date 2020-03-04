@@ -46,7 +46,6 @@ R -e "rmarkdown::render('/data/workflow.Rmd', output_file='/data/workflow.html')
 docker run \
 -v `pwd`:/data \
 --name gwas-vcf-performance \
---rm \
 -it -d \
 gwas-vcf-performance \
 R -e "rmarkdown::render('/data/rsid_query_performance.Rmd', output_file='/data/rsid_query_performance.html')"
