@@ -30,19 +30,15 @@ gzip -d human_g1k_v37.fasta.fai.gz
 gzip -d human_g1k_v37.dict.gz
 ```
 
-## Download and index dbSNP file by rsid using [rsidx](https://github.com/bioforensics/rsidx)
+## Download dbSNP file
 
-These files are needed index using dbsnp
+These files are needed to update dbSNP identifiers
 
 ```sh
-# download
 wget ftp://ftp.ncbi.nih.gov/snp/latest_release/VCF/GCF_000001405.25.gz
 wget ftp://ftp.ncbi.nih.gov/snp/latest_release/VCF/GCF_000001405.25.gz.tbi
 mv GCF_000001405.25.gz dbsnp.v153.b37.vcf.gz
 mv GCF_000001405.25.gz.tbi dbsnp.v153.b37.vcf.gz.tbi
-
-# index VCF by ID
-rsidx index dbsnp.v153.b37.vcf.gz dbsnp.v153.b37.vcf.gz.rsidx
 ```
 
 ## Run evaluation

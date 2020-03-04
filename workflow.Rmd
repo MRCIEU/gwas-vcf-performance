@@ -67,39 +67,72 @@ Convert GWAS to VCF. This will perform on-the-fly harmonisation of the effect al
 
 ```{bash}
 set -euo pipefail
-
-# convert to VCF.gz
 python /app/gwas2vcf/main.py \
 --out /data/gwas.uncombined.vcf.gz \
 --data /data/gwas.txt.gz \
 --ref /data/human_g1k_v37.fasta \
 --id "neale-bmi-2018" \
 --json /data/schema.json
+```
 
-# combine multialleleic variants
+### Combine multialleleic variants
+
+Merge duplicate positions into a single row. This is required if using ID field to prevent duplicate identifiers.
+
+```{bash}
+set -euo pipefails
 bcftools norm \
 -f /data/human_g1k_v37.fasta \
 -m +any \
 -O z \
--o /data/gwas.vcf.gz \
+-o /data/gwas.unannotated.vcf.gz \
 /data/gwas.uncombined.vcf.gz
+```
 
-# make uncompressed version available & index
+### Update ID field
+
+Replace ID field with up-to-date set of dbSNP identifiers. IDs are frequently merged between builds. Also by combining multialleleics rsIDs for INDELs can reference the wrong position.
+
+```{bash}
+set -euo pipefail
+/usr/bin/gatk-4.1.5.0/gatk \
+VariantAnnotator \
+-R /data/human_g1k_v37.fasta \
+-V /data/gwas.unannotated.vcf.gz \
+-O /data/gwas.vcf.gz \
+--dbsnp /data/dbsnp.v153.b37.vcf.gz
+```
+
+### Validate output
+
+Check file format is valid. Genotype checking is skipped since the file has no genotypes.
+
+```{bash}
+set -euo pipefail
+/usr/bin/gatk-4.1.5.0/gatk \
+ValidateVariants \
+-R /data/human_g1k_v37.fasta \
+-V /data/gwas.vcf.gz \
+--validation-type-to-exclude ALLELES
+```
+
+### Index on rsID
+
+[rsidx](https://github.com/bioforensics/rsidx) is an excellent tool for indexing on VCF ID. This is made possible by extracting a creating an SQLite database of rsIDs and chromosome position which is later queried to obtain the variant locus for extraction using tabix.
+
+```{bash}
+rsidx index /data/gwas.vcf.gz /data/gwas.vcf.gz.rsidx
+```
+
+### Create uncompressed VCF & index
+
+Uncompress the file to see what the performance impact is later.
+
+```{bash}
 zcat /data/gwas.vcf.gz > /data/gwas.vcf
 /usr/bin/gatk-4.1.5.0/gatk \
 IndexFeatureFile \
 -I /data/gwas.vcf
-
-# validate output
-# skip allele check -- we have no genotypes
-/usr/bin/gatk-4.1.5.0/gatk \
-ValidateVariants \
--R /data/human_g1k_v37.fasta \
--V /data/gwas.vcf \
---validation-type-to-exclude ALLELES
-
-# index on marker ID
-rsidx index /data/gwas.vcf.gz /data/gwas.vcf.gz.rsidx
 ```
 
 ### Compare file sizes
