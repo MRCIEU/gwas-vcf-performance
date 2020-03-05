@@ -93,8 +93,24 @@ bcftools annotate \
 -c ID \
 -a /data/dbsnp.v153.b37.vcf.gz \
 -O z \
--o /data/gwas.vcf.gz \
+-o /data/gwas.all.vcf.gz \
 /data/gwas.noid.vcf.gz
+
+bcftools index \
+-t \
+/data/gwas.all.vcf.gz
+```
+
+### Drop multialleleics and missing rsID field
+
+Not including these variants in the performance comparison for simplicity
+
+```{bash}
+bcftools view \
+-e 'ID == "." && ALT[1]=="."' \
+-O z \
+-o /data/gwas.vcf.gz \
+/data/gwas.all.vcf.gz
 
 bcftools index \
 -t \
@@ -137,15 +153,13 @@ IndexFeatureFile \
 
 ### Prepare tabular extract for performance comparisons
 
-Create extract of VCF to text for performance comparisons later. Ignore multialleleics and missing rsID for simplicity.
+Create extract of VCF to text for performance comparisons later
 
 ```{bash}
 echo -e "CHROM\tPOS\tREF\tALT\tID\tES\tSE\tLP\tAF\tSS" > /data/gwas.txt
 bcftools query \
--e '%ID == "."' \
 -f '%CHROM\t%POS\t%REF\t%ALT\t%ID[\t%ES\t%SE\t%LP\t%AF\t%SS]\n' \
-/data/gwas.vcf.gz | \
-grep -v "," >> /data/gwas.txt
+/data/gwas.vcf.gz >> /data/gwas.txt
 gzip -c /data/gwas.txt > /data/gwas.txt.gz
 ```
 
