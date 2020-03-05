@@ -60,6 +60,8 @@ R -e "rmarkdown::render('/data/workflow.Rmd', output_file='/data/workflow.html')
 
 ## Run evaluation
 
+These should NOT be processed in parallel which might artifically inflate query times.
+
 ### RSID query
 
 ```sh
