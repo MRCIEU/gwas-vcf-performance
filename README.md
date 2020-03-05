@@ -47,7 +47,6 @@ mv GCF_000001405.25.gz.tbi dbsnp.v153.b37.vcf.gz.tbi
 docker run \
 -v `pwd`:/data \
 --name gwas-vcf-performance-workflow \
---rm \
 -it -d \
 gwas-vcf-performance \
 R -e "rmarkdown::render('/data/workflow.Rmd', output_file='/data/workflow.html')"

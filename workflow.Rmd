@@ -137,6 +137,8 @@ IndexFeatureFile \
 
 ### Prepare tabular extract for performance comparisons
 
+Create extract of VCF to text for performance comparisons later. Ignore multialleleics and missing rsID for simplicity.
+
 ```{bash}
 echo -e "CHROM\tPOS\tREF\tALT\tID\tES\tSE\tLP\tAF\tSS" > /data/gwas.txt
 bcftools query \

@@ -1,143 +1,217 @@
 ---
-title: "Compare VCF and text for summary stats using chromosome & position"
+title: "Compare VCF and text for summary stats using chromosome position"
 author: "Matt Lyon"
 date: "2020-02-25"
 params:
     n_sim: 5
 ---
 
-### Compare query execution time between VCF and unindexed text
+## Compare query execution time between VCF and unindexed text
 
-#### Simulate queries
-
-All outputs should return n_sim otherwise the query is invalid
+### Simulate queries
 
 ```{bash}
 set -euo pipefail
 
 # uncompressed text awk
-echo -e "query\treal\tuser\tsys" > /data/rsid.query.uncompressed.text.awk.time.txt
-while read snp; do
-    echo -ne "$snp\t" >> /data/rsid.query.uncompressed.text.awk.time.txt
-    /usr/bin/time -f "%e\t%U\t%S" -ao /data/rsid.query.uncompressed.text.awk.time.txt \
-    awk -v snp="$snp" -F"\t" '$3==snp' /data/gwas.txt
-done < /data/rsid.txt | wc -l
+echo -e "query\treal\tuser\tsys" > /data/chrpos.query.uncompressed.text.awk.time.txt
+echo -e "query\tn" > /data/chrpos.query.uncompressed.text.awk.counts.txt
+while read line; do
+    chr=$(echo "$line" | cut -s -f1)
+    pos=$(echo "$line" | cut -s -f2)
+    echo -ne "$chr"_"$pos\t" >> /data/chrpos.query.uncompressed.text.awk.time.txt
+    echo -ne "$chr"_"$pos\t" >> /data/chrpos.query.uncompressed.text.awk.counts.txt
+    /usr/bin/time -f "%e\t%U\t%S" -ao /data/chrpos.query.uncompressed.text.awk.time.txt \
+    awk -v chr="$chr" -v pos="$pos" -F"\t" '$1==chr && $2==pos' /data/gwas.txt | wc -l >> /data/chrpos.query.uncompressed.text.awk.counts.txt
+done < /data/chrpos.txt
 
 # uncompressed text grep
-echo -e "query\treal\tuser\tsys" > /data/rsid.query.uncompressed.text.grep.time.txt
-while read snp; do
-    echo -ne "$snp\t" >> /data/rsid.query.uncompressed.text.grep.time.txt
-    /usr/bin/time -f "%e\t%U\t%S" -ao /data/rsid.query.uncompressed.text.grep.time.txt \
-    grep -w "$snp" /data/gwas.txt
-done < /data/rsid.txt | wc -l
+echo -e "query\treal\tuser\tsys" > /data/chrpos.query.uncompressed.text.grep.time.txt
+echo -e "query\tn" > /data/chrpos.query.uncompressed.text.grep.counts.txt
+while read line; do
+    chr=$(echo "$line" | cut -s -f1)
+    pos=$(echo "$line" | cut -s -f2)
+    echo -ne "$chr"_"$pos\t" >> /data/chrpos.query.uncompressed.text.grep.time.txt
+    echo -ne "$chr"_"$pos\t" >> /data/chrpos.query.uncompressed.text.grep.counts.txt
+    /usr/bin/time -f "%e\t%U\t%S" -ao /data/chrpos.query.uncompressed.text.grep.time.txt \
+    grep -P "$chr\t$pos\t" /data/gwas.txt | wc -l >> /data/chrpos.query.uncompressed.text.grep.counts.txt
+done < /data/chrpos.txt
 
 # compressed text awk
-echo -e "query\treal\tuser\tsys" > /data/rsid.query.compressed.text.awk.time.txt
-while read snp; do
-    echo -ne "$snp\t" >> /data/rsid.query.compressed.text.awk.time.txt
-    /usr/bin/time -f "%e\t%U\t%S" -ao /data/rsid.query.compressed.text.awk.time.txt \
+echo -e "query\treal\tuser\tsys" > /data/chrpos.query.compressed.text.awk.time.txt
+echo -e "query\tn" > /data/chrpos.query.compressed.text.awk.counts.txt
+while read line; do
+    chr=$(echo "$line" | cut -s -f1)
+    pos=$(echo "$line" | cut -s -f2)
+    echo -ne "$chr"_"$pos\t" >> /data/chrpos.query.compressed.text.awk.time.txt
+    echo -ne "$chr"_"$pos\t" >> /data/chrpos.query.compressed.text.awk.counts.txt
+    /usr/bin/time -f "%e\t%U\t%S" -ao /data/chrpos.query.compressed.text.awk.time.txt \
     gzip -dc /data/gwas.txt.gz | \
-    awk -v snp="$snp" -F"\t" '$3==snp'
-done < /data/rsid.txt | wc -l
+    awk -v chr="$chr" -v pos="$pos" -F"\t" '$1==chr && $2==pos' | wc -l >> /data/chrpos.query.compressed.text.awk.counts.txt
+done < /data/chrpos.txt
 
 # compressed text grep
-echo -e "query\treal\tuser\tsys" > /data/rsid.query.compressed.text.grep.time.txt
-while read snp; do
-    echo -ne "$snp\t" >> /data/rsid.query.compressed.text.grep.time.txt
-    /usr/bin/time -f "%e\t%U\t%S" -ao /data/rsid.query.compressed.text.grep.time.txt \
+echo -e "query\treal\tuser\tsys" > /data/chrpos.query.compressed.text.grep.time.txt
+echo -e "query\tn" > /data/chrpos.query.compressed.text.grep.counts.txt
+while read line; do
+    chr=$(echo "$line" | cut -s -f1)
+    pos=$(echo "$line" | cut -s -f2)
+    echo -ne "$chr"_"$pos\t" >> /data/chrpos.query.compressed.text.grep.time.txt
+    echo -ne "$chr"_"$pos\t" >> /data/chrpos.query.compressed.text.grep.counts.txt
+    /usr/bin/time -f "%e\t%U\t%S" -ao /data/chrpos.query.compressed.text.grep.time.txt \
     gzip -dc /data/gwas.txt.gz | \
-    grep -w "$snp"
-done < /data/rsid.txt | wc -l
+    grep -P "$chr\t$pos\t" | wc -l >> /data/chrpos.query.compressed.text.grep.counts.txt
+done < /data/chrpos.txt
 
 # uncompressed vcf awk
-echo -e "query\treal\tuser\tsys" > /data/rsid.query.uncompressed.vcf.awk.time.txt
-while read snp; do
-    echo -ne "$snp\t" >> /data/rsid.query.uncompressed.vcf.awk.time.txt
-    /usr/bin/time -f "%e\t%U\t%S" -ao /data/rsid.query.uncompressed.vcf.awk.time.txt \
-    awk -v snp="$snp" -F"\t" '$3==snp' /data/gwas.vcf
-done < /data/rsid.txt | wc -l
+echo -e "query\treal\tuser\tsys" > /data/chrpos.query.uncompressed.vcf.awk.time.txt
+echo -e "query\tn" > /data/chrpos.query.uncompressed.vcf.awk.counts.txt
+while read line; do
+    chr=$(echo "$line" | cut -s -f1)
+    pos=$(echo "$line" | cut -s -f2)
+    echo -ne "$chr"_"$pos\t" >> /data/chrpos.query.uncompressed.vcf.awk.time.txt
+    echo -ne "$chr"_"$pos\t" >> /data/chrpos.query.uncompressed.vcf.awk.counts.txt
+    /usr/bin/time -f "%e\t%U\t%S" -ao /data/chrpos.query.uncompressed.vcf.awk.time.txt \
+    awk -v chr="$chr" -v pos="$pos" -F"\t" '$1==chr && $2==pos' /data/gwas.vcf | wc -l >> /data/chrpos.query.uncompressed.vcf.awk.counts.txt
+done < /data/chrpos.txt
 
 # uncompressed vcf grep
-echo -e "query\treal\tuser\tsys" > /data/rsid.query.uncompressed.vcf.grep.time.txt
-while read snp; do
-    echo -ne "$snp\t" >> /data/rsid.query.uncompressed.vcf.grep.time.txt
-    /usr/bin/time -f "%e\t%U\t%S" -ao /data/rsid.query.uncompressed.vcf.grep.time.txt \
-    grep -w "$snp" /data/gwas.vcf
-done < /data/rsid.txt | wc -l
+echo -e "query\treal\tuser\tsys" > /data/chrpos.query.uncompressed.vcf.grep.time.txt
+echo -e "query\tn" > /data/chrpos.query.uncompressed.vcf.grep.counts.txt
+while read line; do
+    chr=$(echo "$line" | cut -s -f1)
+    pos=$(echo "$line" | cut -s -f2)
+    echo -ne "$chr"_"$pos\t" >> /data/chrpos.query.uncompressed.vcf.grep.time.txt
+    echo -ne "$chr"_"$pos\t" >> /data/chrpos.query.uncompressed.vcf.grep.counts.txt
+    /usr/bin/time -f "%e\t%U\t%S" -ao /data/chrpos.query.uncompressed.vcf.grep.time.txt \
+    grep -P "$chr\t$pos\t" /data/gwas.vcf | wc -l >> /data/chrpos.query.uncompressed.vcf.grep.counts.txt
+done < /data/chrpos.txt
 
 # compressed vcf awk
-echo -e "query\treal\tuser\tsys" > /data/rsid.query.compressed.vcf.awk.time.txt
-while read snp; do
-    echo -ne "$snp\t" >> /data/rsid.query.compressed.vcf.awk.time.txt
-    /usr/bin/time -f "%e\t%U\t%S" -ao /data/rsid.query.compressed.vcf.awk.time.txt \
+echo -e "query\treal\tuser\tsys" > /data/chrpos.query.compressed.vcf.awk.time.txt
+echo -e "query\tn" > /data/chrpos.query.compressed.vcf.awk.counts.txt
+while read line; do
+    chr=$(echo "$line" | cut -s -f1)
+    pos=$(echo "$line" | cut -s -f2)
+    echo -ne "$chr"_"$pos\t" >> /data/chrpos.query.compressed.vcf.awk.time.txt
+    echo -ne "$chr"_"$pos\t" >> /data/chrpos.query.compressed.vcf.awk.counts.txt
+    /usr/bin/time -f "%e\t%U\t%S" -ao /data/chrpos.query.compressed.vcf.awk.time.txt \
     gzip -dc /data/gwas.vcf.gz | \
-    awk -v snp="$snp" -F"\t" '$3==snp'
-done < /data/rsid.txt | wc -l
+    awk -v chr="$chr" -v pos="$pos" -F"\t" '$1==chr && $2==pos' | wc -l >> /data/chrpos.query.compressed.vcf.awk.counts.txt
+done < /data/chrpos.txt
 
 # compressed vcf grep
-echo -e "query\treal\tuser\tsys" > /data/rsid.query.compressed.vcf.grep.time.txt
-while read snp; do
-    echo -ne "$snp\t" >> /data/rsid.query.compressed.vcf.grep.time.txt
-    /usr/bin/time -f "%e\t%U\t%S" -ao /data/rsid.query.compressed.vcf.grep.time.txt \
+echo -e "query\treal\tuser\tsys" > /data/chrpos.query.compressed.vcf.grep.time.txt
+echo -e "query\tn" > /data/chrpos.query.compressed.vcf.grep.counts.txt
+while read line; do
+    chr=$(echo "$line" | cut -s -f1)
+    pos=$(echo "$line" | cut -s -f2)
+    echo -ne "$chr"_"$pos\t" >> /data/chrpos.query.compressed.vcf.grep.time.txt
+    echo -ne "$chr"_"$pos\t" >> /data/chrpos.query.compressed.vcf.grep.counts.txt
+    /usr/bin/time -f "%e\t%U\t%S" -ao /data/chrpos.query.compressed.vcf.grep.time.txt \
     gzip -dc /data/gwas.vcf.gz | \
-    grep -w "$snp"
-done < /data/rsid.txt | wc -l
+    grep -P "$chr\t$pos\t" | wc -l >> /data/chrpos.query.compressed.vcf.grep.counts.txt
+done < /data/chrpos.txt
 
 # compressed vcf bcftools
-echo -e "query\treal\tuser\tsys" > /data/rsid.query.compressed.vcf.bcftools.time.txt
-while read snp; do
-    echo -ne "$snp\t" >> /data/rsid.query.compressed.vcf.bcftools.time.txt
-    /usr/bin/time -f "%e\t%U\t%S" -ao /data/rsid.query.compressed.vcf.bcftools.time.txt \
-    bcftools query -i "%ID == \"$snp\"" -f '%LINE\n' /data/gwas.vcf.gz
-done < /data/rsid.txt | wc -l
+echo -e "query\treal\tuser\tsys" > /data/chrpos.query.compressed.vcf.bcftools.time.txt
+echo -e "query\tn" > /data/chrpos.query.compressed.vcf.bcftools.counts.txt
+while read line; do
+    chr=$(echo "$line" | cut -s -f1)
+    pos=$(echo "$line" | cut -s -f2)
+    echo -ne "$chr"_"$pos\t" >> /data/chrpos.query.compressed.vcf.bcftools.time.txt
+    echo -ne "$chr"_"$pos\t" >> /data/chrpos.query.compressed.vcf.bcftools.counts.txt
+    /usr/bin/time -f "%e\t%U\t%S" -ao /data/chrpos.query.compressed.vcf.bcftools.time.txt \
+    bcftools view -H /data/gwas.vcf.gz "$chr":"$pos"-"$pos" | wc -l >> /data/chrpos.query.compressed.vcf.bcftools.counts.txt
+done < /data/chrpos.txt
 ```
 
-#### Plot results
+### Plot results
 
 ```{r}
 library('ggplot2')
 library('data.table')
 
-# read in data
+ci <- function(mu, sigma, n){
+    error <- qt(0.975, df = n-1 ) * sigma / sqrt(n)
+    return(list(mean=mu, sd=sigma, lower=mu - error, upper=mu + error))
+}
+
+# read in query return line counts
 
 ## text
-rsid.query.uncompressed.text.awk.time <- fread("/data/rsid.query.uncompressed.text.awk.time.txt")
-rsid.query.uncompressed.text.grep.time <- fread("/data/rsid.query.uncompressed.text.grep.time.txt")
-rsid.query.compressed.text.awk.time <- fread("/data/rsid.query.compressed.text.awk.time.txt")
-rsid.query.compressed.text.grep.time <- fread("/data/rsid.query.compressed.text.grep.time.txt")
+chrpos.query.uncompressed.text.awk.counts <- fread("chrpos.query.uncompressed.text.awk.counts.txt")
+chrpos.query.uncompressed.text.grep.counts <- fread("chrpos.query.uncompressed.text.grep.counts.txt")
+chrpos.query.compressed.text.awk.counts <- fread("chrpos.query.compressed.text.awk.counts.txt")
+chrpos.query.compressed.text.grep.counts <- fread("chrpos.query.compressed.text.grep.counts.txt")
 ## vcf
-rsid.query.uncompressed.vcf.awk.time <- fread("/data/rsid.query.uncompressed.vcf.awk.time.txt")
-rsid.query.uncompressed.vcf.grep.time <- fread("/data/rsid.query.uncompressed.vcf.grep.time.txt")
-rsid.query.compressed.vcf.awk.time <- fread("/data/rsid.query.compressed.vcf.awk.time.txt")
-rsid.query.compressed.vcf.grep.time <- fread("/data/rsid.query.compressed.vcf.grep.time.txt")
-rsid.query.compressed.vcf.bcftools.time <- fread("/data/rsid.query.compressed.vcf.bcftools.time.txt")
+chrpos.query.uncompressed.vcf.awk.counts <- fread("chrpos.query.uncompressed.vcf.awk.counts.txt")
+chrpos.query.uncompressed.vcf.grep.counts <- fread("chrpos.query.uncompressed.vcf.grep.counts.txt")
+chrpos.query.compressed.vcf.awk.counts <- fread("chrpos.query.compressed.vcf.awk.counts.txt")
+chrpos.query.compressed.vcf.grep.counts <- fread("chrpos.query.compressed.vcf.grep.counts.txt")
+chrpos.query.compressed.vcf.bcftools.counts <- fread("chrpos.query.compressed.vcf.bcftools.counts.txt")
+
+# check line counts equal to n_sim
+stopifnot(sum(chrpos.query.uncompressed.vcf.awk.counts$n == 1) == params$n_sim)
+stopifnot(sum(chrpos.query.uncompressed.vcf.grep.counts$n == 1) == params$n_sim)
+stopifnot(sum(chrpos.query.compressed.vcf.awk.counts$n == 1) == params$n_sim)
+stopifnot(sum(chrpos.query.compressed.vcf.grep.counts$n == 1) == params$n_sim)
+stopifnot(sum(chrpos.query.compressed.vcf.bcftools.counts$n == 1) == params$n_sim)
+
+# read in query time
+
+## text
+chrpos.query.uncompressed.text.awk.time <- fread("chrpos.query.uncompressed.text.awk.time.txt")
+chrpos.query.uncompressed.text.grep.time <- fread("chrpos.query.uncompressed.text.grep.time.txt")
+chrpos.query.compressed.text.awk.time <- fread("chrpos.query.compressed.text.awk.time.txt")
+chrpos.query.compressed.text.grep.time <- fread("chrpos.query.compressed.text.grep.time.txt")
+## vcf
+chrpos.query.uncompressed.vcf.awk.time <- fread("chrpos.query.uncompressed.vcf.awk.time.txt")
+chrpos.query.uncompressed.vcf.grep.time <- fread("chrpos.query.uncompressed.vcf.grep.time.txt")
+chrpos.query.compressed.vcf.awk.time <- fread("chrpos.query.compressed.vcf.awk.time.txt")
+chrpos.query.compressed.vcf.grep.time <- fread("chrpos.query.compressed.vcf.grep.time.txt")
+chrpos.query.compressed.vcf.bcftools.time <- fread("chrpos.query.compressed.vcf.bcftools.time.txt")
 
 # add methods
-rsid.query.uncompressed.text.awk.time$method <- "uncompressed.text.awk"
-rsid.query.uncompressed.text.grep.time$method <- "uncompressed.text.grep"
-rsid.query.compressed.text.awk.time$method <- "compressed.text.awk"
-rsid.query.compressed.text.grep.time$method <- "compressed.text.grep"
+chrpos.query.uncompressed.text.awk.time$method <- "awk - uncompressed text"
+print(ci(mean(chrpos.query.uncompressed.text.awk.time$real), sd(chrpos.query.uncompressed.text.awk.time$real), nrow(chrpos.query.uncompressed.text.awk.time)))
+chrpos.query.uncompressed.text.grep.time$method <- "grep - uncompressed text"
+print(ci(mean(chrpos.query.uncompressed.text.grep.time$real), sd(chrpos.query.uncompressed.text.grep.time$real), nrow(chrpos.query.uncompressed.text.grep.time)))
+chrpos.query.compressed.text.awk.time$method <- "awk - compressed text"
+print(ci(mean(chrpos.query.compressed.text.awk.time$real), sd(chrpos.query.compressed.text.awk.time$real), nrow(chrpos.query.compressed.text.awk.time)))
+chrpos.query.compressed.text.grep.time$method <- "grep - compressed text"
+print(ci(mean(chrpos.query.compressed.text.grep.time$real), sd(chrpos.query.compressed.text.grep.time$real), nrow(chrpos.query.compressed.text.grep.time)))
 
-rsid.query.uncompressed.vcf.awk.time$method <- "uncompressed.vcf.awk"
-rsid.query.uncompressed.vcf.grep.time$method <- "uncompressed.vcf.grep"
-rsid.query.compressed.vcf.awk.time$method <- "compressed.vcf.awk"
-rsid.query.compressed.vcf.grep.time$method <- "compressed.vcf.grep"
-rsid.query.compressed.vcf.bcftools.time$method <- "compressed.vcf.bcftools"
+chrpos.query.uncompressed.vcf.awk.time$method <- "awk - uncompressed vcf"
+print(ci(mean(chrpos.query.uncompressed.vcf.awk.time$real), sd(chrpos.query.uncompressed.vcf.awk.time$real), nrow(chrpos.query.uncompressed.vcf.awk.time)))
+chrpos.query.uncompressed.vcf.grep.time$method <- "grep - uncompressed vcf"
+print(ci(mean(chrpos.query.uncompressed.vcf.grep.time$real), sd(chrpos.query.uncompressed.vcf.grep.time$real), nrow(chrpos.query.uncompressed.vcf.grep.time)))
+chrpos.query.compressed.vcf.awk.time$method <- "awk - compressed vcf"
+print(ci(mean(chrpos.query.compressed.vcf.awk.time$real), sd(chrpos.query.compressed.vcf.awk.time$real), nrow(chrpos.query.compressed.vcf.awk.time)))
+chrpos.query.compressed.vcf.grep.time$method <- "grep - compressed vcf"
+print(ci(mean(chrpos.query.compressed.vcf.grep.time$real), sd(chrpos.query.compressed.vcf.grep.time$real), nrow(chrpos.query.compressed.vcf.grep.time)))
+chrpos.query.compressed.vcf.bcftools.time$method <- "bcftools - compressed vcf"
+print(ci(mean(chrpos.query.compressed.vcf.bcftools.time$real), sd(chrpos.query.compressed.vcf.bcftools.time$real), nrow(chrpos.query.compressed.vcf.bcftools.time)))
 
 # merge
 all <- rbind(
-    rsid.query.uncompressed.text.awk.time[, c("real", "method")],
-    rsid.query.uncompressed.text.grep.time[, c("real", "method")],
-    rsid.query.compressed.text.awk.time[, c("real", "method")],
-    rsid.query.compressed.text.grep.time[, c("real", "method")],
-    rsid.query.uncompressed.vcf.awk.time[, c("real", "method")],
-    rsid.query.uncompressed.vcf.grep.time[, c("real", "method")],
-    rsid.query.compressed.vcf.awk.time[, c("real", "method")],
-    rsid.query.compressed.vcf.grep.time[, c("real", "method")],
-    rsid.query.compressed.vcf.bcftools.time[, c("real", "method")]
+    chrpos.query.uncompressed.text.awk.time[, c("real", "method")],
+    chrpos.query.compressed.text.awk.time[, c("real", "method")],
+    chrpos.query.uncompressed.text.grep.time[, c("real", "method")],
+    chrpos.query.compressed.text.grep.time[, c("real", "method")],
+    chrpos.query.uncompressed.vcf.awk.time[, c("real", "method")],
+    chrpos.query.compressed.vcf.awk.time[, c("real", "method")],
+    chrpos.query.uncompressed.vcf.grep.time[, c("real", "method")],
+    chrpos.query.compressed.vcf.grep.time[, c("real", "method")],
+    chrpos.query.compressed.vcf.bcftools.time[, c("real", "method")]
 )
 all$method <- as.factor(all$method)
 
-# plot
-ggplot(all, aes(color = method, y = real)) + geom_boxplot() + labs(x = "Method", y = "Execution time (sec)") + theme(axis.text.x=element_blank()) + theme(legend.title=element_blank()) + ggtitle("Query time using dbsnp identifier")
+# plot runtime
+ggplot(all, aes(x = method, y = real)) +
+    geom_boxplot() +
+    labs(x = "Method", y = "Execution time (sec)") +
+    ggtitle("Query time using marker identifier") +
+    theme(axis.text.x=element_text(angle=90, hjust=1)) +
+    scale_y_continuous(breaks = scales::pretty_breaks(n = 10))
 ```
