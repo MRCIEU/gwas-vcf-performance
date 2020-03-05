@@ -8,7 +8,7 @@ To view comparison results open html files in a web browser.
 4. [interval_query_performance](interval_query_performance.html) - performance queries on chromosome interval
 5. [pval_query_performance](pval_query_performance.html) - performance queries on association P value
 
-To reproduce the analysis follow the following instructions.
+To reproduce the analysis follow these instructions.
 
 ## Obtain source code
 
