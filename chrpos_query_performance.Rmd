@@ -152,6 +152,10 @@ chrpos.query.compressed.vcf.grep.counts <- fread("chrpos.query.compressed.vcf.gr
 chrpos.query.compressed.vcf.bcftools.counts <- fread("chrpos.query.compressed.vcf.bcftools.counts.txt")
 
 # check line counts equal to n_sim
+stopifnot(sum(chrpos.query.uncompressed.text.awk.counts$n == 1) == params$n_sim)
+stopifnot(sum(chrpos.query.uncompressed.text.grep.counts$n == 1) == params$n_sim)
+stopifnot(sum(chrpos.query.compressed.text.awk.counts$n == 1) == params$n_sim)
+stopifnot(sum(chrpos.query.compressed.text.grep.counts$n == 1) == params$n_sim)
 stopifnot(sum(chrpos.query.uncompressed.vcf.awk.counts$n == 1) == params$n_sim)
 stopifnot(sum(chrpos.query.uncompressed.vcf.grep.counts$n == 1) == params$n_sim)
 stopifnot(sum(chrpos.query.compressed.vcf.awk.counts$n == 1) == params$n_sim)

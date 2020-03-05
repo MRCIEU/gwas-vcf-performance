@@ -1,0 +1,157 @@
+---
+title: "Compare VCF and text for summary stats using chromosome position interval"
+author: "Matt Lyon"
+date: "2020-02-25"
+params:
+    n_sim: 5
+---
+
+## Compare query execution time between VCF and unindexed text
+
+### Simulate queries
+
+```{bash}
+set -euo pipefail
+
+# uncompressed text awk
+echo -e "query\treal\tuser\tsys" > /data/intervals.query.uncompressed.text.awk.time.txt
+echo -e "query\texpected_n\tn" > /data/intervals.query.uncompressed.text.awk.counts.txt
+while read line; do
+    chr=$(echo "$line" | cut -s -f1)
+    start=$(echo "$line" | cut -s -f2)
+    end=$(echo "$line" | cut -s -f3)
+    n=$(echo "$line" | cut -s -f4)
+    echo -ne "$chr"_"$start"_"$end\t" >> /data/intervals.query.uncompressed.text.awk.time.txt
+    echo -ne "$chr"_"$start"_"$end\t$n\t" >> /data/intervals.query.uncompressed.text.awk.counts.txt
+    /usr/bin/time -f "%e\t%U\t%S" -ao /data/intervals.query.uncompressed.text.awk.time.txt \
+    awk -v chr="$chr" -v start="$start" -v end="$end" -F"\t" '$1==chr && $2>start && $2<end' /data/gwas.txt | wc -l >> /data/intervals.query.uncompressed.text.awk.counts.txt
+done < /data/intervals.txt
+
+# compressed text awk
+echo -e "query\treal\tuser\tsys" > /data/intervals.query.compressed.text.awk.time.txt
+echo -e "query\texpected_n\tn" > /data/intervals.query.compressed.text.awk.counts.txt
+while read line; do
+    chr=$(echo "$line" | cut -s -f1)
+    start=$(echo "$line" | cut -s -f2)
+    end=$(echo "$line" | cut -s -f3)
+    n=$(echo "$line" | cut -s -f4)
+    echo -ne "$chr"_"$start"_"$end\t" >> /data/intervals.query.compressed.text.awk.time.txt
+    echo -ne "$chr"_"$start"_"$end\t$n\t" >> /data/intervals.query.compressed.text.awk.counts.txt
+    /usr/bin/time -f "%e\t%U\t%S" -ao /data/intervals.query.compressed.text.awk.time.txt \
+    gzip -dc /data/gwas.txt.gz | \
+    awk -v chr="$chr" -v start="$start" -v end="$end" -F"\t" '$1==chr && $2>start && $2<end' | wc -l >> /data/intervals.query.compressed.text.awk.counts.txt
+done < /data/intervals.txt
+
+# uncompressed vcf awk
+echo -e "query\treal\tuser\tsys" > /data/intervals.query.uncompressed.vcf.awk.time.txt
+echo -e "query\texpected_n\tn" > /data/intervals.query.uncompressed.vcf.awk.counts.txt
+while read line; do
+    chr=$(echo "$line" | cut -s -f1)
+    start=$(echo "$line" | cut -s -f2)
+    end=$(echo "$line" | cut -s -f3)
+    n=$(echo "$line" | cut -s -f4)
+    echo -ne "$chr"_"$start"_"$end\t" >> /data/intervals.query.uncompressed.vcf.awk.time.txt
+    echo -ne "$chr"_"$start"_"$end\t$n\t" >> /data/intervals.query.uncompressed.vcf.awk.counts.txt
+    /usr/bin/time -f "%e\t%U\t%S" -ao /data/intervals.query.uncompressed.vcf.awk.time.txt \
+    awk -v chr="$chr" -v start="$start" -v end="$end" -F"\t" '$1==chr && $2>start && $2<end' /data/gwas.vcf | wc -l >> /data/intervals.query.uncompressed.vcf.awk.counts.txt
+done < /data/intervals.txt
+
+# compressed vcf awk
+echo -e "query\treal\tuser\tsys" > /data/intervals.query.compressed.vcf.awk.time.txt
+echo -e "query\texpected_n\tn" > /data/intervals.query.compressed.vcf.awk.counts.txt
+while read line; do
+    chr=$(echo "$line" | cut -s -f1)
+    start=$(echo "$line" | cut -s -f2)
+    end=$(echo "$line" | cut -s -f3)
+    n=$(echo "$line" | cut -s -f4)
+    echo -ne "$chr"_"$start"_"$end\t" >> /data/intervals.query.compressed.vcf.awk.time.txt
+    echo -ne "$chr"_"$start"_"$end\t$n\t" >> /data/intervals.query.compressed.vcf.awk.counts.txt
+    /usr/bin/time -f "%e\t%U\t%S" -ao /data/intervals.query.compressed.vcf.awk.time.txt \
+    gzip -dc /data/gwas.vcf.gz | \
+    awk -v chr="$chr" -v start="$start" -v end="$end" -F"\t" '$1==chr && $2>start && $2<end' | wc -l >> /data/intervals.query.compressed.vcf.awk.counts.txt
+done < /data/intervals.txt
+
+# compressed vcf bcftools
+echo -e "query\treal\tuser\tsys" > /data/intervals.query.compressed.vcf.bcftools.time.txt
+echo -e "query\texpected_n\tn" > /data/intervals.query.compressed.vcf.bcftools.counts.txt
+while read line; do
+    chr=$(echo "$line" | cut -s -f1)
+    start=$(echo "$line" | cut -s -f2)
+    end=$(echo "$line" | cut -s -f3)
+    n=$(echo "$line" | cut -s -f4)
+    echo -ne "$chr"_"$start"_"$end\t" >> /data/intervals.query.compressed.vcf.bcftools.time.txt
+    echo -ne "$chr"_"$start"_"$end\t$n\t" >> /data/intervals.query.compressed.vcf.bcftools.counts.txt
+    /usr/bin/time -f "%e\t%U\t%S" -ao /data/intervals.query.compressed.vcf.bcftools.time.txt \
+    bcftools view -H /data/gwas.vcf.gz "$chr":"$start"-"$end" | wc -l >> /data/intervals.query.compressed.vcf.bcftools.counts.txt
+done < /data/intervals.txt
+```
+
+### Plot results
+
+```{r}
+library('ggplot2')
+library('data.table')
+
+ci <- function(mu, sigma, n){
+    error <- qt(0.975, df = n-1 ) * sigma / sqrt(n)
+    return(list(mean=mu, sd=sigma, lower=mu - error, upper=mu + error))
+}
+
+# read in query return line counts
+
+## text
+intervals.query.uncompressed.text.awk.counts <- fread("intervals.query.uncompressed.text.awk.counts.txt")
+intervals.query.compressed.text.awk.counts <- fread("intervals.query.compressed.text.awk.counts.txt")
+## vcf
+intervals.query.uncompressed.vcf.awk.counts <- fread("intervals.query.uncompressed.vcf.awk.counts.txt")
+intervals.query.compressed.vcf.awk.counts <- fread("intervals.query.compressed.vcf.awk.counts.txt")
+intervals.query.compressed.vcf.bcftools.counts <- fread("intervals.query.compressed.vcf.bcftools.counts.txt")
+
+# check line counts equal to expected_n
+stopifnot(intervals.query.uncompressed.text.awk.counts$n == intervals.query.uncompressed.text.awk.counts$expected_n)
+stopifnot(intervals.query.compressed.text.awk.counts$n == intervals.query.compressed.text.awk.counts$expected_n)
+stopifnot(intervals.query.uncompressed.vcf.awk.counts$n == intervals.query.uncompressed.vcf.awk.counts$expected_n)
+stopifnot(intervals.query.compressed.vcf.awk.counts$n == intervals.query.compressed.vcf.awk.counts$expected_n)
+stopifnot(intervals.query.compressed.vcf.bcftools.counts$n == intervals.query.compressed.vcf.bcftools.counts$expected_n)
+
+# read in query time
+
+## text
+intervals.query.uncompressed.text.awk.time <- fread("intervals.query.uncompressed.text.awk.time.txt")
+intervals.query.compressed.text.awk.time <- fread("intervals.query.compressed.text.awk.time.txt")
+## vcf
+intervals.query.uncompressed.vcf.awk.time <- fread("intervals.query.uncompressed.vcf.awk.time.txt")
+intervals.query.compressed.vcf.awk.time <- fread("intervals.query.compressed.vcf.awk.time.txt")
+intervals.query.compressed.vcf.bcftools.time <- fread("intervals.query.compressed.vcf.bcftools.time.txt")
+
+# add methods
+intervals.query.uncompressed.text.awk.time$method <- "awk - uncompressed text"
+print(ci(mean(intervals.query.uncompressed.text.awk.time$real), sd(intervals.query.uncompressed.text.awk.time$real), nrow(intervals.query.uncompressed.text.awk.time)))
+intervals.query.compressed.text.awk.time$method <- "awk - compressed text"
+print(ci(mean(intervals.query.compressed.text.awk.time$real), sd(intervals.query.compressed.text.awk.time$real), nrow(intervals.query.compressed.text.awk.time)))
+
+intervals.query.uncompressed.vcf.awk.time$method <- "awk - uncompressed vcf"
+print(ci(mean(intervals.query.uncompressed.vcf.awk.time$real), sd(intervals.query.uncompressed.vcf.awk.time$real), nrow(intervals.query.uncompressed.vcf.awk.time)))
+intervals.query.compressed.vcf.awk.time$method <- "awk - compressed vcf"
+print(ci(mean(intervals.query.compressed.vcf.awk.time$real), sd(intervals.query.compressed.vcf.awk.time$real), nrow(intervals.query.compressed.vcf.awk.time)))
+intervals.query.compressed.vcf.bcftools.time$method <- "bcftools - compressed vcf"
+print(ci(mean(intervals.query.compressed.vcf.bcftools.time$real), sd(intervals.query.compressed.vcf.bcftools.time$real), nrow(intervals.query.compressed.vcf.bcftools.time)))
+
+# merge
+all <- rbind(
+    intervals.query.uncompressed.text.awk.time[, c("real", "method")],
+    intervals.query.compressed.text.awk.time[, c("real", "method")],
+    intervals.query.uncompressed.vcf.awk.time[, c("real", "method")],
+    intervals.query.compressed.vcf.awk.time[, c("real", "method")],
+    intervals.query.compressed.vcf.bcftools.time[, c("real", "method")]
+)
+all$method <- as.factor(all$method)
+
+# plot runtime
+ggplot(all, aes(x = method, y = real)) +
+    geom_boxplot() +
+    labs(x = "Method", y = "Execution time (sec)") +
+    ggtitle("Query time using marker identifier") +
+    theme(axis.text.x=element_text(angle=90, hjust=1)) +
+    scale_y_continuous(breaks = scales::pretty_breaks(n = 10))
+```
