@@ -151,7 +151,7 @@ all$method <- as.factor(all$method)
 ggplot(all, aes(x = method, y = real)) +
     geom_boxplot() +
     labs(x = "Method", y = "Execution time (sec)") +
-    ggtitle("Query time using marker identifier") +
+    ggtitle("Query time using genomic interval") +
     theme(axis.text.x=element_text(angle=90, hjust=1)) +
     scale_y_continuous(breaks = scales::pretty_breaks(n = 10))
 ```
