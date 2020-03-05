@@ -22,7 +22,7 @@ while read line; do
     echo -ne "$pthresh\t" >> /data/pval.query.uncompressed.text.awk.time.txt
     echo -ne "$pthresh\t$n\t" >> /data/pval.query.uncompressed.text.awk.counts.txt
     /usr/bin/time -f "%e\t%U\t%S" -ao /data/pval.query.uncompressed.text.awk.time.txt \
-    awk -v pthresh="$pthresh" -F"\t" '$8 > pthresh' /data/gwas.txt | wc -l >> /data/pval.query.uncompressed.text.awk.counts.txt
+    awk -v pthresh="$pthresh" -F"\t" 'NR > 1 && $8 > pthresh' /data/gwas.txt | wc -l >> /data/pval.query.uncompressed.text.awk.counts.txt
 done < /data/pval.txt
 
 # compressed text awk
@@ -35,7 +35,7 @@ while read line; do
     echo -ne "$pthresh\t$n\t" >> /data/pval.query.compressed.text.awk.counts.txt
     /usr/bin/time -f "%e\t%U\t%S" -ao /data/pval.query.compressed.text.awk.time.txt \
     gzip -dc /data/gwas.txt.gz | \
-    awk -v pthresh="$pthresh" -F"\t" '$8 > pthresh' | wc -l >> /data/pval.query.compressed.text.awk.counts.txt
+    awk -v pthresh="$pthresh" -F"\t" 'NR > 1 && $8 > pthresh' | wc -l >> /data/pval.query.compressed.text.awk.counts.txt
 done < /data/pval.txt
 
 # uncompressed vcf awk
