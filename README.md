@@ -58,9 +58,9 @@ gwas-vcf-performance \
 R -e "rmarkdown::render('/data/workflow.Rmd', output_file='/data/workflow.html')"
 ```
 
-## Run evaluations
+## Run evaluation
 
-### rsID query
+### RSID query
 
 ```sh
 docker run \
@@ -71,7 +71,7 @@ gwas-vcf-performance \
 R -e "rmarkdown::render('/data/rsid_query_performance.Rmd', output_file='/data/rsid_query_performance.html')"
 ```
 
-### chromosome position query
+### Chromosome position query
 
 ```sh
 docker run \
@@ -82,7 +82,7 @@ gwas-vcf-performance \
 R -e "rmarkdown::render('/data/chrpos_query_performance.Rmd', output_file='/data/chrpos_query_performance.html')"
 ```
 
-### interval query
+### Interval query
 
 ```sh
 docker run \
