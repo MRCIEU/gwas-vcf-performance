@@ -2,6 +2,12 @@
 
 To view comparison results open html files in a web browser.
 
+1. [workflow]("workflow.html") - set up GWAS and prepare queries
+2. [rsid_query_performance]("rsid_query_performance.html") - performance queries on rsID
+3. [chrpos_query_performance]("chrpos_query_performance.html") - performance queries on chromosome position
+4. [interval_query_performance]("interval_query_performance.html") - performance queries on chromosome interval
+5. [pval_query_performance]("pval_query_performance.html") - performance queries on association P value
+
 To reproduce the analysis follow the following instructions.
 
 ## Obtain source code

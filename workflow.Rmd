@@ -107,7 +107,8 @@ Not including these variants in the performance comparison for simplicity
 
 ```{bash}
 bcftools view \
--e 'ID == "." && ALT[1]=="."' \
+-e 'COUNT(ALT) > 1' \
+-e 'ID == "."' \
 -O z \
 -o /data/gwas.vcf.gz \
 /data/gwas.all.vcf.gz
@@ -189,10 +190,18 @@ s$interval_count <- apply(s, 1, function(row){ length(which(gwas$CHROM == row[['
 write.table(s[,c("CHROM", "start", "end", "interval_count")], sep="\t", row.names=F, quote=F, col.names=F, file="/data/intervals.txt")
 
 # write out pval thresholds & counts for querying later
+gwas$LP <- as.numeric(gwas$LP)
+
+## define pval thresholds
 thresholds <- seq(0.00000005, 1, 1/params$n_sim)
 thresholds <- -log10(thresholds)
-counts <- sapply(thresholds, function (threshold) {sum(gwas$LP < threshold, na.rm = T)})
-write.table(data.frame(thresholds=thresholds, counts=counts), row.names=F, quote=F, col.names=F, file="/data/pval.txt")
+
+## round to avoid float imprecision issues
+thresholds <- round(thresholds, 4)
+
+## count records
+counts <- sapply(thresholds, function (threshold) {sum(gwas$LP > threshold, na.rm = T)})
+write.table(data.frame(thresholds=thresholds, counts=counts), sep="\t", row.names=F, quote=F, col.names=F, file="/data/pval.txt")
 
 message(paste("Total number of variants in GWAS:", nrow(gwas)))
 ```

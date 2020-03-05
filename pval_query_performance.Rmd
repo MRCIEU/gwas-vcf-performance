@@ -1,0 +1,147 @@
+---
+title: "Compare VCF and text for summary stats using association P value"
+author: "Matt Lyon"
+date: "2020-02-25"
+params:
+    n_sim: 5
+---
+
+## Compare query execution time between VCF and unindexed text
+
+### Simulate queries
+
+```{bash}
+set -euo pipefail
+
+# uncompressed text awk
+echo -e "query\treal\tuser\tsys" > /data/pval.query.uncompressed.text.awk.time.txt
+echo -e "query\texpected_n\tn" > /data/pval.query.uncompressed.text.awk.counts.txt
+while read line; do
+    pthresh=$(echo "$line" | cut -s -f1)
+    n=$(echo "$line" | cut -s -f2)
+    echo -ne "$pthresh\t" >> /data/pval.query.uncompressed.text.awk.time.txt
+    echo -ne "$pthresh\t$n\t" >> /data/pval.query.uncompressed.text.awk.counts.txt
+    /usr/bin/time -f "%e\t%U\t%S" -ao /data/pval.query.uncompressed.text.awk.time.txt \
+    awk -v pthresh="$pthresh" -F"\t" '$8 > pthresh' /data/gwas.txt | wc -l >> /data/pval.query.uncompressed.text.awk.counts.txt
+done < /data/pval.txt
+
+# compressed text awk
+echo -e "query\treal\tuser\tsys" > /data/pval.query.compressed.text.awk.time.txt
+echo -e "query\texpected_n\tn" > /data/pval.query.compressed.text.awk.counts.txt
+while read line; do
+    pthresh=$(echo "$line" | cut -s -f1)
+    n=$(echo "$line" | cut -s -f2)
+    echo -ne "$pthresh\t" >> /data/pval.query.compressed.text.awk.time.txt
+    echo -ne "$pthresh\t$n\t" >> /data/pval.query.compressed.text.awk.counts.txt
+    /usr/bin/time -f "%e\t%U\t%S" -ao /data/pval.query.compressed.text.awk.time.txt \
+    gzip -dc /data/gwas.txt.gz | \
+    awk -v pthresh="$pthresh" -F"\t" '$8 > pthresh' | wc -l >> /data/pval.query.compressed.text.awk.counts.txt
+done < /data/pval.txt
+
+# uncompressed vcf awk
+echo -e "query\treal\tuser\tsys" > /data/pval.query.uncompressed.vcf.awk.time.txt
+echo -e "query\texpected_n\tn" > /data/pval.query.uncompressed.vcf.awk.counts.txt
+while read line; do
+    pthresh=$(echo "$line" | cut -s -f1)
+    n=$(echo "$line" | cut -s -f2)
+    echo -ne "$pthresh\t" >> /data/pval.query.uncompressed.vcf.awk.time.txt
+    echo -ne "$pthresh\t$n\t" >> /data/pval.query.uncompressed.vcf.awk.counts.txt
+    /usr/bin/time -f "%e\t%U\t%S" -ao /data/pval.query.uncompressed.vcf.awk.time.txt \
+    awk -v pthresh="$pthresh" -F"\t|:" '$18 > pthresh' /data/gwas.vcf | wc -l >> /data/pval.query.uncompressed.vcf.awk.counts.txt
+done < /data/pval.txt
+
+# compressed vcf awk
+echo -e "query\treal\tuser\tsys" > /data/pval.query.compressed.vcf.awk.time.txt
+echo -e "query\texpected_n\tn" > /data/pval.query.compressed.vcf.awk.counts.txt
+while read line; do
+    pthresh=$(echo "$line" | cut -s -f1)
+    n=$(echo "$line" | cut -s -f2)
+    echo -ne "$pthresh\t" >> /data/pval.query.compressed.vcf.awk.time.txt
+    echo -ne "$pthresh\t$n\t" >> /data/pval.query.compressed.vcf.awk.counts.txt
+    /usr/bin/time -f "%e\t%U\t%S" -ao /data/pval.query.compressed.vcf.awk.time.txt \
+    gzip -dc /data/gwas.vcf.gz | \
+    awk -v pthresh="$pthresh" -F"\t|:" '$18 > pthresh' | wc -l >> /data/pval.query.compressed.vcf.awk.counts.txt
+done < /data/pval.txt
+
+# compressed vcf bcftools
+echo -e "query\treal\tuser\tsys" > /data/pval.query.compressed.vcf.bcftools.time.txt
+echo -e "query\texpected_n\tn" > /data/pval.query.compressed.vcf.bcftools.counts.txt
+while read line; do
+    pthresh=$(echo "$line" | cut -s -f1)
+    n=$(echo "$line" | cut -s -f2)
+    echo -ne "$pthresh\t" >> /data/pval.query.compressed.vcf.bcftools.time.txt
+    echo -ne "$pthresh\t$n\t" >> /data/pval.query.compressed.vcf.bcftools.counts.txt
+    /usr/bin/time -f "%e\t%U\t%S" -ao /data/pval.query.compressed.vcf.bcftools.time.txt \
+    bcftools view -i "FORMAT/LP > $pthresh" -H /data/gwas.vcf.gz | wc -l >> /data/pval.query.compressed.vcf.bcftools.counts.txt
+done < /data/pval.txt
+```
+
+### Plot results
+
+```{r}
+library('ggplot2')
+library('data.table')
+
+ci <- function(mu, sigma, n){
+    error <- qt(0.975, df = n-1 ) * sigma / sqrt(n)
+    return(list(mean=mu, sd=sigma, lower=mu - error, upper=mu + error))
+}
+
+# read in query return line counts
+
+## text
+pval.query.uncompressed.text.awk.counts <- fread("pval.query.uncompressed.text.awk.counts.txt")
+pval.query.compressed.text.awk.counts <- fread("pval.query.compressed.text.awk.counts.txt")
+## vcf
+pval.query.uncompressed.vcf.awk.counts <- fread("pval.query.uncompressed.vcf.awk.counts.txt")
+pval.query.compressed.vcf.awk.counts <- fread("pval.query.compressed.vcf.awk.counts.txt")
+pval.query.compressed.vcf.bcftools.counts <- fread("pval.query.compressed.vcf.bcftools.counts.txt")
+
+# check line counts equal to expected_n
+stopifnot(pval.query.uncompressed.text.awk.counts$n == pval.query.uncompressed.text.awk.counts$expected_n)
+stopifnot(pval.query.compressed.text.awk.counts$n == pval.query.compressed.text.awk.counts$expected_n)
+stopifnot(pval.query.uncompressed.vcf.awk.counts$n == pval.query.uncompressed.vcf.awk.counts$expected_n)
+stopifnot(pval.query.compressed.vcf.awk.counts$n == pval.query.compressed.vcf.awk.counts$expected_n)
+stopifnot(pval.query.compressed.vcf.bcftools.counts$n == pval.query.compressed.vcf.bcftools.counts$expected_n)
+
+# read in query time
+
+## text
+pval.query.uncompressed.text.awk.time <- fread("pval.query.uncompressed.text.awk.time.txt")
+pval.query.compressed.text.awk.time <- fread("pval.query.compressed.text.awk.time.txt")
+## vcf
+pval.query.uncompressed.vcf.awk.time <- fread("pval.query.uncompressed.vcf.awk.time.txt")
+pval.query.compressed.vcf.awk.time <- fread("pval.query.compressed.vcf.awk.time.txt")
+pval.query.compressed.vcf.bcftools.time <- fread("pval.query.compressed.vcf.bcftools.time.txt")
+
+# add methods
+pval.query.uncompressed.text.awk.time$method <- "awk - uncompressed text"
+print(ci(mean(pval.query.uncompressed.text.awk.time$real), sd(pval.query.uncompressed.text.awk.time$real), nrow(pval.query.uncompressed.text.awk.time)))
+pval.query.compressed.text.awk.time$method <- "awk - compressed text"
+print(ci(mean(pval.query.compressed.text.awk.time$real), sd(pval.query.compressed.text.awk.time$real), nrow(pval.query.compressed.text.awk.time)))
+
+pval.query.uncompressed.vcf.awk.time$method <- "awk - uncompressed vcf"
+print(ci(mean(pval.query.uncompressed.vcf.awk.time$real), sd(pval.query.uncompressed.vcf.awk.time$real), nrow(pval.query.uncompressed.vcf.awk.time)))
+pval.query.compressed.vcf.awk.time$method <- "awk - compressed vcf"
+print(ci(mean(pval.query.compressed.vcf.awk.time$real), sd(pval.query.compressed.vcf.awk.time$real), nrow(pval.query.compressed.vcf.awk.time)))
+pval.query.compressed.vcf.bcftools.time$method <- "bcftools - compressed vcf"
+print(ci(mean(pval.query.compressed.vcf.bcftools.time$real), sd(pval.query.compressed.vcf.bcftools.time$real), nrow(pval.query.compressed.vcf.bcftools.time)))
+
+# merge
+all <- rbind(
+    pval.query.uncompressed.text.awk.time[, c("real", "method")],
+    pval.query.compressed.text.awk.time[, c("real", "method")],
+    pval.query.uncompressed.vcf.awk.time[, c("real", "method")],
+    pval.query.compressed.vcf.awk.time[, c("real", "method")],
+    pval.query.compressed.vcf.bcftools.time[, c("real", "method")]
+)
+all$method <- as.factor(all$method)
+
+# plot runtime
+ggplot(all, aes(x = method, y = real)) +
+    geom_boxplot() +
+    labs(x = "Method", y = "Execution time (sec)") +
+    ggtitle("Query time using marker identifier") +
+    theme(axis.text.x=element_text(angle=90, hjust=1)) +
+    scale_y_continuous(breaks = scales::pretty_breaks(n = 10))
+```
