@@ -6,6 +6,96 @@ params:
     n_sim: 5
 ---
 
+### Download and format GWAS
+
+Download BMI GWAS summary statistics and annotation data (Neale et al)
+
+```{r}
+library('data.table')
+library('stringr')
+library('jsonlite')
+set.seed(12345)
+options(scipen=999)
+# UK Biobank — Neale lab. (n.d.). Retrieved February 25, 2020, from http://www.nealelab.is/uk-biobank/
+download.file("https://www.dropbox.com/s/tx8iw9lk53z3vj9/21001_raw.gwas.imputed_v3.both_sexes.tsv.bgz?raw=1", destfile="/data/gwas.raw.txt.gz")
+download.file("https://www.dropbox.com/s/puxks683vb0omeg/variants.tsv.bgz?raw=1", destfile="/data/lookup.txt.gz")
+gwas <- fread("/data/gwas.raw.txt.gz")
+lookup <- fread("/data/lookup.txt.gz")
+gwas <- merge(gwas, lookup, "variant")
+rm(lookup)
+# save output to gzip tab file
+df1 <- gwas[,c("chr", "pos", "alt", "ref", "beta", "se", "pval", "rsid", "AF", "info", "n_complete_samples")]
+gz1 <- gzfile("/data/gwas.raw.merged.txt.gz", "w")
+write.table(df1, gz1, sep="\t", row.names=F, quote=F)
+close(gz1)
+# write out params to json
+j <- list(chr_col = 0, pos_col = 1, ea_col = 2, oa_col = 3, beta_col = 4, se_col = 5, pval_col = 6, snp_col = 7, eaf_col = 8, imp_info_col = 9, ncontrol_col = 10, delimiter = "\t", header = TRUE, build = "GRCh37")
+write(toJSON(j, auto_unbox=T), file = "/data/schema.json")
+```
+
+### Map GWAS to VCF
+
+Map plain text to VCF format
+
+Convert GWAS to VCF. This will perform on-the-fly harmonisation of the effect allele to the VCF alternative allele ensuring data consistency. Source code available here: [gwas2vcf](https://github.com/MRCIEU/gwas2vcf).
+
+```{bash}
+set -euo pipefail
+python /app/gwas2vcf/main.py \
+--out /data/gwas.raw.vcf.gz \
+--data /data/gwas.raw.merged.txt.gz \
+--ref /data/human_g1k_v37.fasta \
+--id "neale-bmi-ukb" \
+--json /data/schema.json
+```
+
+### Combine multialleleic variants
+
+Merge duplicate positions into a single row. This is required if using ID field to prevent duplicate identifiers.
+
+```{bash}
+set -euo pipefail
+bcftools norm \
+-f /data/human_g1k_v37.fasta \
+-m +any \
+-O z \
+-o /data/gwas.norm.vcf.gz \
+/data/gwas.raw.vcf.gz
+```
+
+### Update ID field
+
+Replace ID field with up-to-date set of dbSNP identifiers using versioned release. IDs are frequently merged between builds. Also by combining multialleleics rsIDs for INDELs can reference the wrong position.
+
+Strip out existing ID field
+
+```{bash}
+set -euo pipefail
+bcftools annotate \
+-x ID \
+-O z \
+-o /data/gwas.noid.vcf.gz \
+/data/gwas.norm.vcf.gz
+bcftools index \
+-t \
+/data/gwas.noid.vcf.gz
+```
+
+Add versioned IDs (build 153)
+
+```{bash}
+set -euo pipefail
+bcftools annotate \
+-c ID \
+-a /data/dbsnp.v153.b37.vcf.gz \
+-O z \
+-o /data/gwas.all.vcf.gz \
+/data/gwas.noid.vcf.gz
+bcftools index \
+-t \
+/data/gwas.all.vcf.gz
+```
+
 ### Drop multialleleics and missing rsID field
 
 Not including these variants in the performance comparison to avoid handling arrary values /querying on null values.
