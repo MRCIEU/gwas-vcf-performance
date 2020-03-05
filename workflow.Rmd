@@ -103,12 +103,11 @@ bcftools index \
 
 ### Drop multialleleics and missing rsID field
 
-Not including these variants in the performance comparison for simplicity
+Not including these variants in the performance comparison to avoid handling arrary values /querying on null values.
 
 ```{bash}
 bcftools view \
--e 'COUNT(ALT) > 1' \
--e 'ID == "."' \
+-i 'ID != "." && COUNT(ALT) == 1 && COUNT(REF) == 1' \
 -O z \
 -o /data/gwas.vcf.gz \
 /data/gwas.all.vcf.gz
