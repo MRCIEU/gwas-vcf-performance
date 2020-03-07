@@ -74,6 +74,18 @@ while read line; do
     /usr/bin/time -f "%e\t%U\t%S" -ao /data/pval.query.compressed.vcf.bcftools.time.txt \
     bcftools view -i "FORMAT/LP > $pthresh" -H /data/gwas.vcf.gz | wc -l >> /data/pval.query.compressed.vcf.bcftools.counts.txt
 done < /data/pval.txt
+
+# compressed bcf bcftools
+echo -e "query\treal\tuser\tsys" > /data/pval.query.compressed.bcf.bcftools.time.txt
+echo -e "query\texpected_n\tn" > /data/pval.query.compressed.bcf.bcftools.counts.txt
+while read line; do
+    pthresh=$(echo "$line" | cut -s -f1)
+    n=$(echo "$line" | cut -s -f2)
+    echo -ne "$pthresh\t" >> /data/pval.query.compressed.bcf.bcftools.time.txt
+    echo -ne "$pthresh\t$n\t" >> /data/pval.query.compressed.bcf.bcftools.counts.txt
+    /usr/bin/time -f "%e\t%U\t%S" -ao /data/pval.query.compressed.bcf.bcftools.time.txt \
+    bcftools view -i "FORMAT/LP > $pthresh" -H /data/gwas.bcf | wc -l >> /data/pval.query.compressed.bcf.bcftools.counts.txt
+done < /data/pval.txt
 ```
 
 ### Plot results
@@ -96,6 +108,7 @@ pval.query.compressed.text.awk.counts <- fread("pval.query.compressed.text.awk.c
 pval.query.uncompressed.vcf.awk.counts <- fread("pval.query.uncompressed.vcf.awk.counts.txt")
 pval.query.compressed.vcf.awk.counts <- fread("pval.query.compressed.vcf.awk.counts.txt")
 pval.query.compressed.vcf.bcftools.counts <- fread("pval.query.compressed.vcf.bcftools.counts.txt")
+pval.query.compressed.bcf.bcftools.counts <- fread("pval.query.compressed.bcf.bcftools.counts.txt")
 
 # check line counts equal to expected_n
 stopifnot(pval.query.uncompressed.text.awk.counts$n == pval.query.uncompressed.text.awk.counts$expected_n)
@@ -103,6 +116,7 @@ stopifnot(pval.query.compressed.text.awk.counts$n == pval.query.compressed.text.
 stopifnot(pval.query.uncompressed.vcf.awk.counts$n == pval.query.uncompressed.vcf.awk.counts$expected_n)
 stopifnot(pval.query.compressed.vcf.awk.counts$n == pval.query.compressed.vcf.awk.counts$expected_n)
 stopifnot(pval.query.compressed.vcf.bcftools.counts$n == pval.query.compressed.vcf.bcftools.counts$expected_n)
+stopifnot(pval.query.compressed.bcf.bcftools.counts$n == pval.query.compressed.bcf.bcftools.counts$expected_n)
 
 # read in query time
 
@@ -113,6 +127,7 @@ pval.query.compressed.text.awk.time <- fread("pval.query.compressed.text.awk.tim
 pval.query.uncompressed.vcf.awk.time <- fread("pval.query.uncompressed.vcf.awk.time.txt")
 pval.query.compressed.vcf.awk.time <- fread("pval.query.compressed.vcf.awk.time.txt")
 pval.query.compressed.vcf.bcftools.time <- fread("pval.query.compressed.vcf.bcftools.time.txt")
+pval.query.compressed.bcf.bcftools.time <- fread("pval.query.compressed.bcf.bcftools.time.txt")
 
 # add methods
 pval.query.uncompressed.text.awk.time$method <- "awk - uncompressed text"
@@ -126,6 +141,8 @@ pval.query.compressed.vcf.awk.time$method <- "awk - compressed vcf"
 print(ci(mean(pval.query.compressed.vcf.awk.time$real), sd(pval.query.compressed.vcf.awk.time$real), nrow(pval.query.compressed.vcf.awk.time)))
 pval.query.compressed.vcf.bcftools.time$method <- "bcftools - compressed vcf"
 print(ci(mean(pval.query.compressed.vcf.bcftools.time$real), sd(pval.query.compressed.vcf.bcftools.time$real), nrow(pval.query.compressed.vcf.bcftools.time)))
+pval.query.compressed.bcf.bcftools.time$method <- "bcftools - compressed bcf"
+print(ci(mean(pval.query.compressed.bcf.bcftools.time$real), sd(pval.query.compressed.bcf.bcftools.time$real), nrow(pval.query.compressed.bcf.bcftools.time)))
 
 # merge
 all <- rbind(
@@ -133,7 +150,8 @@ all <- rbind(
     pval.query.compressed.text.awk.time[, c("real", "method")],
     pval.query.uncompressed.vcf.awk.time[, c("real", "method")],
     pval.query.compressed.vcf.awk.time[, c("real", "method")],
-    pval.query.compressed.vcf.bcftools.time[, c("real", "method")]
+    pval.query.compressed.vcf.bcftools.time[, c("real", "method")],
+    pval.query.compressed.bcf.bcftools.time[, c("real", "method")]
 )
 all$method <- as.factor(all$method)
 

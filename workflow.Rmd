@@ -146,6 +146,19 @@ IndexFeatureFile \
 -I /data/gwas.vcf
 ```
 
+### Create compressed BCF & index
+
+Convert to BCF to see what the performance impact is later.
+
+```{bash}
+bcftools view \
+-O b \
+-o /data/gwas.bcf \
+/data/gwas.vcf.gz
+
+bcftools index /data/gwas.bcf
+```
+
 ### Prepare tabular extract for performance comparisons
 
 Create extract of VCF to text for performance comparisons later
