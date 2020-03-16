@@ -1,5 +1,7 @@
 # VCF vs plain text GWAS storage formats
 
+Runtime performance for querying GWAS summary statistics in plain/tabular text and VCF
+
 ## Results
 
 To view comparison results open html files in a web browser.
