@@ -26,7 +26,7 @@ cd gwas-vcf-performance
 Pull existing image from DockerHub or build
 
 ```sh
-docker pull mcgml/gwas-vcf-performance
+docker pull mrcieu/gwas-vcf-performance
 # OR
 docker build -t gwas-vcf-performance .
 ```
