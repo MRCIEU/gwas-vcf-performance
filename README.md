@@ -16,13 +16,17 @@ To view comparison results open html files in a web browser.
 
 ```sh
 git clone --recurse-submodules git@github.com:MRCIEU/gwas-vcf-performance.git
+cd gwas-vcf-performance
 ```
 
-### Build docker image
+### Docker
+
+Pull existing image from DockerHub or build
 
 ```sh
-cd gwas-vcf-performance
-docker build -t gwas-vcf-performance:latest .
+docker pull mcgml/gwas-vcf-performance
+# OR
+docker build -t gwas-vcf-performance .
 ```
 
 ### Download FASTA file
