@@ -63,7 +63,7 @@ docker run \
 --name gwas-vcf-performance-workflow \
 -it -d \
 gwas-vcf-performance \
-R -e "rmarkdown::render('/data/workflow.Rmd', output_file='/data/workflow.html')"
+R -e "rmarkdown::render('/data/workflow.Rmd', output_file='/data/workflow.html', params = list(n_sim = 100))"
 ```
 
 ### Run evaluation
