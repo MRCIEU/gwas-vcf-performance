@@ -1,9 +1,6 @@
 library('ggplot2')
 library('data.table')
 
-# added params
-params <- data.frame(n_sim=100)
-
 ci <- function(mu, sigma, n){
     error <- qt(0.975, df = n-1 ) * sigma / sqrt(n)
     return(list(mean=mu, sd=sigma, lower=mu - error, upper=mu + error))
@@ -26,15 +23,15 @@ chrpos.query.compressed.vcf.grep.counts <- fread("chrpos.query.compressed.vcf.gr
 chrpos.query.compressed.vcf.bcftools.counts <- fread("chrpos.query.compressed.vcf.bcftools.counts.txt")
 
 # check line counts equal to n_sim
-stopifnot(sum(chrpos.query.uncompressed.text.awk.counts$n == 1) == params$n_sim)
-stopifnot(sum(chrpos.query.uncompressed.text.grep.counts$n == 1) == params$n_sim)
-stopifnot(sum(chrpos.query.compressed.text.awk.counts$n == 1) == params$n_sim)
-stopifnot(sum(chrpos.query.compressed.text.grep.counts$n == 1) == params$n_sim)
-stopifnot(sum(chrpos.query.uncompressed.vcf.awk.counts$n == 1) == params$n_sim)
-stopifnot(sum(chrpos.query.uncompressed.vcf.grep.counts$n == 1) == params$n_sim)
-stopifnot(sum(chrpos.query.compressed.vcf.awk.counts$n == 1) == params$n_sim)
-stopifnot(sum(chrpos.query.compressed.vcf.grep.counts$n == 1) == params$n_sim)
-stopifnot(sum(chrpos.query.compressed.vcf.bcftools.counts$n == 1) == params$n_sim)
+stopifnot(sum(chrpos.query.uncompressed.text.awk.counts$n == 1) == 100)
+stopifnot(sum(chrpos.query.uncompressed.text.grep.counts$n == 1) == 100)
+stopifnot(sum(chrpos.query.compressed.text.awk.counts$n == 1) == 100)
+stopifnot(sum(chrpos.query.compressed.text.grep.counts$n == 1) == 100)
+stopifnot(sum(chrpos.query.uncompressed.vcf.awk.counts$n == 1) == 100)
+stopifnot(sum(chrpos.query.uncompressed.vcf.grep.counts$n == 1) == 100)
+stopifnot(sum(chrpos.query.compressed.vcf.awk.counts$n == 1) == 100)
+stopifnot(sum(chrpos.query.compressed.vcf.grep.counts$n == 1) == 100)
+stopifnot(sum(chrpos.query.compressed.vcf.bcftools.counts$n == 1) == 100)
 
 # read in query time
 
@@ -214,12 +211,12 @@ rsid.query.compressed.vcf.bcftools.counts <- fread("rsid.query.compressed.vcf.bc
 rsid.query.compressed.vcf.rsidx.counts <- fread("rsid.query.compressed.vcf.rsidx.counts.txt")
 
 # check line counts equal to n_sim
-stopifnot(sum(rsid.query.uncompressed.vcf.awk.counts$n == 1) == params$n_sim)
-stopifnot(sum(rsid.query.uncompressed.vcf.grep.counts$n == 1) == params$n_sim)
-stopifnot(sum(rsid.query.compressed.vcf.awk.counts$n == 1) == params$n_sim)
-stopifnot(sum(rsid.query.compressed.vcf.grep.counts$n == 1) == params$n_sim)
-stopifnot(sum(rsid.query.compressed.vcf.bcftools.counts$n == 1) == params$n_sim)
-stopifnot(sum(rsid.query.compressed.vcf.rsidx.counts$n == 1) == params$n_sim)
+stopifnot(sum(rsid.query.uncompressed.vcf.awk.counts$n == 1) == 100)
+stopifnot(sum(rsid.query.uncompressed.vcf.grep.counts$n == 1) == 100)
+stopifnot(sum(rsid.query.compressed.vcf.awk.counts$n == 1) == 100)
+stopifnot(sum(rsid.query.compressed.vcf.grep.counts$n == 1) == 100)
+stopifnot(sum(rsid.query.compressed.vcf.bcftools.counts$n == 1) == 100)
+stopifnot(sum(rsid.query.compressed.vcf.rsidx.counts$n == 1) == 100)
 
 # read in query time
 
