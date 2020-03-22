@@ -34,7 +34,7 @@ while read line; do
     echo -ne "$chr"_"$pos\t" >> /data/chrpos.query.uncompressed.text.grep.time.txt
     echo -ne "$chr"_"$pos\t" >> /data/chrpos.query.uncompressed.text.grep.counts.txt
     /usr/bin/time -f "%e\t%U\t%S" -ao /data/chrpos.query.uncompressed.text.grep.time.txt \
-    grep -P "$chr\t$pos\t" /data/gwas.txt | wc -l >> /data/chrpos.query.uncompressed.text.grep.counts.txt
+    grep -P "^$chr\t$pos\t" /data/gwas.txt | wc -l >> /data/chrpos.query.uncompressed.text.grep.counts.txt
 done < /data/chrpos.txt
 
 # compressed text awk
@@ -60,7 +60,7 @@ while read line; do
     echo -ne "$chr"_"$pos\t" >> /data/chrpos.query.compressed.text.grep.counts.txt
     /usr/bin/time -f "%e\t%U\t%S" -ao /data/chrpos.query.compressed.text.grep.time.txt \
     gzip -dc /data/gwas.txt.gz | \
-    grep -P "$chr\t$pos\t" | wc -l >> /data/chrpos.query.compressed.text.grep.counts.txt
+    grep -P "^$chr\t$pos\t" | wc -l >> /data/chrpos.query.compressed.text.grep.counts.txt
 done < /data/chrpos.txt
 
 # uncompressed vcf awk
@@ -84,7 +84,7 @@ while read line; do
     echo -ne "$chr"_"$pos\t" >> /data/chrpos.query.uncompressed.vcf.grep.time.txt
     echo -ne "$chr"_"$pos\t" >> /data/chrpos.query.uncompressed.vcf.grep.counts.txt
     /usr/bin/time -f "%e\t%U\t%S" -ao /data/chrpos.query.uncompressed.vcf.grep.time.txt \
-    grep -P "$chr\t$pos\t" /data/gwas.vcf | wc -l >> /data/chrpos.query.uncompressed.vcf.grep.counts.txt
+    grep -P "^$chr\t$pos\t" /data/gwas.vcf | wc -l >> /data/chrpos.query.uncompressed.vcf.grep.counts.txt
 done < /data/chrpos.txt
 
 # compressed vcf awk
@@ -110,7 +110,7 @@ while read line; do
     echo -ne "$chr"_"$pos\t" >> /data/chrpos.query.compressed.vcf.grep.counts.txt
     /usr/bin/time -f "%e\t%U\t%S" -ao /data/chrpos.query.compressed.vcf.grep.time.txt \
     gzip -dc /data/gwas.vcf.gz | \
-    grep -P "$chr\t$pos\t" | wc -l >> /data/chrpos.query.compressed.vcf.grep.counts.txt
+    grep -P "^$chr\t$pos\t" | wc -l >> /data/chrpos.query.compressed.vcf.grep.counts.txt
 done < /data/chrpos.txt
 
 # compressed vcf bcftools
