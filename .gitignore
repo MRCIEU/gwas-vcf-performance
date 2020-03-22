@@ -12,3 +12,4 @@ data/
 dbsnp.v153.b37.vcf.gz
 dbsnp.v153.b37.vcf.gz.tbi
 dbsnp.v153.b37.vcf.gz.rsidx
+.RData
