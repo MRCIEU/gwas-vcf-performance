@@ -1,6 +1,9 @@
 library('ggplot2')
 library('data.table')
 
+# added params
+params <- data.frame(n_sim=100)
+
 ci <- function(mu, sigma, n){
     error <- qt(0.975, df = n-1 ) * sigma / sqrt(n)
     return(list(mean=mu, sd=sigma, lower=mu - error, upper=mu + error))
