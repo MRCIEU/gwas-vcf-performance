@@ -186,4 +186,4 @@ p <- ggplot(all, aes(x=tool, y=mill_mean, ymin=mill_lower, ymax=mill_upper, fill
     ylab("Mean runtime (log10 milliseconds)")
 
 # save
-ggsave("plot.pdf", p, height = 210 , width = 148, units=c("mm"))
+ggsave("plot.pdf", p, height=7, width=10)
