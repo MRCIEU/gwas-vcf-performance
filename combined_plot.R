@@ -77,7 +77,7 @@ intervals.all <- rbind(intervals.all, real2ci(intervals.query.compressed.vcf.awk
 intervals.all <- rbind(intervals.all, real2ci(intervals.query.compressed.vcf.bcftools.time), stringsAsFactors=F)
 
 # add test
-interval.all$test <- "1Mb interval"
+intervals.all$test <- "1Mb interval"
 
 ### P value ###
 pval.query.uncompressed.text.awk.time <- fread("pval.query.uncompressed.text.awk.time.txt")
