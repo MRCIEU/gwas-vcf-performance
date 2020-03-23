@@ -1,5 +1,6 @@
-library('ggplot2')
+library('tidyverse')
 library('data.table')
+library('scales')
 
 ci <- function(mu, sigma, n){
     error <- qnorm(0.975) * (sigma / sqrt(n))
@@ -151,8 +152,38 @@ rsid.all$test <- "dbSNP identifier"
 
 # merge dfs
 all <- rbind(chrpos.all, rsid.all, intervals.all, pval.all)
+all$tool <- stringr::str_trim(stringr::str_split(all$method, "-", simplify=T)[,1])
+all$file <- stringr::str_trim(stringr::str_split(all$method, "-", simplify=T)[,2])
 
-# bar plot with CIs
-p <- ggplot(all, aes(x=method, y=mean, fill=test)) +
-    geom_bar() +
-    geom_errorbar(aes(ymin=lower, ymax=upper))
+# drop bcf
+all <- all[which(all$file != "compressed bcf"),]
+
+# rename types
+all$File <- all$file
+all$File <- gsub("^compressed text$", "Text (GZIP)", all$File)
+all$File <- gsub("^uncompressed text$", "Text", all$File)
+all$File <- gsub("^compressed vcf$", "VCF (GZIP)", all$File)
+all$File <- gsub("^uncompressed vcf$", "VCF", all$File)
+
+# factorise
+all$test <- factor(all$test, levels=c('Base position','dbSNP identifier','1Mb interval','P value'))
+
+# convert sec to log millisec
+all$mill_mean <- log10(all$mean * 1000)
+all$mill_lower <- log10(all$lower * 1000)
+all$mill_upper <- log10(all$upper * 1000)
+
+# plot
+p <- ggplot(all, aes(x=tool, y=mill_mean, ymin=mill_lower, ymax=mill_upper, fill=File)) +
+    geom_col(width = 0.8, position = position_dodge2(width = 0.8, preserve = "single")) +
+    geom_errorbar(width = 0.08, position = position_dodge(0.8)) +
+    scale_y_continuous(breaks = scales::pretty_breaks(n = 10)) +
+    facet_grid(. ~ test, scales="free", space = "free") +
+    theme_light() +
+    scale_fill_brewer(palette = "RdYlBu") +
+    ggtitle("Query runtime of VCF and unindexed text using a range of operations") +
+    xlab("Method") + 
+    ylab("Mean runtime (log10 milliseconds)")
+
+# save
+ggsave("plot.pdf", p, height = 210 , width = 148, units=c("mm"))
