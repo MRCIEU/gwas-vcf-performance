@@ -6,11 +6,11 @@ Runtime performance for querying GWAS summary statistics in plain/tabular text a
 
 To view comparison results open html files in a web browser.
 
-1. [workflow](workflow.html) - set up GWAS and prepare queries
-2. [rsid_query_performance](rsid_query_performance.html) - performance queries on rsID
-3. [chrpos_query_performance](chrpos_query_performance.html) - performance queries on chromosome position
-4. [interval_query_performance](interval_query_performance.html) - performance queries on chromosome interval
-5. [pval_query_performance](pval_query_performance.html) - performance queries on association P value
+1. [workflow](https://mrcieu.github.io/gwas-vcf-performance/workflow.html) - set up GWAS and prepare queries
+2. [rsid_query_performance](https://mrcieu.github.io/gwas-vcf-performance/rsid_query_performance.html) - performance queries on rsID
+3. [chrpos_query_performance](https://mrcieu.github.io/gwas-vcf-performance/chrpos_query_performance.html) - performance queries on chromosome position
+4. [interval_query_performance](https://mrcieu.github.io/gwas-vcf-performance/interval_query_performance.html) - performance queries on chromosome interval
+5. [pval_query_performance](https://mrcieu.github.io/gwas-vcf-performance/pval_query_performance.html) - performance queries on association P value
 
 ## Run
 
