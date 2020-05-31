@@ -2,6 +2,14 @@
 
 Runtime performance for querying GWAS summary statistics in plain/tabular text and VCF
 
+## Citation
+
+```
+The variant call format provides efficient and robust storage of GWAS summary statistics
+Matthew S Lyon, Shea J Andrews, Benjamin L Elsworth, Tom R Gaunt, Gibran Hemani, Edoardo Marcora
+bioRxiv 2020.05.29.115824; doi: https://doi.org/10.1101/2020.05.29.115824
+```
+
 ## Results
 
 To view comparison results open html files in a web browser.
