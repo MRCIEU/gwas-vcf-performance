@@ -73,7 +73,7 @@ docker run \
 --name gwas-vcf-performance-workflow \
 -it -d \
 gwas-vcf-performance \
-R -e "rmarkdown::render('/data/workflow.Rmd', output_file='/data/workflow.html', params = list(ukbb_id = 21001))"
+R -e "rmarkdown::render('/app/workflow.Rmd', output_file='/data/workflow.html', params = list(ukbb_id = 21001))"
 ```
 
 ### Prepare queries
@@ -86,7 +86,7 @@ docker run \
 --name gwas-vcf-performance-prepare_query \
 -it -d \
 gwas-vcf-performance \
-R -e "rmarkdown::render('/data/prepare_query.Rmd', output_file='/data/prepare_query.html', params = list(n_sim = 100, n_variants = 10000000))"
+R -e "rmarkdown::render('/app/prepare_query.Rmd', output_file='/data/prepare_query.html', params = list(n_sim = 100, n_variants = 10000000))"
 ```
 
 ### Run evaluation
@@ -101,7 +101,7 @@ docker run \
 --name gwas-vcf-performance-rsid \
 -it -d \
 gwas-vcf-performance \
-R -e "rmarkdown::render('/data/rsid_query_performance.Rmd', output_file='/data/rsid_query_performance.html', params = list(n_sim = 100))"
+R -e "rmarkdown::render('/app/rsid_query_performance.Rmd', output_file='/data/rsid_query_performance.html', params = list(n_sim = 100))"
 ```
 
 #### Chromosome position query
@@ -112,7 +112,7 @@ docker run \
 --name gwas-vcf-performance-chrpos \
 -it -d \
 gwas-vcf-performance \
-R -e "rmarkdown::render('/data/chrpos_query_performance.Rmd', output_file='/data/chrpos_query_performance.html', params = list(n_sim = 100))"
+R -e "rmarkdown::render('/app/chrpos_query_performance.Rmd', output_file='/data/chrpos_query_performance.html', params = list(n_sim = 100))"
 ```
 
 #### Interval query
@@ -123,7 +123,7 @@ docker run \
 --name gwas-vcf-performance-interval \
 -it -d \
 gwas-vcf-performance \
-R -e "rmarkdown::render('/data/interval_query_performance.Rmd', output_file='/data/interval_query_performance.html', params = list(n_sim = 100))"
+R -e "rmarkdown::render('/app/interval_query_performance.Rmd', output_file='/data/interval_query_performance.html', params = list(n_sim = 100))"
 ```
 
 #### P value query
@@ -134,5 +134,5 @@ docker run \
 --name gwas-vcf-performance-pval \
 -it -d \
 gwas-vcf-performance \
-R -e "rmarkdown::render('/data/pval_query_performance.Rmd', output_file='/data/pval_query_performance.html', params = list(n_sim = 100))"
+R -e "rmarkdown::render('/app/pval_query_performance.Rmd', output_file='/data/pval_query_performance.html', params = list(n_sim = 100))"
 ```
