@@ -70,7 +70,6 @@ Make a folder for the GWAS-VCF files, copy in the reference genome files & dbsnp
 ```sh
 docker run \
 -v `pwd`:/data \
---name gwas-vcf-performance-workflow \
 -it -d \
 gwas-vcf-performance \
 R -e "rmarkdown::render('/app/workflow.Rmd', output_file='/data/workflow.html', params = list(ukbb_id = 21001))"
@@ -78,12 +77,11 @@ R -e "rmarkdown::render('/app/workflow.Rmd', output_file='/data/workflow.html', 
 
 ### Prepare queries
 
-Create project folder, soft-link GWAS-VCF file(s) using unique name (not gwas.vcf.gz) from above into the project folder and then execute:
+Create project folder, hard-link GWAS-VCF file(s) using unique name (not gwas.vcf.gz) from above into the project folder and then execute:
 
 ```sh
 docker run \
 -v `pwd`:/data \
---name gwas-vcf-performance-prepare_query \
 -it -d \
 gwas-vcf-performance \
 R -e "rmarkdown::render('/app/prepare_query.Rmd', output_file='/data/prepare_query.html', params = list(n_sim = 100, n_variants = 10000000))"
@@ -98,7 +96,6 @@ In the project folder from above execute the evaluations:
 ```sh
 docker run \
 -v `pwd`:/data \
---name gwas-vcf-performance-rsid \
 -it -d \
 gwas-vcf-performance \
 R -e "rmarkdown::render('/app/rsid_query_performance.Rmd', output_file='/data/rsid_query_performance.html', params = list(n_sim = 100))"
@@ -109,7 +106,6 @@ R -e "rmarkdown::render('/app/rsid_query_performance.Rmd', output_file='/data/rs
 ```sh
 docker run \
 -v `pwd`:/data \
---name gwas-vcf-performance-chrpos \
 -it -d \
 gwas-vcf-performance \
 R -e "rmarkdown::render('/app/chrpos_query_performance.Rmd', output_file='/data/chrpos_query_performance.html', params = list(n_sim = 100))"
@@ -120,7 +116,6 @@ R -e "rmarkdown::render('/app/chrpos_query_performance.Rmd', output_file='/data/
 ```sh
 docker run \
 -v `pwd`:/data \
---name gwas-vcf-performance-interval \
 -it -d \
 gwas-vcf-performance \
 R -e "rmarkdown::render('/app/interval_query_performance.Rmd', output_file='/data/interval_query_performance.html', params = list(n_sim = 100))"
@@ -131,7 +126,6 @@ R -e "rmarkdown::render('/app/interval_query_performance.Rmd', output_file='/dat
 ```sh
 docker run \
 -v `pwd`:/data \
---name gwas-vcf-performance-pval \
 -it -d \
 gwas-vcf-performance \
 R -e "rmarkdown::render('/app/pval_query_performance.Rmd', output_file='/data/pval_query_performance.html', params = list(n_sim = 100))"

@@ -35,6 +35,7 @@ Merge multiple GWAS-VCF files into single file if multiple are present
 ```{bash}
 if [[ $(ls *_sampled.vcf.gz | wc -l) -ge 1 ]]; then
     bcftools merge \
+    --force-samples \
     -O z \
     -o /data/gwas.vcf.gz \
     /data/*_sampled.vcf.gz
