@@ -42,7 +42,7 @@ if [[ $(ls /data/*_sampled.vcf.gz | wc -l) -ge 1 ]]; then
     --force-samples \
     -O z \
     -o /data/gwas.vcf.gz \
-    /data/*_sampled.vcf.gz
+    $(ls /data/*_sampled.vcf.gz)
 else
     mv /data/*_sampled.vcf.gz /data/gwas.vcf.gz
 fi
@@ -104,7 +104,6 @@ set.seed(12345)
 options(scipen=999)
 
 # read in tab GWAS
-# TODO check missing headers if multosample VCF do not cause problems
 gwas <- fread("/data/gwas.txt")
 
 # subsample variants
@@ -123,7 +122,6 @@ s$interval_count <- apply(s, 1, function(row){ length(which(gwas$CHROM == row[['
 write.table(s[,c("CHROM", "start", "end", "interval_count")], sep="\t", row.names=F, quote=F, col.names=F, file="/data/intervals.txt")
 
 # write out pval thresholds & counts for querying later
-# TODO check . is converted to NA where first GWAS has not been typed at this loci
 gwas$LP <- as.numeric(gwas$LP)
 
 ## define pval thresholds
