@@ -19,14 +19,14 @@ Subsample the GWAS-VCF to obtain n variants
 
 ```{bash}
 # TODO check this works as expected
-for (file in $(ls /data/*.vcf.gz)){
+for file in $(ls /data/*.vcf.gz); do
     # select header
     bcftools view -h "$file" > /data/tmp.vcf
     # select body, randomly sort and select n_variants
     bcftools view -H "$file" | shuf | head -n "$n_variants" >> /data/tmp.vcf
     # sort and compress
     bcftools sort tmp.vcf -O z -o $(echo "$file" | sed 's/\.vcf\.gz/_sampled\.vcf\.gz/g')
-}
+done
 ```
 
 ### Merge GWAS-VCF

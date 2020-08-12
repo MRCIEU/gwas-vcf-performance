@@ -65,7 +65,7 @@ mv GCF_000001405.25.gz.tbi dbsnp.v153.b37.vcf.gz.tbi
 
 ### Convert GWAS to VCF
 
-Make a folder for the GWAS-VCF files, change into the dir and then execute:
+Make a folder for the GWAS-VCF files, copy in the reference genome files & dbsnp files, change into the dir and then execute:
 
 ```sh
 docker run \
