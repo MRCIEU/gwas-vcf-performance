@@ -16,12 +16,12 @@ RUN /opt/conda/bin/conda install -c conda-forge pandoc
 # install htslib
 RUN wget https://github.com/samtools/htslib/releases/download/1.10.2/htslib-1.10.2.tar.bz2
 RUN tar -xvf htslib-1.10.2.tar.bz2
-RUN cd htslib-1.10.2 && ./configure && make && make test && make install
+RUN cd htslib-1.10.2 && ./configure && make && make install
 
 # install bcftools
 RUN wget https://github.com/samtools/bcftools/releases/download/1.10/bcftools-1.10.tar.bz2
 RUN tar -xvf bcftools-1.10.tar.bz2
-RUN cd bcftools-1.10 && ./configure && make && make test && make install
+RUN cd bcftools-1.10 && ./configure && make && make install
 
 # install GATK
 RUN /opt/conda/bin/conda install -c anaconda openjdk
@@ -35,4 +35,4 @@ WORKDIR /app
 RUN cd gwas2vcf && pip install -r requirements.txt && python -m unittest discover test
 
 # install patched version of rsidx
-RUN pip install git+https://github.com/mcgml/rsidx
+RUN pip install git+https://github.com/bioforensics/rsidx
