@@ -2,6 +2,8 @@
 title: "Map GWAS to VCF workflow"
 author: "Matt Lyon"
 date: "2020-02-25"
+params:
+    ukbb_id: NULL
 ---
 
 ### Download and format GWAS
