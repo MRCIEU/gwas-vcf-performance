@@ -31,14 +31,17 @@ done
 
 ### Merge GWAS-VCF
 
-Loop over provided list of files and merge into single GWAS-VCF
+Merge multiple GWAS-VCF files into single file if multiple are present
 
 ```{bash}
-# TODO check this works with single input file
-bcftools merge \
--O z \
--o /data/gwas.vcf.gz \
-/data/*_sampled.vcf.gz
+if [[ $(ls *_sampled.vcf.gz | wc -l) -ge 1 ]]; then
+    bcftools merge \
+    -O z \
+    -o /data/gwas.vcf.gz \
+    /data/*_sampled.vcf.gz
+else
+    mv /data/*_sampled.vcf.gz /data/gwas.vcf.gz
+fi
 
 bcftools index /data/gwas.vcf.gz
 ```
