@@ -10,7 +10,7 @@ params:
 ### Set params
 
 ```{r}
-Sys.setenv(n_sim=params$n_sim, n_variants=params$n_variants)
+Sys.setenv(n_sim=params$n_sim, n_variants=format(params$n_variants, scientific = FALSE))
 ```
 
 ### Randomly select n variants
