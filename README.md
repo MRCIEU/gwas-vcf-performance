@@ -63,7 +63,9 @@ mv GCF_000001405.25.gz dbsnp.v153.b37.vcf.gz
 mv GCF_000001405.25.gz.tbi dbsnp.v153.b37.vcf.gz.tbi
 ```
 
-### Prepare GWAS
+### Convert GWAS to VCF
+
+Make a folder for the GWAS-VCF files, change into the dir and then execute:
 
 ```sh
 docker run \
@@ -71,10 +73,25 @@ docker run \
 --name gwas-vcf-performance-workflow \
 -it -d \
 gwas-vcf-performance \
-R -e "rmarkdown::render('/data/workflow.Rmd', output_file='/data/workflow.html', params = list(n_sim = 100))"
+R -e "rmarkdown::render('/data/workflow.Rmd', output_file='/data/workflow.html', params = list(ukbb_id = 21001))"
+```
+
+### Prepare queries
+
+Create project folder, soft-link GWAS-VCF file(s) using unique name (not gwas.vcf.gz) from above into the project folder and then execute:
+
+```sh
+docker run \
+-v `pwd`:/data \
+--name gwas-vcf-performance-prepare_query \
+-it -d \
+gwas-vcf-performance \
+R -e "rmarkdown::render('/data/prepare_query.Rmd', output_file='/data/prepare_query.html', params = list(n_sim = 100, n_variants = 10000000))"
 ```
 
 ### Run evaluation
+
+In the project folder from above execute the evaluations:
 
 #### RSID query
 

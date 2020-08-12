@@ -64,6 +64,7 @@ while read line; do
 done < /data/pval.txt
 
 # compressed vcf bcftools
+# TODO query only on the first LP field if multisample VCF provided
 echo -e "query\treal\tuser\tsys" > /data/pval.query.compressed.vcf.bcftools.time.txt
 echo -e "query\texpected_n\tn" > /data/pval.query.compressed.vcf.bcftools.counts.txt
 while read line; do
@@ -76,6 +77,7 @@ while read line; do
 done < /data/pval.txt
 
 # compressed bcf bcftools
+# TODO query only on the first LP field if multisample VCF provided
 echo -e "query\treal\tuser\tsys" > /data/pval.query.compressed.bcf.bcftools.time.txt
 echo -e "query\texpected_n\tn" > /data/pval.query.compressed.bcf.bcftools.counts.txt
 while read line; do

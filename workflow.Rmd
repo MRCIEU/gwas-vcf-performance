@@ -2,13 +2,11 @@
 title: "Map GWAS to VCF workflow"
 author: "Matt Lyon"
 date: "2020-02-25"
-params:
-    n_sim: 5
 ---
 
 ### Download and format GWAS
 
-Download BMI GWAS summary statistics and annotation data (Neale et al)
+Download GWAS summary statistics and annotation data (Neale et al)
 
 ```{r}
 library('data.table')
@@ -16,8 +14,8 @@ library('stringr')
 library('jsonlite')
 set.seed(12345)
 options(scipen=999)
-# UK Biobank — Neale lab. (n.d.). Retrieved February 25, 2020, from http://www.nealelab.is/uk-biobank/
-download.file("https://www.dropbox.com/s/tx8iw9lk53z3vj9/21001_raw.gwas.imputed_v3.both_sexes.tsv.bgz?raw=1", destfile="/data/gwas.raw.txt.gz")
+# UK Biobank — Neale lab http://www.nealelab.is/uk-biobank/
+download.file(paste0("https://www.dropbox.com/s/tx8iw9lk53z3vj9/", params$ukbb_id,"_raw.gwas.imputed_v3.both_sexes.tsv.bgz?raw=1"), destfile="/data/gwas.raw.txt.gz")
 download.file("https://www.dropbox.com/s/puxks683vb0omeg/variants.tsv.bgz?raw=1", destfile="/data/lookup.txt.gz")
 gwas <- fread("/data/gwas.raw.txt.gz")
 lookup <- fread("/data/lookup.txt.gz")
@@ -31,6 +29,7 @@ close(gz1)
 # write out params to json
 j <- list(chr_col = 0, pos_col = 1, ea_col = 2, oa_col = 3, beta_col = 4, se_col = 5, pval_col = 6, snp_col = 7, eaf_col = 8, imp_info_col = 9, ncontrol_col = 10, delimiter = "\t", header = TRUE, build = "GRCh37")
 write(toJSON(j, auto_unbox=T), file = "/data/schema.json")
+Sys.setenv(ukbb_id=params$ukbb_id)
 ```
 
 ### Map GWAS to VCF
@@ -45,7 +44,7 @@ python /app/gwas2vcf/main.py \
 --out /data/gwas.raw.vcf.gz \
 --data /data/gwas.raw.merged.txt.gz \
 --ref /data/human_g1k_v37.fasta \
---id "neale-bmi-ukb" \
+--id "$ukbb_id" \
 --json /data/schema.json
 ```
 
@@ -123,92 +122,4 @@ ValidateVariants \
 -R /data/human_g1k_v37.fasta \
 -V /data/gwas.vcf.gz \
 --validation-type-to-exclude ALLELES
-```
-
-### Index on rsID
-
-[rsidx](https://github.com/bioforensics/rsidx) is an excellent tool for indexing on VCF ID. This is made possible by extracting rsID and chromosome position to an SQLite database which is later queried to obtain the variant locus for extraction using tabix.
-
-```{bash}
-rsidx index \
-/data/gwas.vcf.gz \
-/data/gwas.vcf.gz.rsidx
-```
-
-### Create uncompressed VCF & index
-
-Uncompress the file to see what the performance impact is later.
-
-```{bash}
-zcat /data/gwas.vcf.gz > /data/gwas.vcf
-/usr/bin/gatk-4.1.5.0/gatk \
-IndexFeatureFile \
--I /data/gwas.vcf
-```
-
-### Create compressed BCF & index
-
-Convert to BCF to see what the performance impact is later.
-
-```{bash}
-bcftools view \
--O b \
--o /data/gwas.bcf \
-/data/gwas.vcf.gz
-
-bcftools index /data/gwas.bcf
-```
-
-### Prepare tabular extract for performance comparisons
-
-Create extract of VCF to text for performance comparisons later
-
-```{bash}
-echo -e "CHROM\tPOS\tREF\tALT\tID\tES\tSE\tLP\tAF\tSS" > /data/gwas.txt
-bcftools query \
--f '%CHROM\t%POS\t%REF\t%ALT\t%ID[\t%ES\t%SE\t%LP\t%AF\t%SS]\n' \
-/data/gwas.vcf.gz >> /data/gwas.txt
-gzip -c /data/gwas.txt > /data/gwas.txt.gz
-```
-
-### Define queries
-
-```{r}
-library('data.table')
-set.seed(12345)
-options(scipen=999)
-
-# read in tab GWAS
-gwas <- fread("/data/gwas.txt")
-
-# subsample variants
-s <- gwas[sample(nrow(gwas), params$n_sim),]
-
-# write out list of rsid for querying later
-write.table(s$ID, sep="\t", row.names=F, quote=F, col.names=F, file="/data/rsid.txt")
-
-# write out list of chrom pos for querying later
-write.table(s[,c("CHROM", "POS")], sep="\t", row.names=F, quote=F, col.names=F, file="/data/chrpos.txt")
-
-# write out list of 1Mb intervals and count number of variants for querying later
-s$start <- s$POS - 500000
-s$end <- s$POS + 500000
-s$interval_count <- apply(s, 1, function(row){ length(which(gwas$CHROM == row[['CHROM']] & gwas$POS > as.numeric(row[['start']]) & gwas$POS < as.numeric(row[['end']]))) })
-write.table(s[,c("CHROM", "start", "end", "interval_count")], sep="\t", row.names=F, quote=F, col.names=F, file="/data/intervals.txt")
-
-# write out pval thresholds & counts for querying later
-gwas$LP <- as.numeric(gwas$LP)
-
-## define pval thresholds
-thresholds <- seq(0.00000005, 1, 1/params$n_sim)
-thresholds <- -log10(thresholds)
-
-## round to avoid float imprecision issues
-thresholds <- round(thresholds, 4)
-
-## count records
-counts <- sapply(thresholds, function (threshold) {sum(gwas$LP > threshold, na.rm = T)})
-write.table(data.frame(thresholds=thresholds, counts=counts), sep="\t", row.names=F, quote=F, col.names=F, file="/data/pval.txt")
-
-message(paste("Total number of variants in GWAS:", nrow(gwas)))
 ```

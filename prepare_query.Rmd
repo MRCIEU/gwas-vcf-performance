@@ -1,0 +1,134 @@
+---
+title: "Prepare data for quering"
+author: "Matt Lyon"
+date: "2020-08-12"
+params:
+    n_sim: 5
+    n_variants: 2500000
+---
+
+### Set params
+
+```{r}
+Sys.setenv(n_sim=params$n_sim, n_variants=params$n_variants)
+```
+
+### Randomly select n variants
+
+Subsample the GWAS-VCF to obtain n variants
+
+```{bash}
+# TODO check this works as expected
+for (file in $(ls /data/*.vcf.gz)){
+    # select header
+    bcftools view -h "$file" > /data/tmp.vcf
+    # select body, randomly sort and select n_variants
+    bcftools view -H "$file" | shuf | head -n "$n_variants" >> /data/tmp.vcf
+    # sort and compress
+    bcftools sort tmp.vcf -O z -o $(echo "$file" | sed 's/\.vcf\.gz/_sampled\.vcf\.gz/g')
+}
+```
+
+### Merge GWAS-VCF
+
+Loop over provided list of files and merge into single GWAS-VCF
+
+```{bash}
+# TODO check this works with single input file
+bcftools merge \
+-O z \
+-o /data/gwas.vcf.gz \
+/data/*_sampled.vcf.gz
+
+bcftools index /data/gwas.vcf.gz
+```
+
+### Index on rsID
+
+[rsidx](https://github.com/bioforensics/rsidx) is an excellent tool for indexing on VCF ID. This is made possible by extracting rsID and chromosome position to an SQLite database which is later queried to obtain the variant locus for extraction using tabix.
+
+```{bash}
+rsidx index \
+/data/gwas.vcf.gz \
+/data/gwas.vcf.gz.rsidx
+```
+
+### Create uncompressed VCF & index
+
+Uncompress the file to see what the performance impact is later.
+
+```{bash}
+zcat /data/gwas.vcf.gz > /data/gwas.vcf
+/usr/bin/gatk-4.1.5.0/gatk \
+IndexFeatureFile \
+-I /data/gwas.vcf
+```
+
+### Create compressed BCF & index
+
+Convert to BCF to see what the performance impact is later.
+
+```{bash}
+bcftools view \
+-O b \
+-o /data/gwas.bcf \
+/data/gwas.vcf.gz
+
+bcftools index /data/gwas.bcf
+```
+
+### Prepare tabular extract for performance comparisons
+
+Create extract of VCF to text for performance comparisons later
+
+```{bash}
+echo -e "CHROM\tPOS\tREF\tALT\tID\tES\tSE\tLP\tAF\tSS" > /data/gwas.txt
+bcftools query \
+-f '%CHROM\t%POS\t%REF\t%ALT\t%ID[\t%ES\t%SE\t%LP\t%AF\t%SS]\n' \
+/data/gwas.vcf.gz >> /data/gwas.txt
+gzip -c /data/gwas.txt > /data/gwas.txt.gz
+```
+
+### Define queries
+
+```{r}
+library('data.table')
+set.seed(12345)
+options(scipen=999)
+
+# read in tab GWAS
+# TODO check missing headers if multosample VCF do not cause problems
+gwas <- fread("/data/gwas.txt")
+
+# subsample variants
+s <- gwas[sample(nrow(gwas), params$n_sim),]
+
+# write out list of rsid for querying later
+write.table(s$ID, sep="\t", row.names=F, quote=F, col.names=F, file="/data/rsid.txt")
+
+# write out list of chrom pos for querying later
+write.table(s[,c("CHROM", "POS")], sep="\t", row.names=F, quote=F, col.names=F, file="/data/chrpos.txt")
+
+# write out list of 1Mb intervals and count number of variants for querying later
+s$start <- s$POS - 500000
+s$end <- s$POS + 500000
+s$interval_count <- apply(s, 1, function(row){ length(which(gwas$CHROM == row[['CHROM']] & gwas$POS > as.numeric(row[['start']]) & gwas$POS < as.numeric(row[['end']]))) })
+write.table(s[,c("CHROM", "start", "end", "interval_count")], sep="\t", row.names=F, quote=F, col.names=F, file="/data/intervals.txt")
+
+# write out pval thresholds & counts for querying later
+# TODO check . is converted to NA where first GWAS has not been typed at this loci
+gwas$LP <- as.numeric(gwas$LP)
+
+## define pval thresholds
+thresholds <- seq(0.00000005, 1, 1/params$n_sim)
+thresholds <- -log10(thresholds)
+
+## round to avoid float imprecision issues
+thresholds <- round(thresholds, 4)
+
+## count records
+counts <- sapply(thresholds, function (threshold) {sum(gwas$LP > threshold, na.rm = T)})
+write.table(data.frame(thresholds=thresholds, counts=counts), sep="\t", row.names=F, quote=F, col.names=F, file="/data/pval.txt")
+
+message(paste("Total number of variants in GWAS:", nrow(gwas)))
+```
