@@ -140,16 +140,16 @@ ci <- function(mu, sigma, n){
 # read in query return line counts
 
 ## text
-chrpos.query.uncompressed.text.awk.counts <- fread("chrpos.query.uncompressed.text.awk.counts.txt")
-chrpos.query.uncompressed.text.grep.counts <- fread("chrpos.query.uncompressed.text.grep.counts.txt")
-chrpos.query.compressed.text.awk.counts <- fread("chrpos.query.compressed.text.awk.counts.txt")
-chrpos.query.compressed.text.grep.counts <- fread("chrpos.query.compressed.text.grep.counts.txt")
+chrpos.query.uncompressed.text.awk.counts <- fread("/data/chrpos.query.uncompressed.text.awk.counts.txt")
+chrpos.query.uncompressed.text.grep.counts <- fread("/data/chrpos.query.uncompressed.text.grep.counts.txt")
+chrpos.query.compressed.text.awk.counts <- fread("/data/chrpos.query.compressed.text.awk.counts.txt")
+chrpos.query.compressed.text.grep.counts <- fread("/data/chrpos.query.compressed.text.grep.counts.txt")
 ## vcf
-chrpos.query.uncompressed.vcf.awk.counts <- fread("chrpos.query.uncompressed.vcf.awk.counts.txt")
-chrpos.query.uncompressed.vcf.grep.counts <- fread("chrpos.query.uncompressed.vcf.grep.counts.txt")
-chrpos.query.compressed.vcf.awk.counts <- fread("chrpos.query.compressed.vcf.awk.counts.txt")
-chrpos.query.compressed.vcf.grep.counts <- fread("chrpos.query.compressed.vcf.grep.counts.txt")
-chrpos.query.compressed.vcf.bcftools.counts <- fread("chrpos.query.compressed.vcf.bcftools.counts.txt")
+chrpos.query.uncompressed.vcf.awk.counts <- fread("/data/chrpos.query.uncompressed.vcf.awk.counts.txt")
+chrpos.query.uncompressed.vcf.grep.counts <- fread("/data/chrpos.query.uncompressed.vcf.grep.counts.txt")
+chrpos.query.compressed.vcf.awk.counts <- fread("/data/chrpos.query.compressed.vcf.awk.counts.txt")
+chrpos.query.compressed.vcf.grep.counts <- fread("/data/chrpos.query.compressed.vcf.grep.counts.txt")
+chrpos.query.compressed.vcf.bcftools.counts <- fread("/data/chrpos.query.compressed.vcf.bcftools.counts.txt")
 
 # check line counts equal to n_sim
 stopifnot(sum(chrpos.query.uncompressed.text.awk.counts$n == 1) == params$n_sim)
@@ -165,16 +165,16 @@ stopifnot(sum(chrpos.query.compressed.vcf.bcftools.counts$n == 1) == params$n_si
 # read in query time
 
 ## text
-chrpos.query.uncompressed.text.awk.time <- fread("chrpos.query.uncompressed.text.awk.time.txt")
-chrpos.query.uncompressed.text.grep.time <- fread("chrpos.query.uncompressed.text.grep.time.txt")
-chrpos.query.compressed.text.awk.time <- fread("chrpos.query.compressed.text.awk.time.txt")
-chrpos.query.compressed.text.grep.time <- fread("chrpos.query.compressed.text.grep.time.txt")
+chrpos.query.uncompressed.text.awk.time <- fread("/data/chrpos.query.uncompressed.text.awk.time.txt")
+chrpos.query.uncompressed.text.grep.time <- fread("/data/chrpos.query.uncompressed.text.grep.time.txt")
+chrpos.query.compressed.text.awk.time <- fread("/data/chrpos.query.compressed.text.awk.time.txt")
+chrpos.query.compressed.text.grep.time <- fread("/data/chrpos.query.compressed.text.grep.time.txt")
 ## vcf
-chrpos.query.uncompressed.vcf.awk.time <- fread("chrpos.query.uncompressed.vcf.awk.time.txt")
-chrpos.query.uncompressed.vcf.grep.time <- fread("chrpos.query.uncompressed.vcf.grep.time.txt")
-chrpos.query.compressed.vcf.awk.time <- fread("chrpos.query.compressed.vcf.awk.time.txt")
-chrpos.query.compressed.vcf.grep.time <- fread("chrpos.query.compressed.vcf.grep.time.txt")
-chrpos.query.compressed.vcf.bcftools.time <- fread("chrpos.query.compressed.vcf.bcftools.time.txt")
+chrpos.query.uncompressed.vcf.awk.time <- fread("/data/chrpos.query.uncompressed.vcf.awk.time.txt")
+chrpos.query.uncompressed.vcf.grep.time <- fread("/data/chrpos.query.uncompressed.vcf.grep.time.txt")
+chrpos.query.compressed.vcf.awk.time <- fread("/data/chrpos.query.compressed.vcf.awk.time.txt")
+chrpos.query.compressed.vcf.grep.time <- fread("/data/chrpos.query.compressed.vcf.grep.time.txt")
+chrpos.query.compressed.vcf.bcftools.time <- fread("/data/chrpos.query.compressed.vcf.bcftools.time.txt")
 
 # add methods
 chrpos.query.uncompressed.text.awk.time$method <- "awk - uncompressed text"

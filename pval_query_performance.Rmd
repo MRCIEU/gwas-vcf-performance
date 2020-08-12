@@ -104,13 +104,13 @@ ci <- function(mu, sigma, n){
 # read in query return line counts
 
 ## text
-pval.query.uncompressed.text.awk.counts <- fread("pval.query.uncompressed.text.awk.counts.txt")
-pval.query.compressed.text.awk.counts <- fread("pval.query.compressed.text.awk.counts.txt")
+pval.query.uncompressed.text.awk.counts <- fread("/data/pval.query.uncompressed.text.awk.counts.txt")
+pval.query.compressed.text.awk.counts <- fread("/data/pval.query.compressed.text.awk.counts.txt")
 ## vcf
-pval.query.uncompressed.vcf.awk.counts <- fread("pval.query.uncompressed.vcf.awk.counts.txt")
-pval.query.compressed.vcf.awk.counts <- fread("pval.query.compressed.vcf.awk.counts.txt")
-pval.query.compressed.vcf.bcftools.counts <- fread("pval.query.compressed.vcf.bcftools.counts.txt")
-pval.query.compressed.bcf.bcftools.counts <- fread("pval.query.compressed.bcf.bcftools.counts.txt")
+pval.query.uncompressed.vcf.awk.counts <- fread("/data/pval.query.uncompressed.vcf.awk.counts.txt")
+pval.query.compressed.vcf.awk.counts <- fread("/data/pval.query.compressed.vcf.awk.counts.txt")
+pval.query.compressed.vcf.bcftools.counts <- fread("/data/pval.query.compressed.vcf.bcftools.counts.txt")
+pval.query.compressed.bcf.bcftools.counts <- fread("/data/pval.query.compressed.bcf.bcftools.counts.txt")
 
 # check line counts equal to expected_n
 stopifnot(pval.query.uncompressed.text.awk.counts$n == pval.query.uncompressed.text.awk.counts$expected_n)
@@ -123,13 +123,13 @@ stopifnot(pval.query.compressed.bcf.bcftools.counts$n == pval.query.compressed.b
 # read in query time
 
 ## text
-pval.query.uncompressed.text.awk.time <- fread("pval.query.uncompressed.text.awk.time.txt")
-pval.query.compressed.text.awk.time <- fread("pval.query.compressed.text.awk.time.txt")
+pval.query.uncompressed.text.awk.time <- fread("/data/pval.query.uncompressed.text.awk.time.txt")
+pval.query.compressed.text.awk.time <- fread("/data/pval.query.compressed.text.awk.time.txt")
 ## vcf
-pval.query.uncompressed.vcf.awk.time <- fread("pval.query.uncompressed.vcf.awk.time.txt")
-pval.query.compressed.vcf.awk.time <- fread("pval.query.compressed.vcf.awk.time.txt")
-pval.query.compressed.vcf.bcftools.time <- fread("pval.query.compressed.vcf.bcftools.time.txt")
-pval.query.compressed.bcf.bcftools.time <- fread("pval.query.compressed.bcf.bcftools.time.txt")
+pval.query.uncompressed.vcf.awk.time <- fread("/data/pval.query.uncompressed.vcf.awk.time.txt")
+pval.query.compressed.vcf.awk.time <- fread("/data/pval.query.compressed.vcf.awk.time.txt")
+pval.query.compressed.bcf.bcftools.time <- fread("/data/pval.query.compressed.bcf.bcftools.time.txt")
+pval.query.compressed.vcf.bcftools.time <- fread("/data/pval.query.compressed.vcf.bcftools.time.txt")
 
 # add methods
 pval.query.uncompressed.text.awk.time$method <- "awk - uncompressed text"

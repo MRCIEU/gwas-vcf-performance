@@ -132,17 +132,17 @@ ci <- function(mu, sigma, n){
 # read in query return line counts
 
 ## text
-rsid.query.uncompressed.text.awk.counts <- fread("rsid.query.uncompressed.text.awk.counts.txt")
-rsid.query.uncompressed.text.grep.counts <- fread("rsid.query.uncompressed.text.grep.counts.txt")
-rsid.query.compressed.text.awk.counts <- fread("rsid.query.compressed.text.awk.counts.txt")
-rsid.query.compressed.text.grep.counts <- fread("rsid.query.compressed.text.grep.counts.txt")
+rsid.query.uncompressed.text.awk.counts <- fread("/data/rsid.query.uncompressed.text.awk.counts.txt")
+rsid.query.uncompressed.text.grep.counts <- fread("/data/rsid.query.uncompressed.text.grep.counts.txt")
+rsid.query.compressed.text.awk.counts <- fread("/data/rsid.query.compressed.text.awk.counts.txt")
+rsid.query.compressed.text.grep.counts <- fread("/data/rsid.query.compressed.text.grep.counts.txt")
 ## vcf
-rsid.query.uncompressed.vcf.awk.counts <- fread("rsid.query.uncompressed.vcf.awk.counts.txt")
-rsid.query.uncompressed.vcf.grep.counts <- fread("rsid.query.uncompressed.vcf.grep.counts.txt")
-rsid.query.compressed.vcf.awk.counts <- fread("rsid.query.compressed.vcf.awk.counts.txt")
-rsid.query.compressed.vcf.grep.counts <- fread("rsid.query.compressed.vcf.grep.counts.txt")
-rsid.query.compressed.vcf.bcftools.counts <- fread("rsid.query.compressed.vcf.bcftools.counts.txt")
-rsid.query.compressed.vcf.rsidx.counts <- fread("rsid.query.compressed.vcf.rsidx.counts.txt")
+rsid.query.uncompressed.vcf.awk.counts <- fread("/data/rsid.query.uncompressed.vcf.awk.counts.txt")
+rsid.query.uncompressed.vcf.grep.counts <- fread("/data/rsid.query.uncompressed.vcf.grep.counts.txt")
+rsid.query.compressed.vcf.awk.counts <- fread("/data/rsid.query.compressed.vcf.awk.counts.txt")
+rsid.query.compressed.vcf.grep.counts <- fread("/data/rsid.query.compressed.vcf.grep.counts.txt")
+rsid.query.compressed.vcf.bcftools.counts <- fread("/data/rsid.query.compressed.vcf.bcftools.counts.txt")
+rsid.query.compressed.vcf.rsidx.counts <- fread("/data/rsid.query.compressed.vcf.rsidx.counts.txt")
 
 # check line counts equal to n_sim
 stopifnot(sum(rsid.query.uncompressed.vcf.awk.counts$n == 1) == params$n_sim)
@@ -155,17 +155,17 @@ stopifnot(sum(rsid.query.compressed.vcf.rsidx.counts$n == 1) == params$n_sim)
 # read in query time
 
 ## text
-rsid.query.uncompressed.text.awk.time <- fread("rsid.query.uncompressed.text.awk.time.txt")
-rsid.query.uncompressed.text.grep.time <- fread("rsid.query.uncompressed.text.grep.time.txt")
-rsid.query.compressed.text.awk.time <- fread("rsid.query.compressed.text.awk.time.txt")
-rsid.query.compressed.text.grep.time <- fread("rsid.query.compressed.text.grep.time.txt")
+rsid.query.uncompressed.text.awk.time <- fread("/data/rsid.query.uncompressed.text.awk.time.txt")
+rsid.query.uncompressed.text.grep.time <- fread("/data/rsid.query.uncompressed.text.grep.time.txt")
+rsid.query.compressed.text.awk.time <- fread("/data/rsid.query.compressed.text.awk.time.txt")
+rsid.query.compressed.text.grep.time <- fread("/data/rsid.query.compressed.text.grep.time.txt")
 ## vcf
-rsid.query.uncompressed.vcf.awk.time <- fread("rsid.query.uncompressed.vcf.awk.time.txt")
-rsid.query.uncompressed.vcf.grep.time <- fread("rsid.query.uncompressed.vcf.grep.time.txt")
-rsid.query.compressed.vcf.awk.time <- fread("rsid.query.compressed.vcf.awk.time.txt")
-rsid.query.compressed.vcf.grep.time <- fread("rsid.query.compressed.vcf.grep.time.txt")
-rsid.query.compressed.vcf.bcftools.time <- fread("rsid.query.compressed.vcf.bcftools.time.txt")
-rsid.query.compressed.vcf.rsidx.time <- fread("rsid.query.compressed.vcf.rsidx.time.txt")
+rsid.query.uncompressed.vcf.awk.time <- fread("/data/rsid.query.uncompressed.vcf.awk.time.txt")
+rsid.query.uncompressed.vcf.grep.time <- fread("/data/rsid.query.uncompressed.vcf.grep.time.txt")
+rsid.query.compressed.vcf.awk.time <- fread("/data/rsid.query.compressed.vcf.awk.time.txt")
+rsid.query.compressed.vcf.grep.time <- fread("/data/rsid.query.compressed.vcf.grep.time.txt")
+rsid.query.compressed.vcf.bcftools.time <- fread("/data/rsid.query.compressed.vcf.bcftools.time.txt")
+rsid.query.compressed.vcf.rsidx.time <- fread("/data/rsid.query.compressed.vcf.rsidx.time.txt")
 
 # add methods
 rsid.query.uncompressed.text.awk.time$method <- "awk - uncompressed text"
