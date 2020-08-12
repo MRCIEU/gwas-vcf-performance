@@ -25,7 +25,7 @@ for file in $(ls /data/*.vcf.gz); do
     # select body, randomly sort and select n_variants
     bcftools view -H "$file" | shuf | head -n "$n_variants" >> /data/tmp.vcf
     # sort and compress
-    bcftools sort tmp.vcf -O z -o $(echo "$file" | sed 's/\.vcf\.gz/_sampled\.vcf\.gz/g')
+    bcftools sort /data/tmp.vcf -O z -o $(echo "$file" | sed 's/\.vcf\.gz/_sampled\.vcf\.gz/g')
 done
 ```
 
