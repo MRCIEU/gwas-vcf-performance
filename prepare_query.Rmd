@@ -18,6 +18,7 @@ Sys.setenv(n_sim=params$n_sim, n_variants=params$n_variants)
 Subsample the GWAS-VCF to obtain n variants
 
 ```{bash}
+set -euo pipefail
 echo "$n_variants"
 for file in $(ls /data/*.vcf.gz); do
     echo "$file"
@@ -27,6 +28,8 @@ for file in $(ls /data/*.vcf.gz); do
     bcftools view -H "$file" | shuf | head -n "$n_variants" >> /data/tmp.vcf
     # sort and compress
     bcftools sort /data/tmp.vcf -O z -o $(echo "$file" | sed 's/\.vcf\.gz/_sampled\.vcf\.gz/g')
+    # index
+    bcftools index -t $(echo "$file" | sed 's/\.vcf\.gz/_sampled\.vcf\.gz/g')
 done
 ```
 
