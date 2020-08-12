@@ -18,7 +18,6 @@ Sys.setenv(n_sim=params$n_sim, n_variants=params$n_variants)
 Subsample the GWAS-VCF to obtain n variants
 
 ```{bash}
-# TODO check this works as expected
 for file in $(ls /data/*.vcf.gz); do
     # select header
     bcftools view -h "$file" > /data/tmp.vcf

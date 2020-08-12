@@ -136,3 +136,7 @@ docker run \
 gwas-vcf-performance \
 R -e "rmarkdown::render('/app/pval_query_performance.Rmd', output_file='/data/pval_query_performance.html', params = list(n_sim = 100))"
 ```
+
+#### Figure
+
+TODO
