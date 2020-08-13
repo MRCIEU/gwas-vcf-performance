@@ -19,15 +19,15 @@ real2ci <- function(df){
 }
 
 ### chrpos ###
-chrpos.query.uncompressed.text.awk.time <- fread("chrpos.query.uncompressed.text.awk.time.txt")
-chrpos.query.uncompressed.text.grep.time <- fread("chrpos.query.uncompressed.text.grep.time.txt")
-chrpos.query.compressed.text.awk.time <- fread("chrpos.query.compressed.text.awk.time.txt")
-chrpos.query.compressed.text.grep.time <- fread("chrpos.query.compressed.text.grep.time.txt")
-chrpos.query.uncompressed.vcf.awk.time <- fread("chrpos.query.uncompressed.vcf.awk.time.txt")
-chrpos.query.uncompressed.vcf.grep.time <- fread("chrpos.query.uncompressed.vcf.grep.time.txt")
-chrpos.query.compressed.vcf.awk.time <- fread("chrpos.query.compressed.vcf.awk.time.txt")
-chrpos.query.compressed.vcf.grep.time <- fread("chrpos.query.compressed.vcf.grep.time.txt")
-chrpos.query.compressed.vcf.bcftools.time <- fread("chrpos.query.compressed.vcf.bcftools.time.txt")
+chrpos.query.uncompressed.text.awk.time <- fread("/data/chrpos.query.uncompressed.text.awk.time.txt")
+chrpos.query.uncompressed.text.grep.time <- fread("/data/chrpos.query.uncompressed.text.grep.time.txt")
+chrpos.query.compressed.text.awk.time <- fread("/data/chrpos.query.compressed.text.awk.time.txt")
+chrpos.query.compressed.text.grep.time <- fread("/data/chrpos.query.compressed.text.grep.time.txt")
+chrpos.query.uncompressed.vcf.awk.time <- fread("/data/chrpos.query.uncompressed.vcf.awk.time.txt")
+chrpos.query.uncompressed.vcf.grep.time <- fread("/data/chrpos.query.uncompressed.vcf.grep.time.txt")
+chrpos.query.compressed.vcf.awk.time <- fread("/data/chrpos.query.compressed.vcf.awk.time.txt")
+chrpos.query.compressed.vcf.grep.time <- fread("/data/chrpos.query.compressed.vcf.grep.time.txt")
+chrpos.query.compressed.vcf.bcftools.time <- fread("/data/chrpos.query.compressed.vcf.bcftools.time.txt")
 
 # add method
 chrpos.query.uncompressed.text.awk.time$method <- "awk - uncompressed text"
@@ -56,11 +56,11 @@ chrpos.all <- rbind(chrpos.all, real2ci(chrpos.query.compressed.vcf.bcftools.tim
 chrpos.all$test <- "Base position"
 
 ### Intervals ###
-intervals.query.uncompressed.text.awk.time <- fread("intervals.query.uncompressed.text.awk.time.txt")
-intervals.query.compressed.text.awk.time <- fread("intervals.query.compressed.text.awk.time.txt")
-intervals.query.uncompressed.vcf.awk.time <- fread("intervals.query.uncompressed.vcf.awk.time.txt")
-intervals.query.compressed.vcf.awk.time <- fread("intervals.query.compressed.vcf.awk.time.txt")
-intervals.query.compressed.vcf.bcftools.time <- fread("intervals.query.compressed.vcf.bcftools.time.txt")
+intervals.query.uncompressed.text.awk.time <- fread("/data/intervals.query.uncompressed.text.awk.time.txt")
+intervals.query.compressed.text.awk.time <- fread("/data/intervals.query.compressed.text.awk.time.txt")
+intervals.query.uncompressed.vcf.awk.time <- fread("/data/intervals.query.uncompressed.vcf.awk.time.txt")
+intervals.query.compressed.vcf.awk.time <- fread("/data/intervals.query.compressed.vcf.awk.time.txt")
+intervals.query.compressed.vcf.bcftools.time <- fread("/data/intervals.query.compressed.vcf.bcftools.time.txt")
 
 # add methods
 intervals.query.uncompressed.text.awk.time$method <- "awk - uncompressed text"
@@ -81,12 +81,12 @@ intervals.all <- rbind(intervals.all, real2ci(intervals.query.compressed.vcf.bcf
 intervals.all$test <- "1Mb interval"
 
 ### P value ###
-pval.query.uncompressed.text.awk.time <- fread("pval.query.uncompressed.text.awk.time.txt")
-pval.query.compressed.text.awk.time <- fread("pval.query.compressed.text.awk.time.txt")
-pval.query.uncompressed.vcf.awk.time <- fread("pval.query.uncompressed.vcf.awk.time.txt")
-pval.query.compressed.vcf.awk.time <- fread("pval.query.compressed.vcf.awk.time.txt")
-pval.query.compressed.vcf.bcftools.time <- fread("pval.query.compressed.vcf.bcftools.time.txt")
-pval.query.compressed.bcf.bcftools.time <- fread("pval.query.compressed.bcf.bcftools.time.txt")
+pval.query.uncompressed.text.awk.time <- fread("/data/pval.query.uncompressed.text.awk.time.txt")
+pval.query.compressed.text.awk.time <- fread("/data/pval.query.compressed.text.awk.time.txt")
+pval.query.uncompressed.vcf.awk.time <- fread("/data/pval.query.uncompressed.vcf.awk.time.txt")
+pval.query.compressed.vcf.awk.time <- fread("/data/pval.query.compressed.vcf.awk.time.txt")
+pval.query.compressed.vcf.bcftools.time <- fread("/data/pval.query.compressed.vcf.bcftools.time.txt")
+pval.query.compressed.bcf.bcftools.time <- fread("/data/pval.query.compressed.bcf.bcftools.time.txt")
 
 # add methods
 pval.query.uncompressed.text.awk.time$method <- "awk - uncompressed text"
@@ -109,16 +109,16 @@ pval.all <- rbind(pval.all, real2ci(pval.query.compressed.bcf.bcftools.time), st
 pval.all$test <- "P value"
 
 ### rsID ###
-rsid.query.uncompressed.text.awk.time <- fread("rsid.query.uncompressed.text.awk.time.txt")
-rsid.query.uncompressed.text.grep.time <- fread("rsid.query.uncompressed.text.grep.time.txt")
-rsid.query.compressed.text.awk.time <- fread("rsid.query.compressed.text.awk.time.txt")
-rsid.query.compressed.text.grep.time <- fread("rsid.query.compressed.text.grep.time.txt")
-rsid.query.uncompressed.vcf.awk.time <- fread("rsid.query.uncompressed.vcf.awk.time.txt")
-rsid.query.uncompressed.vcf.grep.time <- fread("rsid.query.uncompressed.vcf.grep.time.txt")
-rsid.query.compressed.vcf.awk.time <- fread("rsid.query.compressed.vcf.awk.time.txt")
-rsid.query.compressed.vcf.grep.time <- fread("rsid.query.compressed.vcf.grep.time.txt")
-rsid.query.compressed.vcf.bcftools.time <- fread("rsid.query.compressed.vcf.bcftools.time.txt")
-rsid.query.compressed.vcf.rsidx.time <- fread("rsid.query.compressed.vcf.rsidx.time.txt")
+rsid.query.uncompressed.text.awk.time <- fread("/data/rsid.query.uncompressed.text.awk.time.txt")
+rsid.query.uncompressed.text.grep.time <- fread("/data/rsid.query.uncompressed.text.grep.time.txt")
+rsid.query.compressed.text.awk.time <- fread("/data/rsid.query.compressed.text.awk.time.txt")
+rsid.query.compressed.text.grep.time <- fread("/data/rsid.query.compressed.text.grep.time.txt")
+rsid.query.uncompressed.vcf.awk.time <- fread("/data/rsid.query.uncompressed.vcf.awk.time.txt")
+rsid.query.uncompressed.vcf.grep.time <- fread("/data/rsid.query.uncompressed.vcf.grep.time.txt")
+rsid.query.compressed.vcf.awk.time <- fread("/data/rsid.query.compressed.vcf.awk.time.txt")
+rsid.query.compressed.vcf.grep.time <- fread("/data/rsid.query.compressed.vcf.grep.time.txt")
+rsid.query.compressed.vcf.bcftools.time <- fread("/data/rsid.query.compressed.vcf.bcftools.time.txt")
+rsid.query.compressed.vcf.rsidx.time <- fread("/data/rsid.query.compressed.vcf.rsidx.time.txt")
 
 # add methods
 rsid.query.uncompressed.text.awk.time$method <- "awk - uncompressed text"
@@ -186,4 +186,4 @@ p <- ggplot(all, aes(x=tool, y=mill_mean, ymin=mill_lower, ymax=mill_upper, fill
     ylab("Mean runtime (log10 milliseconds)")
 
 # save
-ggsave("plot.pdf", p, height=7, width=10)
+ggsave("/data/plot.pdf", p, height=7, width=10)

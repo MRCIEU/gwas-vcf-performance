@@ -118,7 +118,7 @@ write.table(s[,c("CHROM", "POS")], sep="\t", row.names=F, quote=F, col.names=F, 
 # write out list of 1Mb intervals and count number of variants for querying later
 s$start <- s$POS - 500000
 s$end <- s$POS + 500000
-s$interval_count <- apply(s, 1, function(row){ length(which(gwas$CHROM == row[['CHROM']] & gwas$POS > as.numeric(row[['start']]) & gwas$POS < as.numeric(row[['end']]))) })
+s$interval_count <- apply(s, 1, function(row){ length(which(gwas$CHROM == row[['CHROM']] & gwas$POS >= as.numeric(row[['start']]) & gwas$POS <= as.numeric(row[['end']]))) })
 write.table(s[,c("CHROM", "start", "end", "interval_count")], sep="\t", row.names=F, quote=F, col.names=F, file="/data/intervals.txt")
 
 # write out pval thresholds & counts for querying later
