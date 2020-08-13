@@ -5,6 +5,8 @@ date: "2020-02-25"
 params:
     n_sim: 5
 ---
+# TODO counts do not match for multisample data
+# TODO rerun 10M single-sample for intervals
 
 ## Compare query execution time between VCF and unindexed text
 
