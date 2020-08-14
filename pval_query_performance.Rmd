@@ -47,7 +47,7 @@ while read line; do
     echo -ne "$pthresh\t" >> /data/pval.query.uncompressed.vcf.awk.time.txt
     echo -ne "$pthresh\t$n\t" >> /data/pval.query.uncompressed.vcf.awk.counts.txt
     /usr/bin/time -f "%e\t%U\t%S" -ao /data/pval.query.uncompressed.vcf.awk.time.txt \
-    awk -v pthresh="$pthresh" -F"\t|:" '$18 > pthresh' /data/gwas.vcf | wc -l >> /data/pval.query.uncompressed.vcf.awk.counts.txt
+    awk -v pthresh="$pthresh" -F"\t|:" '/^[^#]/ && $18 > pthresh' /data/gwas.vcf | wc -l >> /data/pval.query.uncompressed.vcf.awk.counts.txt
 done < /data/pval.txt
 
 # compressed vcf awk
@@ -60,7 +60,7 @@ while read line; do
     echo -ne "$pthresh\t$n\t" >> /data/pval.query.compressed.vcf.awk.counts.txt
     /usr/bin/time -f "%e\t%U\t%S" -ao /data/pval.query.compressed.vcf.awk.time.txt \
     gzip -dc /data/gwas.vcf.gz | \
-    awk -v pthresh="$pthresh" -F"\t|:" '$18 > pthresh' | wc -l >> /data/pval.query.compressed.vcf.awk.counts.txt
+    awk -v pthresh="$pthresh" -F"\t|:" '/^[^#]/ && $18 > pthresh' | wc -l >> /data/pval.query.compressed.vcf.awk.counts.txt
 done < /data/pval.txt
 
 # compressed vcf bcftools
