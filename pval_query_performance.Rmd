@@ -5,8 +5,6 @@ date: "2020-02-25"
 params:
     n_sim: 5
 ---
-# TODO counts do not match for multisample data
-# TODO rerun 10M single-sample for intervals
 
 ## Compare query execution time between VCF and unindexed text
 
@@ -66,7 +64,6 @@ while read line; do
 done < /data/pval.txt
 
 # compressed vcf bcftools
-# TODO query only on the first LP field if multisample VCF provided
 echo -e "query\treal\tuser\tsys" > /data/pval.query.compressed.vcf.bcftools.time.txt
 echo -e "query\texpected_n\tn" > /data/pval.query.compressed.vcf.bcftools.counts.txt
 while read line; do
@@ -75,11 +72,10 @@ while read line; do
     echo -ne "$pthresh\t" >> /data/pval.query.compressed.vcf.bcftools.time.txt
     echo -ne "$pthresh\t$n\t" >> /data/pval.query.compressed.vcf.bcftools.counts.txt
     /usr/bin/time -f "%e\t%U\t%S" -ao /data/pval.query.compressed.vcf.bcftools.time.txt \
-    bcftools view -i "FORMAT/LP > $pthresh" -H /data/gwas.vcf.gz | wc -l >> /data/pval.query.compressed.vcf.bcftools.counts.txt
+    bcftools view -i "FORMAT/LP[0:0] > $pthresh" -H /data/gwas.vcf.gz | wc -l >> /data/pval.query.compressed.vcf.bcftools.counts.txt
 done < /data/pval.txt
 
 # compressed bcf bcftools
-# TODO query only on the first LP field if multisample VCF provided
 echo -e "query\treal\tuser\tsys" > /data/pval.query.compressed.bcf.bcftools.time.txt
 echo -e "query\texpected_n\tn" > /data/pval.query.compressed.bcf.bcftools.counts.txt
 while read line; do
@@ -88,7 +84,7 @@ while read line; do
     echo -ne "$pthresh\t" >> /data/pval.query.compressed.bcf.bcftools.time.txt
     echo -ne "$pthresh\t$n\t" >> /data/pval.query.compressed.bcf.bcftools.counts.txt
     /usr/bin/time -f "%e\t%U\t%S" -ao /data/pval.query.compressed.bcf.bcftools.time.txt \
-    bcftools view -i "FORMAT/LP > $pthresh" -H /data/gwas.bcf | wc -l >> /data/pval.query.compressed.bcf.bcftools.counts.txt
+    bcftools view -i "FORMAT/LP[0:0] > $pthresh" -H /data/gwas.bcf | wc -l >> /data/pval.query.compressed.bcf.bcftools.counts.txt
 done < /data/pval.txt
 ```
 

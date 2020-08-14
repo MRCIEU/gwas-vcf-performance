@@ -24,7 +24,7 @@ while read line; do
     echo -ne "$chr"_"$start"_"$end\t" >> /data/intervals.query.uncompressed.text.awk.time.txt
     echo -ne "$chr"_"$start"_"$end\t$n\t" >> /data/intervals.query.uncompressed.text.awk.counts.txt
     /usr/bin/time -f "%e\t%U\t%S" -ao /data/intervals.query.uncompressed.text.awk.time.txt \
-    awk -v chr="$chr" -v start="$start" -v end="$end" -F"\t" '$1==chr && $2>start && $2<end' /data/gwas.txt | wc -l >> /data/intervals.query.uncompressed.text.awk.counts.txt
+    awk -v chr="$chr" -v start="$start" -v end="$end" -F"\t" '$1==chr && $2>=start && $2<=end' /data/gwas.txt | wc -l >> /data/intervals.query.uncompressed.text.awk.counts.txt
 done < /data/intervals.txt
 
 # compressed text awk
@@ -39,7 +39,7 @@ while read line; do
     echo -ne "$chr"_"$start"_"$end\t$n\t" >> /data/intervals.query.compressed.text.awk.counts.txt
     /usr/bin/time -f "%e\t%U\t%S" -ao /data/intervals.query.compressed.text.awk.time.txt \
     gzip -dc /data/gwas.txt.gz | \
-    awk -v chr="$chr" -v start="$start" -v end="$end" -F"\t" '$1==chr && $2>start && $2<end' | wc -l >> /data/intervals.query.compressed.text.awk.counts.txt
+    awk -v chr="$chr" -v start="$start" -v end="$end" -F"\t" '$1==chr && $2>=start && $2<=end' | wc -l >> /data/intervals.query.compressed.text.awk.counts.txt
 done < /data/intervals.txt
 
 # uncompressed vcf awk
@@ -53,7 +53,7 @@ while read line; do
     echo -ne "$chr"_"$start"_"$end\t" >> /data/intervals.query.uncompressed.vcf.awk.time.txt
     echo -ne "$chr"_"$start"_"$end\t$n\t" >> /data/intervals.query.uncompressed.vcf.awk.counts.txt
     /usr/bin/time -f "%e\t%U\t%S" -ao /data/intervals.query.uncompressed.vcf.awk.time.txt \
-    awk -v chr="$chr" -v start="$start" -v end="$end" -F"\t" '$1==chr && $2>start && $2<end' /data/gwas.vcf | wc -l >> /data/intervals.query.uncompressed.vcf.awk.counts.txt
+    awk -v chr="$chr" -v start="$start" -v end="$end" -F"\t" '$1==chr && $2>=start && $2<=end' /data/gwas.vcf | wc -l >> /data/intervals.query.uncompressed.vcf.awk.counts.txt
 done < /data/intervals.txt
 
 # compressed vcf awk
@@ -68,7 +68,7 @@ while read line; do
     echo -ne "$chr"_"$start"_"$end\t$n\t" >> /data/intervals.query.compressed.vcf.awk.counts.txt
     /usr/bin/time -f "%e\t%U\t%S" -ao /data/intervals.query.compressed.vcf.awk.time.txt \
     gzip -dc /data/gwas.vcf.gz | \
-    awk -v chr="$chr" -v start="$start" -v end="$end" -F"\t" '$1==chr && $2>start && $2<end' | wc -l >> /data/intervals.query.compressed.vcf.awk.counts.txt
+    awk -v chr="$chr" -v start="$start" -v end="$end" -F"\t" '$1==chr && $2>=start && $2<=end' | wc -l >> /data/intervals.query.compressed.vcf.awk.counts.txt
 done < /data/intervals.txt
 
 # compressed vcf bcftools
