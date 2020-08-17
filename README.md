@@ -22,10 +22,7 @@ TODO
 
 Set up GWAS and prepare queries
 
-- [single-sample-2.5M](https://mrcieu.github.io/gwas-vcf-performance/single-sample-2.5M/workflow.html)
-- [single-sample-10M](https://mrcieu.github.io/gwas-vcf-performance/single-sample-10M/workflow.html)
-- [multi-sample-2.5M](https://mrcieu.github.io/gwas-vcf-performance/multi-sample-2.5M/workflow.html)
-- [multi-sample-10M](https://mrcieu.github.io/gwas-vcf-performance/multi-sample-10M/workflow.html)
+- [body_mass_index](https://mrcieu.github.io/gwas-vcf-performance/workflow.html)
 
 ### RSID query performance
 
