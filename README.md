@@ -14,13 +14,50 @@ bioRxiv 2020.05.29.115824; doi: https://doi.org/10.1101/2020.05.29.115824
 
 To view comparison results open html files in a web browser.
 
-1. [workflow](https://mrcieu.github.io/gwas-vcf-performance/workflow.html) - set up GWAS and prepare queries
-2. [rsid_query_performance](https://mrcieu.github.io/gwas-vcf-performance/rsid_query_performance.html) - performance queries on rsID
-3. [chrpos_query_performance](https://mrcieu.github.io/gwas-vcf-performance/chrpos_query_performance.html) - performance queries on chromosome position
-4. [interval_query_performance](https://mrcieu.github.io/gwas-vcf-performance/interval_query_performance.html) - performance queries on chromosome interval
-5. [pval_query_performance](https://mrcieu.github.io/gwas-vcf-performance/pval_query_performance.html) - performance queries on association P value
+### Plot
 
-## Run
+TODO
+
+### Workflow
+
+Set up GWAS and prepare queries
+
+- [single-sample-2.5M](https://mrcieu.github.io/gwas-vcf-performance/single-sample-2.5M/workflow.html)
+- [single-sample-10M](https://mrcieu.github.io/gwas-vcf-performance/single-sample-10M/workflow.html)
+- [multi-sample-2.5M](https://mrcieu.github.io/gwas-vcf-performance/multi-sample-2.5M/workflow.html)
+- [multi-sample-10M](https://mrcieu.github.io/gwas-vcf-performance/multi-sample-10M/workflow.html)
+
+### RSID query performance
+
+Performance queries on rsID
+
+- [single-sample-2.5M](https://mrcieu.github.io/gwas-vcf-performance/single-sample-2.5M/rsid_query_performance.html)
+- [single-sample-10M](https://mrcieu.github.io/gwas-vcf-performance/single-sample-10M/rsid_query_performance.html)
+- [multi-sample-2.5M](https://mrcieu.github.io/gwas-vcf-performance/multi-sample-2.5M/rsid_query_performance.html)
+- [multi-sample-10M](https://mrcieu.github.io/gwas-vcf-performance/multi-sample-10M/rsid_query_performance.html)
+
+### Genomic position query performance
+
+Performance queries on chromosome position
+
+- [single-sample-2.5M](https://mrcieu.github.io/gwas-vcf-performance/single-sample-2.5M/chrpos_query_performance.html)
+- [single-sample-10M](https://mrcieu.github.io/gwas-vcf-performance/single-sample-10M/chrpos_query_performance.html)
+- [multi-sample-2.5M](https://mrcieu.github.io/gwas-vcf-performance/multi-sample-2.5M/chrpos_query_performance.html)
+- [multi-sample-10M](https://mrcieu.github.io/gwas-vcf-performance/multi-sample-10M/chrpos_query_performance.html)
+
+### Genomic interval query performance
+
+- [single-sample-2.5M](https://mrcieu.github.io/gwas-vcf-performance/single-sample-2.5M/interval_query_performance.html)
+- [single-sample-10M](https://mrcieu.github.io/gwas-vcf-performance/single-sample-10M/interval_query_performance.html)
+- [multi-sample-2.5M](https://mrcieu.github.io/gwas-vcf-performance/multi-sample-2.5M/interval_query_performance.html)
+- [multi-sample-10M](https://mrcieu.github.io/gwas-vcf-performance/multi-sample-10M/interval_query_performance.html)
+
+### P value query performance
+
+- [single-sample-2.5M](https://mrcieu.github.io/gwas-vcf-performance/single-sample-2.5M/pval_query_performance.html)
+- [single-sample-10M](https://mrcieu.github.io/gwas-vcf-performance/single-sample-10M/pval_query_performance.html)
+- [multi-sample-2.5M](https://mrcieu.github.io/gwas-vcf-performance/multi-sample-2.5M/pval_query_performance.html)
+- [multi-sample-10M](https://mrcieu.github.io/gwas-vcf-performance/multi-sample-10M/pval_query_performance.html)
 
 ### Obtain source code
 
