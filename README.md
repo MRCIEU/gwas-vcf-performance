@@ -16,7 +16,7 @@ To view comparison results open html files in a web browser.
 
 ### Plot
 
-TODO
+[Combined plot](plot.pdf)
 
 ### Workflow
 
@@ -167,4 +167,7 @@ R -e "rmarkdown::render('/app/pval_query_performance.Rmd', output_file='/data/pv
 
 #### Figure
 
-TODO
+```sh
+cd data
+Rscript combined_plot.R
+```
