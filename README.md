@@ -20,9 +20,18 @@ To view comparison results open html files in a web browser.
 
 ### Workflow
 
-Set up GWAS and prepare queries
+Process GWAS to GWAS-VCF
 
 - [body_mass_index](https://mrcieu.github.io/gwas-vcf-performance/workflow.html)
+
+### Prepare queries
+
+Subsample the data, prepare multisample GWAS-VCF and record expected output results for comparison with command-line tools
+
+- [single-sample-2.5M](https://mrcieu.github.io/gwas-vcf-performance/single-sample-2.5M/prepare_query.html)
+- [single-sample-10M](https://mrcieu.github.io/gwas-vcf-performance/single-sample-10M/prepare_query.html)
+- [multi-sample-2.5M](https://mrcieu.github.io/gwas-vcf-performance/multi-sample-2.5M/prepare_query.html)
+- [multi-sample-10M](https://mrcieu.github.io/gwas-vcf-performance/multi-sample-10M/prepare_query.html)
 
 ### RSID query performance
 
