@@ -19,7 +19,7 @@ Subsample the GWAS-VCF to obtain n variants
 
 ```{bash}
 echo "$n_variants"
-for file in $(ls /data/*.vcf.gz); do
+for file in $(ls /data/*.vcf.gz | grep -v "sampled"); do
     echo "$file"
     # select header
     bcftools view -h "$file" > /data/tmp.vcf
@@ -55,7 +55,7 @@ bcftools index /data/gwas.vcf.gz
 [rsidx](https://github.com/bioforensics/rsidx) is an excellent tool for indexing on VCF ID. This is made possible by extracting rsID and chromosome position to an SQLite database which is later queried to obtain the variant locus for extraction using tabix.
 
 ```{bash}
-rsidx index \
+rsidx index -f \
 /data/gwas.vcf.gz \
 /data/gwas.vcf.gz.rsidx
 ```
