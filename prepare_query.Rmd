@@ -5,12 +5,14 @@ date: "2020-08-12"
 params:
     n_sim: 5
     n_variants: 2500000
+    n_gwas: 1
+    filepath: NA
 ---
 
 ### Set params
 
 ```{r}
-Sys.setenv(n_sim=params$n_sim, n_variants=format(params$n_variants, scientific = FALSE))
+Sys.setenv(n_sim=params$n_sim, n_sim=params$n_gwas, file=params$filepath, n_variants=format(params$n_variants, scientific = FALSE))
 ```
 
 ### Randomly select n variants
@@ -19,16 +21,23 @@ Subsample the GWAS-VCF to obtain n variants
 
 ```{bash}
 echo "$n_variants"
-for file in $(ls /data/*.vcf.gz | grep -v "sampled"); do
-    echo "$file"
-    # select header
-    bcftools view -h "$file" > /data/tmp.vcf
-    # select body, randomly sort and select n_variants
-    bcftools view -H "$file" | shuf | head -n "$n_variants" >> /data/tmp.vcf
-    # sort and compress
-    bcftools sort /data/tmp.vcf -O z -o $(echo "$file" | sed 's/\.vcf\.gz/_sampled\.vcf\.gz/g')
-    # index
-    bcftools index -t $(echo "$file" | sed 's/\.vcf\.gz/_sampled\.vcf\.gz/g')
+echo "$file"
+# select header
+bcftools view -h "$file" > /data/tmp.vcf
+# select body, randomly sort and select n_variants
+bcftools view -H "$file" | shuf | head -n "$n_variants" >> /data/tmp.vcf
+# sort and compress
+bcftools sort /data/tmp.vcf -O z -o /data/tmp.vcf.gz
+# index
+bcftools index -t /data/tmp.vcf.gz
+```
+
+Duplicate data to produce multisample GWAS-VCF files
+
+```{bash}
+for i in $(seq 1 $n_gwas); do
+    cp /data/tmp.vcf.gz /data/"$i"_sampled.vcf.gz
+    cp /data/tmp.vcf.gz.tbi /data/"$i"_sampled.vcf.gz.tbi
 done
 ```
 
