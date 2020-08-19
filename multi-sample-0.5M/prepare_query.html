@@ -384,49 +384,32 @@ $(document).ready(function () {
 
 <div id="set-params" class="section level3">
 <h3>Set params</h3>
-<pre class="r"><code>Sys.setenv(n_sim=params$n_sim, n_variants=format(params$n_variants, scientific = FALSE))</code></pre>
+<pre class="r"><code>Sys.setenv(n_sim=params$n_sim, n_gwas=params$n_gwas, file=params$filepath, n_variants=format(params$n_variants, scientific = FALSE))</code></pre>
 </div>
 <div id="randomly-select-n-variants" class="section level3">
 <h3>Randomly select n variants</h3>
 <p>Subsample the GWAS-VCF to obtain n variants</p>
 <pre class="bash"><code>echo &quot;$n_variants&quot;
-for file in $(ls /data/*.vcf.gz | grep -v &quot;sampled&quot;); do
-    echo &quot;$file&quot;
-    # select header
-    bcftools view -h &quot;$file&quot; &gt; /data/tmp.vcf
-    # select body, randomly sort and select n_variants
-    bcftools view -H &quot;$file&quot; | shuf | head -n &quot;$n_variants&quot; &gt;&gt; /data/tmp.vcf
-    # sort and compress
-    bcftools sort /data/tmp.vcf -O z -o $(echo &quot;$file&quot; | sed &#39;s/\.vcf\.gz/_sampled\.vcf\.gz/g&#39;)
-    # index
-    bcftools index -t $(echo &quot;$file&quot; | sed &#39;s/\.vcf\.gz/_sampled\.vcf\.gz/g&#39;)
-done</code></pre>
+echo &quot;$file&quot;
+# select header
+bcftools view -h &quot;$file&quot; &gt; /data/tmp.vcf
+# select body, randomly sort and select n_variants
+bcftools view -H &quot;$file&quot; | shuf | head -n &quot;$n_variants&quot; &gt;&gt; /data/tmp.vcf
+# sort and compress
+bcftools sort /data/tmp.vcf -O z -o /data/tmp.vcf.gz
+# index
+bcftools index -t /data/tmp.vcf.gz</code></pre>
 <pre><code>## 500000
-## /data/21001_1.vcf.gz
-## Writing to /tmp/bcftools-sort.PGyTye
-## Merging 1 temporary files
-## Cleaning
-## Done
-## /data/21001_2.vcf.gz
-## Writing to /tmp/bcftools-sort.Z8Wruq
-## Merging 1 temporary files
-## Cleaning
-## Done
-## /data/21001_3.vcf.gz
-## Writing to /tmp/bcftools-sort.w6efBq
-## Merging 1 temporary files
-## Cleaning
-## Done
-## /data/21001_4.vcf.gz
-## Writing to /tmp/bcftools-sort.eYWnPi
-## Merging 1 temporary files
-## Cleaning
-## Done
-## /data/21001_5.vcf.gz
-## Writing to /tmp/bcftools-sort.MjkyYb
+## /data/21001.vcf.gz
+## Writing to /tmp/bcftools-sort.j8Ed1N
 ## Merging 1 temporary files
 ## Cleaning
 ## Done</code></pre>
+<p>Duplicate data to produce multisample GWAS-VCF files</p>
+<pre class="bash"><code>for i in $(seq 1 $n_gwas); do
+    cp /data/tmp.vcf.gz /data/&quot;$i&quot;_sampled.vcf.gz
+    cp /data/tmp.vcf.gz.tbi /data/&quot;$i&quot;_sampled.vcf.gz.tbi
+done</code></pre>
 </div>
 <div id="merge-gwas-vcf" class="section level3">
 <h3>Merge GWAS-VCF</h3>
@@ -449,9 +432,7 @@ bcftools index /data/gwas.vcf.gz</code></pre>
 <pre class="bash"><code>rsidx index -f \
 /data/gwas.vcf.gz \
 /data/gwas.vcf.gz.rsidx</code></pre>
-<pre><code>## [rsidx] running version 0.2
-## [rsidx::index] processed 1000000 variants
-## [rsidx::index] processed 2000000 variants</code></pre>
+<pre><code>## [rsidx] running version 0.2</code></pre>
 </div>
 <div id="create-uncompressed-vcf-index" class="section level3">
 <h3>Create uncompressed VCF &amp; index</h3>
@@ -460,38 +441,38 @@ bcftools index /data/gwas.vcf.gz</code></pre>
 /usr/bin/gatk-4.1.5.0/gatk \
 IndexFeatureFile \
 -I /data/gwas.vcf</code></pre>
-<pre><code>## 08:31:46.389 INFO  NativeLibraryLoader - Loading libgkl_compression.so from jar:file:/usr/bin/gatk-4.1.5.0/gatk-package-4.1.5.0-local.jar!/com/intel/gkl/native/libgkl_compression.so
-## Aug 18, 2020 8:31:46 AM shaded.cloud_nio.com.google.auth.oauth2.ComputeEngineCredentials runningOnComputeEngine
+<pre><code>## 09:13:53.670 INFO  NativeLibraryLoader - Loading libgkl_compression.so from jar:file:/usr/bin/gatk-4.1.5.0/gatk-package-4.1.5.0-local.jar!/com/intel/gkl/native/libgkl_compression.so
+## Aug 19, 2020 9:13:53 AM shaded.cloud_nio.com.google.auth.oauth2.ComputeEngineCredentials runningOnComputeEngine
 ## INFO: Failed to detect whether we are running on Google Compute Engine.
-## 08:31:46.578 INFO  IndexFeatureFile - ------------------------------------------------------------
-## 08:31:46.579 INFO  IndexFeatureFile - The Genome Analysis Toolkit (GATK) v4.1.5.0
-## 08:31:46.579 INFO  IndexFeatureFile - For support and documentation go to https://software.broadinstitute.org/gatk/
-## 08:31:46.579 INFO  IndexFeatureFile - Executing as root@ccf6177dfe28 on Linux v4.15.0-20-generic amd64
-## 08:31:46.579 INFO  IndexFeatureFile - Java runtime: OpenJDK 64-Bit Server VM v1.8.0_152-release-1056-b12
-## 08:31:46.579 INFO  IndexFeatureFile - Start Date/Time: August 18, 2020 8:31:46 AM UTC
-## 08:31:46.579 INFO  IndexFeatureFile - ------------------------------------------------------------
-## 08:31:46.579 INFO  IndexFeatureFile - ------------------------------------------------------------
-## 08:31:46.579 INFO  IndexFeatureFile - HTSJDK Version: 2.21.2
-## 08:31:46.580 INFO  IndexFeatureFile - Picard Version: 2.21.9
-## 08:31:46.580 INFO  IndexFeatureFile - HTSJDK Defaults.COMPRESSION_LEVEL : 2
-## 08:31:46.580 INFO  IndexFeatureFile - HTSJDK Defaults.USE_ASYNC_IO_READ_FOR_SAMTOOLS : false
-## 08:31:46.580 INFO  IndexFeatureFile - HTSJDK Defaults.USE_ASYNC_IO_WRITE_FOR_SAMTOOLS : true
-## 08:31:46.580 INFO  IndexFeatureFile - HTSJDK Defaults.USE_ASYNC_IO_WRITE_FOR_TRIBBLE : false
-## 08:31:46.580 INFO  IndexFeatureFile - Deflater: IntelDeflater
-## 08:31:46.580 INFO  IndexFeatureFile - Inflater: IntelInflater
-## 08:31:46.580 INFO  IndexFeatureFile - GCS max retries/reopens: 20
-## 08:31:46.580 INFO  IndexFeatureFile - Requester pays: disabled
-## 08:31:46.580 INFO  IndexFeatureFile - Initializing engine
-## 08:31:46.580 INFO  IndexFeatureFile - Done initializing engine
-## 08:31:46.827 INFO  FeatureManager - Using codec VCFCodec to read file file:///data/gwas.vcf
-## 08:31:46.839 INFO  ProgressMeter - Starting traversal
-## 08:31:46.839 INFO  ProgressMeter -        Current Locus  Elapsed Minutes     Records Processed   Records/Minute
-## 08:31:52.307 INFO  ProgressMeter -          X:152766087              0.1               2319725       25463501.6
-## 08:31:52.307 INFO  ProgressMeter - Traversal complete. Processed 2319725 total records in 0.1 minutes.
-## 08:31:52.449 INFO  IndexFeatureFile - Successfully wrote index to /data/gwas.vcf.idx
-## 08:31:52.449 INFO  IndexFeatureFile - Shutting down engine
-## [August 18, 2020 8:31:52 AM UTC] org.broadinstitute.hellbender.tools.IndexFeatureFile done. Elapsed time: 0.10 minutes.
-## Runtime.totalMemory()=3611295744
+## 09:13:53.881 INFO  IndexFeatureFile - ------------------------------------------------------------
+## 09:13:53.881 INFO  IndexFeatureFile - The Genome Analysis Toolkit (GATK) v4.1.5.0
+## 09:13:53.881 INFO  IndexFeatureFile - For support and documentation go to https://software.broadinstitute.org/gatk/
+## 09:13:53.882 INFO  IndexFeatureFile - Executing as root@f93167deba4d on Linux v4.15.0-20-generic amd64
+## 09:13:53.882 INFO  IndexFeatureFile - Java runtime: OpenJDK 64-Bit Server VM v1.8.0_152-release-1056-b12
+## 09:13:53.882 INFO  IndexFeatureFile - Start Date/Time: August 19, 2020 9:13:53 AM UTC
+## 09:13:53.882 INFO  IndexFeatureFile - ------------------------------------------------------------
+## 09:13:53.882 INFO  IndexFeatureFile - ------------------------------------------------------------
+## 09:13:53.882 INFO  IndexFeatureFile - HTSJDK Version: 2.21.2
+## 09:13:53.882 INFO  IndexFeatureFile - Picard Version: 2.21.9
+## 09:13:53.882 INFO  IndexFeatureFile - HTSJDK Defaults.COMPRESSION_LEVEL : 2
+## 09:13:53.882 INFO  IndexFeatureFile - HTSJDK Defaults.USE_ASYNC_IO_READ_FOR_SAMTOOLS : false
+## 09:13:53.882 INFO  IndexFeatureFile - HTSJDK Defaults.USE_ASYNC_IO_WRITE_FOR_SAMTOOLS : true
+## 09:13:53.882 INFO  IndexFeatureFile - HTSJDK Defaults.USE_ASYNC_IO_WRITE_FOR_TRIBBLE : false
+## 09:13:53.883 INFO  IndexFeatureFile - Deflater: IntelDeflater
+## 09:13:53.883 INFO  IndexFeatureFile - Inflater: IntelInflater
+## 09:13:53.883 INFO  IndexFeatureFile - GCS max retries/reopens: 20
+## 09:13:53.883 INFO  IndexFeatureFile - Requester pays: disabled
+## 09:13:53.883 INFO  IndexFeatureFile - Initializing engine
+## 09:13:53.883 INFO  IndexFeatureFile - Done initializing engine
+## 09:13:54.235 INFO  FeatureManager - Using codec VCFCodec to read file file:///data/gwas.vcf
+## 09:13:54.248 INFO  ProgressMeter - Starting traversal
+## 09:13:54.248 INFO  ProgressMeter -        Current Locus  Elapsed Minutes     Records Processed   Records/Minute
+## 09:13:56.334 INFO  ProgressMeter -          X:154909055              0.0                500000       14395393.5
+## 09:13:56.334 INFO  ProgressMeter - Traversal complete. Processed 500000 total records in 0.0 minutes.
+## 09:13:56.444 INFO  IndexFeatureFile - Successfully wrote index to /data/gwas.vcf.idx
+## 09:13:56.444 INFO  IndexFeatureFile - Shutting down engine
+## [August 19, 2020 9:13:56 AM UTC] org.broadinstitute.hellbender.tools.IndexFeatureFile done. Elapsed time: 0.05 minutes.
+## Runtime.totalMemory()=2522873856
 ## Tool returned:
 ## /data/gwas.vcf.idx
 ## Using GATK jar /usr/bin/gatk-4.1.5.0/gatk-package-4.1.5.0-local.jar
@@ -544,9 +525,9 @@ s$interval_count &lt;- apply(s, 1, function(row){ length(which(gwas$CHROM == row
 write.table(s[,c(&quot;CHROM&quot;, &quot;start&quot;, &quot;end&quot;, &quot;interval_count&quot;)], sep=&quot;\t&quot;, row.names=F, quote=F, col.names=F, file=&quot;/data/intervals.txt&quot;)
 
 # write out pval thresholds &amp; counts for querying later
-gwas$LP &lt;- as.numeric(gwas$LP)</code></pre>
-<pre><code>## Warning: NAs introduced by coercion</code></pre>
-<pre class="r"><code>## define pval thresholds
+gwas$LP &lt;- as.numeric(gwas$LP)
+
+## define pval thresholds
 thresholds &lt;- seq(0.00000005, 1, 1/params$n_sim)
 thresholds &lt;- -log10(thresholds)
 
@@ -558,7 +539,7 @@ counts &lt;- sapply(thresholds, function (threshold) {sum(gwas$LP &gt; threshold
 write.table(data.frame(thresholds=thresholds, counts=counts), sep=&quot;\t&quot;, row.names=F, quote=F, col.names=F, file=&quot;/data/pval.txt&quot;)
 
 message(paste(&quot;Total number of variants in GWAS:&quot;, nrow(gwas)))</code></pre>
-<pre><code>## Total number of variants in GWAS: 2319725</code></pre>
+<pre><code>## Total number of variants in GWAS: 500000</code></pre>
 </div>
 
 
