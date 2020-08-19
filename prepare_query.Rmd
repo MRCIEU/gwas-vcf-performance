@@ -12,7 +12,7 @@ params:
 ### Set params
 
 ```{r}
-Sys.setenv(n_sim=params$n_sim, n_sim=params$n_gwas, file=params$filepath, n_variants=format(params$n_variants, scientific = FALSE))
+Sys.setenv(n_sim=params$n_sim, n_gwas=params$n_gwas, file=params$filepath, n_variants=format(params$n_variants, scientific = FALSE))
 ```
 
 ### Randomly select n variants

@@ -137,7 +137,7 @@ docker run \
 -v `pwd`:/data \
 -it -d \
 gwas-vcf-performance \
-R -e "rmarkdown::render('/app/prepare_query.Rmd', output_file='/data/prepare_query.html', params = list(n_sim = 100, n_variants = 10000000, n_gwas = 1, filepath = '/data/21001.vcf.gz'))"
+R -e "rmarkdown::render('/app/prepare_query.Rmd', output_file='/data/prepare_query.html', params = list(n_sim = 100, filepath = '/data/21001.vcf.gz', n_gwas = 5, n_variants = 10000000))"
 ```
 
 ### Run evaluation
