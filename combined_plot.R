@@ -1,7 +1,8 @@
-library('tidyverse')
 library('data.table')
+library("dplyr")
 library('scales')
 library('ggplot2')
+set.seed(123)
 
 ci <- function(mu, sigma, n){
     error <- qnorm(0.975) * (sigma / sqrt(n))
@@ -173,20 +174,28 @@ get_rsid_dat <- function(analysis){
 
 # load results
 all <- rbind(
+    get_chrpos_dat("single-sample-0.5M"),
     get_chrpos_dat("single-sample-2.5M"),
     get_chrpos_dat("single-sample-10M"),
+    get_chrpos_dat("multi-sample-0.5M"),
     get_chrpos_dat("multi-sample-2.5M"),
     get_chrpos_dat("multi-sample-10M"),
+    get_intervals_dat("single-sample-0.5M"),
     get_intervals_dat("single-sample-2.5M"),
     get_intervals_dat("single-sample-10M"),
+    get_intervals_dat("multi-sample-0.5M"),
     get_intervals_dat("multi-sample-2.5M"),
     get_intervals_dat("multi-sample-10M"),
+    get_pval_dat("single-sample-0.5M"),
     get_pval_dat("single-sample-2.5M"),
     get_pval_dat("single-sample-10M"),
+    get_pval_dat("multi-sample-0.5M"),
     get_pval_dat("multi-sample-2.5M"),
     get_pval_dat("multi-sample-10M"),
+    get_rsid_dat("single-sample-0.5M"),
     get_rsid_dat("single-sample-2.5M"),
     get_rsid_dat("single-sample-10M"),
+    get_rsid_dat("multi-sample-0.5M"),
     get_rsid_dat("multi-sample-2.5M"),
     get_rsid_dat("multi-sample-10M")
 )
@@ -204,14 +213,16 @@ all$File <- gsub("^compressed vcf$", "VCF (GZIP)", all$File)
 all$File <- gsub("^uncompressed vcf$", "VCF", all$File)
 
 # rename analyses
-all$analysis <- gsub("single-sample-2.5M", "Single GWAS (2.5M variants)", all$analysis)
-all$analysis <- gsub("multi-sample-2.5M", "Multiple GWAS (2.5M variants)", all$analysis)
-all$analysis <- gsub("single-sample-10M", "Single GWAS (10M variants)", all$analysis)
-all$analysis <- gsub("multi-sample-10M", "Multiple GWAS (10M variants)", all$analysis)
+all$analysis <- gsub("single-sample-0.5M", "Single GWAS (0.5M)", all$analysis)
+all$analysis <- gsub("single-sample-2.5M", "Single GWAS (2.5M)", all$analysis)
+all$analysis <- gsub("multi-sample-0.5M", "Multiple GWAS (0.5M)", all$analysis)
+all$analysis <- gsub("multi-sample-2.5M", "Multiple GWAS (2.5M)", all$analysis)
+all$analysis <- gsub("single-sample-10M", "Single GWAS (10M)", all$analysis)
+all$analysis <- gsub("multi-sample-10M", "Multiple GWAS (10M)", all$analysis)
 
 # factorise
 all$test <- factor(all$test, levels=c('Base position','dbSNP identifier','1Mb interval','P value'))
-all$analysis <- factor(all$analysis, levels=c("Single GWAS (2.5M variants)","Multiple GWAS (2.5M variants)","Single GWAS (10M variants)","Multiple GWAS (10M variants)"))
+all$analysis <- factor(all$analysis, levels=c("Single GWAS (0.5M)", "Multiple GWAS (0.5M)", "Single GWAS (2.5M)","Multiple GWAS (2.5M)","Single GWAS (10M)","Multiple GWAS (10M)"))
 all$tool <- factor(all$tool, levels=c('awk','bcftools','grep','rsidx'))
 
 ### Plot ###
@@ -227,12 +238,17 @@ all <- all %>%
 p <- ggplot(all, aes(x=tool, y=mean, ymin=lower, ymax=upper, fill=File)) +
     geom_col(width = 0.8, position = position_dodge2(width = 0.8, preserve = "single")) +
     geom_errorbar(width = 0.08, position = position_dodge(0.8)) +
-    facet_grid(test ~ analysis, scales="free_y", space = "free_x") +
+    facet_wrap(~ test + analysis, scale="free_y", ncol=6) +
+    scale_y_continuous(breaks=pretty_breaks(n=5)) +
     theme_light() +
     scale_fill_brewer(palette = "Dark2") +
     ggtitle("Query performance of GWAS-VCF and unindexed TSV using a range of common operations") +
     xlab("Method") +
-    ylab("Mean runtime (seconds)")
+    ylab("Mean runtime (seconds)") +
+    theme(axis.text.x=element_text(angle=90, hjust=0.5, vjust=1))
 
 # save
-ggsave("plot.pdf", p, height=7, width=10)
+ggsave("plot.pdf", p, height=8, width=12)
+
+facetwrap
+#facet_grid(test~analysis, scales="free", space = "free_x") +
