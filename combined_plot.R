@@ -240,7 +240,8 @@ p <- ggplot(all, aes(x=tool, y=mean, ymin=lower, ymax=upper, fill=File)) +
     geom_errorbar(width = 0.08, position = position_dodge(0.8)) +
     facet_wrap(~ test + analysis, scale="free_y", ncol=6) +
     scale_y_continuous(breaks=pretty_breaks(n=5)) +
-    theme_light(text = element_text(size=12)) +
+    theme_light() +
+    theme(text = element_text(size=12)) +
     scale_fill_brewer(palette = "Dark2") +
     ggtitle("Query performance of GWAS-VCF and unindexed TSV using a range of common operations") +
     xlab("Method") +
@@ -250,5 +251,5 @@ p <- ggplot(all, aes(x=tool, y=mean, ymin=lower, ymax=upper, fill=File)) +
 # save
 ggsave("plot.pdf", p, height=8, width=12)
 
-facetwrap
+#facetwrap
 #facet_grid(test~analysis, scales="free", space = "free_x") +
